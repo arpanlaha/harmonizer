@@ -1,3 +1,3 @@
 #include <essentia/essentia.h>
 #include <stk/Stk.h>
-#include "model.h"
+#include "utils/model.h"
