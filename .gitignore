@@ -27,6 +27,7 @@
 *.lib
 
 # Executables
+*harmonize
 *.exe
 *.out
 *.app
