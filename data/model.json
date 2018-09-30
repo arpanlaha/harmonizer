@@ -1,187 +1,186 @@
 {"keys": [
   {
-    "name": "A Major",
-    "chords": [ "A Major", "B Minor", "C# Minor", "D Major", "E Major", "F# Minor" ]
-
+    "name": "A major",
+    "chords": [ "A major", "B minor", "C# minor", "D major", "E major", "F# minor" ]
   },
   {
-    "name": "A Minor",
-    "chords": [ "A Minor", "C Major", "D Minor", "E Minor", "F Major", "G Major" ]
+    "name": "A minor",
+    "chords": [ "A minor", "C major", "D minor", "E minor", "F major", "G major" ]
   },
   {
-    "name": "Bb Major",
-    "chords": [ "Bb Manor", "C Minor", "D Minor", "Eb Major", "F Major", "G Minor" ]
+    "name": "Bb major",
+    "chords": [ "Bb manor", "C minor", "D minor", "Eb major", "F major", "G minor" ]
   },
-    {"name": "Bb Minor", "chords" : ["Bb Minor", "Db Major", "Eb Minor", "F Minor", "Gb Major", "Ab Major"]},
+    {"name": "Bb minor", "chords" : ["Bb minor", "Db major", "Eb minor", "F minor", "Gb major", "Ab major"]},
   {
-    "name": "B Major",
-    "chords": [ "B Major", "C# Minor", "Eb Minor", "E Major", "F# Major", "G# Minor" ]
-  },
-  {
-    "name": "B Minor",
-    "chords": [ "B Minor", "D Major", "E Minor", "F# Minor", "G Major", "A Major" ]
+    "name": "B major",
+    "chords": [ "B major", "C# minor", "Eb minor", "E major", "F# major", "G# minor" ]
   },
   {
-    "name": "C Major",
-    "chords": [ "C Major", "D Minor", "E Minor", "F Major", "G Major", "A Minor" ]
+    "name": "B minor",
+    "chords": [ "B minor", "D major", "E minor", "F# minor", "G major", "A major" ]
   },
   {
-    "name": "C Minor",
-    "chords": [ "C Minor", "Eb Major", "F Minor", "G Minor", "Ab Major", "Bb Major" ]
+    "name": "C major",
+    "chords": [ "C major", "D minor", "E minor", "F major", "G major", "A minor" ]
   },
   {
-    "name": "C# Minor",
-    "chords": [ "C# Minor", "E Major", "F# Minor", "G# Minor", "A Major", "B Major" ]
+    "name": "C minor",
+    "chords": [ "C minor", "Eb major", "F minor", "G minor", "Ab major", "Bb major" ]
   },
   {
-    "name": "Db Major",
-    "chords": [ "Db Major", "Eb Minor", " F Minor", "Gb Major", "Ab Major", "Bb Minor" ]
+    "name": "C# minor",
+    "chords": [ "C# minor", "E major", "F# minor", "G# minor", "A major", "B major" ]
   },
   {
-    "name": "D Major",
-    "chords": [ "D Major", "E Minor", "F# Minor", "G Major", "A Major", "B Minor" ]
+    "name": "Db major",
+    "chords": [ "Db major", "Eb minor", " F minor", "Gb major", "Ab major", "Bb minor" ]
   },
   {
-    "name": "Eb Minor",
-    "chords": [ "Eb Minor", "Gb Major", "Ab Minor", "Bb Minor", "B Major", "Db Major" ]
+    "name": "D major",
+    "chords": [ "D major", "E minor", "F# minor", "G major", "A major", "B minor" ]
   },
   {
-    "name": "Eb Major",
-    "chords": [ "Eb Major", "F Minor", "G Minor", "Ab Major", "Bb Major", "C Minor" ]
+    "name": "Eb minor",
+    "chords": [ "Eb minor", "Gb major", "Ab minor", "Bb minor", "B major", "Db major" ]
   },
   {
-    "name": "E Major",
-    "chords": [ "E Major", "F# Minor", "G# Minor", "A Major", "B Major", "C# Minor" ]
+    "name": "Eb major",
+    "chords": [ "Eb major", "F minor", "G minor", "Ab major", "Bb major", "C minor" ]
   },
   {
-    "name": "E Minor",
-    "chords": [ "E Minor", "G Major", "A Minor", "B Minor", "C Major", "D Major" ]
+    "name": "E major",
+    "chords": [ "E major", "F# minor", "G# minor", "A major", "B major", "C# minor" ]
   },
   {
-    "name": "F Major",
-    "chords": [ "F Major", "G Minor", "A Minor", "Bb Major", "C Major", "D Minor" ]
+    "name": "E minor",
+    "chords": [ "E minor", "G major", "A minor", "B minor", "C major", "D major" ]
   },
   {
-    "name": "F Minor",
-    "chords": [ "F Minor", "Ab Major", "Bb Minor", "C Minor", "Db Major", "Eb Major" ]
+    "name": "F major",
+    "chords": [ "F major", "G minor", "A minor", "Bb major", "C major", "D minor" ]
   },
   {
-    "name": "F# Minor",
-    "chords": [ "F# Minor", "A Major", "B Minor", "C# Minor", "D Major", "E Major" ]
+    "name": "F minor",
+    "chords": [ "F minor", "Ab major", "Bb minor", "C minor", "Db major", "Eb major" ]
   },
   {
-    "name": "Gb Major",
-    "chords": [ "Gb Major", "Ab Minor", "Bb Minor", "B Major", "Db Major", "Eb Minor" ]
+    "name": "F# minor",
+    "chords": [ "F# minor", "A major", "B minor", "C# minor", "D major", "E major" ]
+  },
+  {
+    "name": "Gb major",
+    "chords": [ "Gb major", "Ab minor", "Bb minor", "B major", "Db major", "Eb minor" ]
  },
   {
-    "name": "G Major",
-    "chords": [ "G Major", "A Minor", "B Minor", "C Major", "D Major", "E Minor" ]
+    "name": "G major",
+    "chords": [ "G major", "A minor", "B minor", "C major", "D major", "E minor" ]
   },
   {
-    "name": "G Minor",
-    "chords": [ "G Minor", "Bb Major", "C Minor", "D Minor", "Eb Major", "F Major" ]
+    "name": "G minor",
+    "chords": [ "G minor", "Bb major", "C minor", "D minor", "Eb major", "F major" ]
   },
   {
-    "name": "G# Minor",
-    "chords": [ "G# Minor", "B Major", "C# Minor", "Eb Minor", "E Major", "Gb Major" ]
+    "name": "G# minor",
+    "chords": [ "G# minor", "B major", "C# minor", "Eb minor", "E major", "Gb major" ]
   },
-    {"name": "Ab Major", "chords" : ["Ab Major", "Bb Minor", "C Minor", "Db Major", "Eb Major", "F Minor"]}
+    {"name": "Ab major", "chords" : ["Ab major", "Bb minor", "C minor", "Db major", "Eb major", "F minor"]}
   ],
   "chords": [
     {
-      "name": "A Major",
+      "name": "A major",
       "notes": [ "A", "C#", "Db", "E" ]
     },
     {
-      "name": "A Minor",
+      "name": "A minor",
       "notes": [ "A", "C", "E" ]
     },
     {
-      "name": "Bb Major",
+      "name": "Bb major",
       "notes": [ "A#", "Bb", "D", "F" ]
     },
     {
-      "name": "Bb Minor",
+      "name": "Bb minor",
       "notes": [ "A#", "Bb", "C#", "Db", "F" ]
     },
     {
-      "name": "B Major",
+      "name": "B major",
       "notes": [ "B", "D#", "Eb", "F#", "Gb" ]
     },
     {
-      "name": "B Minor",
+      "name": "B minor",
       "notes": [ "B", "D", "F#", "Gb" ]
     },
     {
-      "name": "C Major",
+      "name": "C major",
       "notes": [ "C", "E", "G" ]
     },
     {
-      "name": "C Minor",
+      "name": "C minor",
       "notes": [ "C", "D#", "Eb", "G" ]
     },
     {
-      "name": "C# Minor",
+      "name": "C# minor",
       "notes": [ "C#", "Db", "E", "G#", "Ab" ]
     },
     {
-      "name": "Db Major",
+      "name": "Db major",
       "notes": [ "C#", "Db", "F", "G#", "Ab" ]
     },
     {
-      "name": "D Major",
+      "name": "D major",
       "notes": [ "D", "F#", "Gb", "A" ]
     },
     {
-      "name": "D Minor",
+      "name": "D minor",
       "notes": [ "D", "F", "A" ]
     },
     {
-      "name": "Eb Major",
+      "name": "Eb major",
       "notes": [ "D#", "Eb", "G", "A#", "Bb" ]
     },
     {
-      "name": "Eb Minor",
+      "name": "Eb minor",
       "notes": [ "D#", "Eb", "F#", "Gb", "A#", "Bb" ]
     },
     {
-      "name": "E Major",
+      "name": "E major",
       "notes": [ "E", "G#", "Ab", "B" ]
     },
     {
-      "name": "E Minor",
+      "name": "E minor",
       "notes": [ "E", "G", "B" ]
     },
     {
-      "name": "F Major",
+      "name": "F major",
       "notes": [ "F", "A", "C" ]
     },
     {
-      "name": "F Minor",
+      "name": "F minor",
       "notes": [ "F", "G#", "Ab", "C" ]
     },
     {
-      "name": "F# Minor",
+      "name": "F# minor",
       "notes": [ "F#", "Gb", "A", "C#", "Db" ]
     },
     {
-      "name": "Gb Major",
+      "name": "Gb major",
       "notes": [ "F#", "Gb", "A#", "Bb", "C#", "Db" ]
     },
     {
-      "name": "G Major",
+      "name": "G major",
       "notes": [ "G", "B", "D" ]
     },
     {
-      "name": "G Minor",
+      "name": "G minor",
       "notes": [ "G", "A#", "Bb", "D" ]
     },
     {
-      "name": "G# Minor",
+      "name": "G# minor",
       "notes": [ "G#", "Ab", "B", "D#", "Eb" ]
     },
     {
-      "name": "Ab Major",
+      "name": "Ab major",
       "notes": [ "G#", "Ab", "C", "D#", "Eb" ]
     }
   ],

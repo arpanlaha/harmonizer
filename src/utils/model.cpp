@@ -1,7 +1,50 @@
 #include "model.h"
+#include "../../lib/json/json.hpp"
+#include <fstream>
+
+using json = nlohmann::json;
+using std::ifstream;
 
 namespace harmonizer {
     Model::Model() {}
+
+    Model::Model(string file_location) {
+        ifstream ifs(file_location);
+        json j;
+        ifs >> j;
+
+        for (auto key_info : j["keys"]) {
+            Key key;
+            key.setName(key_info["name"]);
+            for (auto chord_name : key_info["chords"]) {
+                key.addChord(chord_name);
+            }
+            keys.push_back(key);
+            keys_by_name.emplace(key.getName(), key);
+        }
+
+        for (auto chord_info : j["chords"]) {
+            Chord chord;
+            chord.setName(chord_info["name"]);
+            for (auto note : chord_info["notes"]) {
+                chord.addNote(note);
+            }
+            chords.push_back(chord);
+            chords_by_name.emplace(chord.getName(), chord);
+        }
+
+        for (auto pitch_info : j["pitches"]) {
+            Pitch pitch;
+            pitch.setName(pitch_info["name"]);
+            for (auto note_number : pitch_info["note_numbers"]) {
+                pitch.addNoteNumber(note_number);
+            }
+            pitch.setBaseFrequency(pitch_info["base_frequency"]);
+            pitches.push_back(pitch);
+            pitches_by_name.emplace(pitch.getName(), pitch);
+            pitches_by_frequency.emplace(pitch.getFrequencies()[0], pitch);
+        }
+    }
 
     vector<Key> Model::getKeys() {
         return keys;

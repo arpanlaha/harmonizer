@@ -3,7 +3,9 @@
 using namespace essentia;
 using namespace essentia::standard;
 
-namespace harmonizer {
+namespace harmonizer {  
+    Analyzer::Analyzer() {}
+
     Analyzer::Analyzer(const string& file_name) {
         essentia::init();
         Pool pool;        
@@ -63,5 +65,21 @@ namespace harmonizer {
         delete rhythm;
         delete key_extractor;
         essentia::shutdown();
+    }
+    
+    float& Analyzer::getBpm() {
+        return bpm;
+    }
+
+    vector<float>& Analyzer::getBeats() {
+        return beats;
+    }
+
+    string& Analyzer::getKey() {
+        return key;
+    }
+
+    vector<float>& Analyzer::getFrequencies() {
+        return frequencies;
     }
 }

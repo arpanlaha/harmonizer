@@ -1,3 +1,4 @@
+#pragma once
 #include <essentia/algorithmfactory.h>
 #include <essentia/pool.h>
 #include <vector>
@@ -16,6 +17,11 @@ namespace harmonizer {
         vector<float> frequencies;
 
     public:
+        Analyzer();
         Analyzer(const string& file_name);
+        float& getBpm();
+        vector<float>& getBeats();
+        string& getKey();
+        vector<float>& getFrequencies();
     };
 }
