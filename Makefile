@@ -5,8 +5,11 @@ CXXFLAGS = -std=c++11 -g -O0 -Wall -Wextra -I/usr/local/include/
 
 all : $(EXENAME)
 
-$(EXENAME): analyzer.o generator.o chord.o key.o model.o pitch.o src/analyzer.h src/generator.h src/utils/chord.h src/utils/key.h src/utils/model.h src/utils/pitch.h
-	$(CXX) $(CXXFLAGS) src/main.cpp analyzer.o generator.o chord.o key.o model.o pitch.o -L/usr/local/lib -lessentia -lfftw3 -lyaml -lavcodec -lavformat -lavutil -lavresample -lsamplerate -ltag -lfftw3f -lstk -o $(EXENAME) 
+$(EXENAME): main.o analyzer.o generator.o chord.o key.o model.o pitch.o src/analyzer.h src/generator.h src/utils/chord.h src/utils/key.h src/utils/model.h src/utils/pitch.h
+	$(CXX) $(CXXFLAGS) main.o analyzer.o generator.o chord.o key.o model.o pitch.o -L/usr/local/lib -lessentia -lfftw3 -lyaml -lavcodec -lavformat -lavutil -lavresample -lsamplerate -ltag -lfftw3f -lstk -o $(EXENAME) 
+
+main.o: src/main.cpp
+	$(CXX) $(CXXFLAGS) -c src/main.cpp
 
 analyzer.o: src/analyzer.h src/analyzer.cpp
 	$(CXX) $(CXXFLAGS) -c src/analyzer.cpp
