@@ -1,4 +1,5 @@
 #include "analyzer.h"
+#include <essentia/algorithmfactory.h>
 
 using namespace essentia;
 using namespace essentia::standard;
@@ -7,8 +8,7 @@ namespace harmonizer {
     Analyzer::Analyzer() {}
 
     Analyzer::Analyzer(const string& file_name) {
-        essentia::init();
-        Pool pool;        
+        essentia::init();      
 
         AlgorithmFactory& factory = AlgorithmFactory::instance();
 

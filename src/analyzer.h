@@ -1,12 +1,9 @@
 #pragma once
-#include <essentia/algorithmfactory.h>
-#include <essentia/pool.h>
 #include <vector>
 #include <string>
 
 using std::vector;
 using std::string;
-using namespace essentia;
 
 namespace harmonizer {
     class Analyzer {
