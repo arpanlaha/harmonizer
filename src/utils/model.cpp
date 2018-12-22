@@ -43,6 +43,8 @@ namespace harmonizer {
             pitches.push_back(pitch);
             pitches_by_name.emplace(pitch.getName(), pitch);
             pitches_by_frequency.emplace(pitch.getFrequencies()[0], pitch);
+            //pitch.setMinBaseFrequency(pitch_info["min_base_frequency"]);
+            //pitch.setMaxBaseFrequency(pitch_info["max_base_frequency"]);
         }
     }
 
@@ -110,19 +112,19 @@ namespace harmonizer {
         return pitches_by_frequency;
     }
 
-    Key& Model::getKeyByName(string key_name) {
+    const Key& Model::getKeyByName(string key_name) {
         return keys_by_name.at(key_name);
     }
 
-    Chord& Model::getChordByName(string chord_name) {
+    const Chord& Model::getChordByName(string chord_name) {
         return chords_by_name.at(chord_name);
     }
 
-    Pitch& Model::getPitchByName(string pitch_name) {
+    const Pitch& Model::getPitchByName(string pitch_name) {
         return pitches_by_name.at(pitch_name);
     }
 
-    Pitch& Model::getPitchByFrequency(double pitch_frequency) {
+    const Pitch& Model::getPitchByFrequency(double pitch_frequency) {
         return pitches_by_frequency.at(pitch_frequency);
     }
 }

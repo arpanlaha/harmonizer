@@ -4,24 +4,24 @@ namespace harmonizer {
 
 	Chord::Chord() {}
 
-	std::string Chord::getName() {
+	string Chord::getName() {
 		return name;
 	}
 
-	std::vector<std::string> Chord::getNotes() {
+	vector<string> Chord::getNotes() {
 		return notes;
 	}
 
-	void Chord::setName(std::string new_name) {
+	void Chord::setName(string new_name) {
 		name = new_name;
 	}
 
-	void Chord::addNote(std::string new_note) {
+	void Chord::addNote(string new_note) {
 		notes.push_back(new_note);
 	}
 
-	bool Chord::containsNote(std::string note) {
-		for (std::string chord_note : notes) {
+	bool Chord::containsNote(string note) {
+		for (string chord_note : notes) {
 			if (chord_note == note) {
 				return true;
 			}
@@ -29,7 +29,7 @@ namespace harmonizer {
 		return false;
 	}
 
-	double Chord::getNoteScore(std::string note) {
+	double Chord::getNoteScore(string note) {
 		if (notes[0] == note) {
 			return 1.5;
 		}

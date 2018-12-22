@@ -2,20 +2,27 @@
 
 #include <string>
 #include <vector>
+using std::string;
+using std::vector;
 
 namespace harmonizer {
 	class Pitch { //A class corresponding to a musical pitch (A, B, C#, etc), with its name, note numbers (MIDI), and frequencies
-		std::string name;
-		std::vector<int> note_numbers;
-		std::vector<double> frequencies;
+		string name;
+		vector<int> note_numbers;
+		vector<double> frequencies;
+		double min_base_frequency;
+		double max_base_frequency;
 	public:
 		Pitch() {}; //Default constructor
-		std::string getName(); //Basic getters and setters/modifiers
-		std::vector<int> getNoteNumbers();
-		std::vector<double> getFrequencies();
-		void setName(std::string set_name);
+		string getName(); //Basic getters and setters/modifiers
+		vector<int> getNoteNumbers();
+		vector<double> getFrequencies();
+		double getMinBaseFrequency();
+		double getMaxBaseFrequency();
+		void setName(string set_name);
 		void addNoteNumber(int note_number);
-		void setBaseFrequency(double base_frequency); //Sets base (lowest) frequency
-		                                              //since octaves multiply by two, this builds all other frequencies
+		void setBaseFrequency(double base_frequency); //Sets base (lowest) frequency, since octaves multiply by two, this builds all other frequencies
+		void setMinBaseFrequency(double set_min);
+		void setMaxBaseFrequency(double set_max);
 	};
 }

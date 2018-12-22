@@ -43,9 +43,9 @@ namespace harmonizer {
         unordered_map<double, Pitch>& getPitchFrequencyMap();
 
         //Retrieve by member
-        Key& getKeyByName(string key_name);
-        Chord& getChordByName(string chord_name);
-        Pitch& getPitchByName(string pitch_name);
-        Pitch& getPitchByFrequency(double pitch_frequency);
+        const Key& getKeyByName(string key_name);
+        const Chord& getChordByName(string chord_name);
+        const Pitch& getPitchByName(string pitch_name);
+        const Pitch& getPitchByFrequency(double pitch_frequency);
     };
 }
