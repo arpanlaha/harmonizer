@@ -67,19 +67,19 @@ namespace harmonizer {
         essentia::shutdown();
     }
     
-    float& Analyzer::getBpm() {
+    const float& Analyzer::getBpm() {
         return bpm;
     }
 
-    vector<float>& Analyzer::getBeats() {
+    const vector<float>& Analyzer::getBeats() {
         return beats;
     }
 
-    string& Analyzer::getKey() {
+    const string& Analyzer::getKey() {
         return key;
     }
 
-    vector<float>& Analyzer::getFrequencies() {
+    const vector<float>& Analyzer::getFrequencies() {
         return frequencies;
     }
 }

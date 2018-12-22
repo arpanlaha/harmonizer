@@ -16,9 +16,10 @@ namespace harmonizer {
     public:
         Analyzer();
         Analyzer(const string& file_name);
-        float& getBpm();
-        vector<float>& getBeats();
-        string& getKey();
-        vector<float>& getFrequencies();
+
+        const float& getBpm();
+        const vector<float>& getBeats();
+        const string& getKey();
+        const vector<float>& getFrequencies();
     };
 }
