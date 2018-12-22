@@ -22,6 +22,7 @@ int main(int argc, char* argv[]) {
         //run program normally
         Analyzer analyzer(arg_2);
         Generator generator(analyzer.getBpm(), analyzer.getBeats(), 4, analyzer.getKey(), analyzer.getFrequencies());
+        cout << generator.print();
     } else {
         cout << "Invalid arguments. Use --help for options." << endl;
     }
