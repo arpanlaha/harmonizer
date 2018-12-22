@@ -16,12 +16,13 @@ namespace harmonizer {
         Generator();
         Generator(float in_bpm, vector<float> in_beats, int in_meter, string in_key_name, vector<float> in_frequencies);
 
-        float& getBpm();
-        vector<float>& getBeats();
-        Key& getKey();
-        vector<float>& getFrequencies();
-        vector<Chord>& getProgression();
+        const float& getBpm();
+        const vector<float>& getBeats();
+        const Key& getKey();
+        const vector<float>& getFrequencies();
+        const vector<Chord>& getProgression();
 
         void generateProgression();
+        string print();
     };
 }

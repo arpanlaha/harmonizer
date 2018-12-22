@@ -2,6 +2,8 @@
 #include <cmath>
 
 using std::ceil;
+using std::round;
+using std::to_string;
 
 namespace harmonizer {
     Generator::Generator() {}
@@ -15,36 +17,44 @@ namespace harmonizer {
         key = model.getKeyByName(in_key_name);
     }
 
-    float& Generator::getBpm() {
+    const float& Generator::getBpm() {
         return bpm;
     }
 
-    vector<float>& Generator::getBeats() {
+    const vector<float>& Generator::getBeats() {
         return beats;
     }
 
-    Key& Generator::getKey() {
+    const Key& Generator::getKey() {
         return key;
     }
 
-    vector<float>& Generator::getFrequencies() {
+    const vector<float>& Generator::getFrequencies() {
         return frequencies;
     }
 
-    vector<Chord>& Generator::getProgression() {
+    const vector<Chord>& Generator::getProgression() {
         return progression;
     }
 
     void Generator::generateProgression() {
         vector<string> chord_names = key.getChords();
-        progression.reserve(ceil((double) beats.size() / meter));
+        progression.reserve(ceil((double) (beats.size() + 1) / meter));
 
         progression[0] = model.getChordByName(chord_names[0]);
         
         progression[progression.size() - 1] = model.getChordByName(chord_names[0]);
 
         for (int measure = progression.size() - 1; measure > 0; measure--) {
-
+            
         }
+    }
+
+    string Generator::print() {
+        string key_info = "Key: " + key.getName() + "\n";
+        string bpm_info = "Tempo: " + to_string((int) round(bpm)) + " beats per minute\n";
+        string meter_info = "Meter: " + to_string(meter) + " beats per measure\n";
+        //add progression print
+        return key_info + bpm_info + meter_info;
     }
 }
