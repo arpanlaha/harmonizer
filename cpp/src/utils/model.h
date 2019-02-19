@@ -9,6 +9,20 @@ using std::vector;
 using std::unordered_map;
 
 namespace harmonizer {
+
+    #define A_PITCH       55.00;
+    #define A_SHARP_PITCH 58.27;
+    #define B_PITCH       61.74;
+    #define C_PITCH       65.41;
+    #define C_SHARP_PITCH 69.30;
+    #define D_PITCH       73.42;
+    #define D_SHARP_PITCH 77.78;
+    #define E_PITCH       82.41;
+    #define F_PITCH       87.31;
+    #define F_SHARP_PITCH 92.50;
+    #define G_PITCH       98.00;
+    #define G_SHARP_PITCH 103.83;
+
     class Model { //A class containing music theory rules, with lists of valid Key, Chord, and Pitch objects
     private:
         vector<Key> keys;
