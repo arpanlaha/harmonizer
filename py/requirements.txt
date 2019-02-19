@@ -1,0 +1,2 @@
+essentia>=2.1b.dev532
+music21>=5.5.0
