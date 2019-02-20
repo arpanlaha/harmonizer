@@ -1,13 +1,16 @@
-from utils.analyzer import analyze
-from utils.model import model
 from math import ceil
+from utils.analyze import analyze
+from utils.generate import generate
+from utils.model import model
 
 
 def harmonize(filename, key=None, tempo=None, time_signature=None):
     analysis = analyze(filename)
 
+    # must be obtained from analyze
     frequencies = analysis["frequencies"]
 
+    # optionally user-defined fields
     if key is None:
         key = analysis["key"]
 
@@ -21,7 +24,7 @@ def harmonize(filename, key=None, tempo=None, time_signature=None):
         time_signature * (60 / tempo) * (44100 / 128)
     )  # (beats/measure) (seconds/ebat) * (bins/second) = frequency bins/measure
 
-    num_measures = ceil(len(frequenci) / measure_length)
+    num_measures = ceil(len(frequencies) / measure_length)
 
     measures = [
         frequencies[
@@ -32,12 +35,18 @@ def harmonize(filename, key=None, tempo=None, time_signature=None):
         for i in range(num_measures)
     ]  # split frequencies into measures
 
-    chords = [""] * num_measures
+    chords = [""] * num_measures  # stores string representation of chord progression
+
+    # assume first and last chords are tonic
     chords[0] = model["keys"][key]["chords"][0]
     chords[len(measures) - 1] = chords[0]
+
+    for i in range(num_measures - 2):
+        # start from second last and go backwards (important for contextual scoring)
+        measure_number = len(chords) - 2 - i
+        chords[measure_number] = generate(measures[measure_number], key)
+
     print(chords)
 
-    # time = len(frequencies) / (44100 / 128)
 
-
-harmonize("simple.wav")
+harmonize("simple.wav")  # exmple
