@@ -1,4 +1,5 @@
 from utils.analyzer import analyze
+from utils.model import model
 from math import ceil
 
 
@@ -28,6 +29,11 @@ def harmonize(filename, key=None, tempo=None, time_signature=None):
         ]
         for i in range(num_measures)
     ]  # split pitches into measures
+
+    chords = [""] * num_measures
+    chords[0] = model["keys"][key]["chords"][0]
+    chords[len(measures) - 1] = chords[0]
+    print(chords)
 
     # time = len(pitches) / (44100 / 128)
 
