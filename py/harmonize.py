@@ -1,13 +1,24 @@
+import numpy as np
+from essentia.standard import MonoWriter
 from math import ceil
 from utils.analyze import analyze
 from utils.generate import generate
 from utils.model import model
+from utils.synthesize import synthesize
 
 
-def harmonize(filename, key=None, tempo=None, time_signature=None):
-    analysis = analyze(filename)
+def harmonize(
+    input_filename,
+    key=None,
+    tempo=None,
+    time_signature=None,
+    harmony_filename=None,
+    harmonized_filename=None,
+):
+    analysis = analyze(input_filename)
 
     # must be obtained from analyze
+    input_signal = np.array(analysis["audio"])
     frequencies = analysis["frequencies"]
 
     # optionally user-defined fields
@@ -19,6 +30,12 @@ def harmonize(filename, key=None, tempo=None, time_signature=None):
 
     if time_signature is None:
         time_signature = 4
+
+    if harmony_filename is None:
+        harmony_filename = input_filename[:-4] + "_harmony.wav"
+
+    if harmonized_filename is None:
+        harmonized_filename = input_filename[:-4] + "_harmonized.wav"
 
     measure_length = (
         time_signature * (60 / tempo) * (44100 / 128)
@@ -47,6 +64,19 @@ def harmonize(filename, key=None, tempo=None, time_signature=None):
         chords[measure_number] = generate(measures[measure_number], key)
 
     print(chords)
+
+    harmony = synthesize(chords, measure_length)
+    harmony.write(harmony_filename)
+    print(harmony_filename)
+
+    harmony_signal = np.array(
+        MonoLoader(filename=harmony_filename)()[: len(input_signal)]
+    )
+    harmonized_signal = (input_signal + harmonized_signal) / 2
+
+    # harmonized_signal = [(input_signal[i] + harmony_signal[i]) / 2 for i in range(min(len(input_signal), len(harmony_signal)))]
+
+    MonoWriter(harmonized_filename)(harmonized_signal)
 
 
 harmonize("simple.wav")  # exmple

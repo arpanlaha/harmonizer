@@ -12,4 +12,9 @@ def analyze(file):
 
     bpm = RhythmExtractor()(audio)[0]  # tempo in beats per minute
 
-    return {"key": key + " " + scale, "frequencies": frequencies, "bpm": bpm}
+    return {
+        "audio": audio,
+        "bpm": bpm,
+        "frequencies": frequencies,
+        "key": key + " " + scale,
+    }
