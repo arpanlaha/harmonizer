@@ -1,6 +1,6 @@
 model = {
-    "keys": [
-        {
+    "keys": {
+        "Ab major": {
             "name": "Ab major",
             "chords": [
                 "Ab major",
@@ -11,7 +11,7 @@ model = {
                 "F minor",
             ],
         },
-        {
+        "Ab minor": {
             "name": "Ab minor",
             "chords": [
                 "Ab minor",
@@ -22,7 +22,7 @@ model = {
                 "Gb major",
             ],
         },
-        {
+        "A major": {
             "name": "A major",
             "chords": [
                 "A major",
@@ -33,7 +33,7 @@ model = {
                 "F# minor",
             ],
         },
-        {
+        "A minor": {
             "name": "A minor",
             "chords": [
                 "A minor",
@@ -44,7 +44,7 @@ model = {
                 "G major",
             ],
         },
-        {
+        "A# major": {
             "name": "A# major",
             "chords": [
                 "A# major",
@@ -55,7 +55,7 @@ model = {
                 "F## minor",
             ],
         },
-        {
+        "A# minor": {
             "name": "A# minor",
             "chords": [
                 "A# minor",
@@ -66,7 +66,7 @@ model = {
                 "G# major",
             ],
         },
-        {
+        "Bb major": {
             "name": "Bb major",
             "chords": [
                 "Bb manor",
@@ -77,7 +77,7 @@ model = {
                 "G minor",
             ],
         },
-        {
+        "Bb minor": {
             "name": "Bb minor",
             "chords": [
                 "Bb minor",
@@ -88,7 +88,7 @@ model = {
                 "Ab major",
             ],
         },
-        {
+        "B major": {
             "name": "B major",
             "chords": [
                 "B major",
@@ -99,7 +99,7 @@ model = {
                 "G# minor",
             ],
         },
-        {
+        "B minor": {
             "name": "B minor",
             "chords": [
                 "B minor",
@@ -110,7 +110,7 @@ model = {
                 "A major",
             ],
         },
-        {
+        "B# major": {
             "name": "B# major",
             "chords": [
                 "B# major",
@@ -121,7 +121,7 @@ model = {
                 "G## minor",
             ],
         },
-        {
+        "B# minor": {
             "name": "B# minor",
             "chords": [
                 "B# minor",
@@ -132,7 +132,7 @@ model = {
                 "A# major",
             ],
         },
-        {
+        "Cb major": {
             "name": "Cb major",
             "chords": [
                 "Cb major",
@@ -143,7 +143,7 @@ model = {
                 "Ab minor",
             ],
         },
-        {
+        "Cb minor": {
             "name": "Cb minor",
             "chords": [
                 "Cb minor",
@@ -154,7 +154,7 @@ model = {
                 "Bbb major",
             ],
         },
-        {
+        "C major": {
             "name": "C major",
             "chords": [
                 "C major",
@@ -165,7 +165,7 @@ model = {
                 "A minor",
             ],
         },
-        {
+        "C minor": {
             "name": "C minor",
             "chords": [
                 "C minor",
@@ -176,7 +176,7 @@ model = {
                 "Bb major",
             ],
         },
-        {
+        "C# major": {
             "name": "C# major",
             "chords": [
                 "C# major",
@@ -187,7 +187,7 @@ model = {
                 "A# minor",
             ],
         },
-        {
+        "C# minor": {
             "name": "C# minor",
             "chords": [
                 "C# minor",
@@ -198,7 +198,7 @@ model = {
                 "B major",
             ],
         },
-        {
+        "Db major": {
             "name": "Db major",
             "chords": [
                 "Db major",
@@ -209,7 +209,7 @@ model = {
                 "Bb minor",
             ],
         },
-        {
+        "Db minor": {
             "name": "Db minor",
             "chords": [
                 "Db minor",
@@ -220,7 +220,7 @@ model = {
                 "Cb major",
             ],
         },
-        {
+        "D major": {
             "name": "D major",
             "chords": [
                 "D major",
@@ -231,7 +231,7 @@ model = {
                 "B minor",
             ],
         },
-        {
+        "D minor": {
             "name": "D minor",
             "chords": [
                 "D minor",
@@ -242,7 +242,7 @@ model = {
                 "C major",
             ],
         },
-        {
+        "D# major": {
             "name": "D# major",
             "chords": [
                 "D# major",
@@ -253,7 +253,7 @@ model = {
                 "B# minor",
             ],
         },
-        {
+        "D# minor": {
             "name": "D# minor",
             "chords": [
                 "D# minor",
@@ -264,7 +264,7 @@ model = {
                 "C# major",
             ],
         },
-        {
+        "Eb major": {
             "name": "Eb major",
             "chords": [
                 "Eb major",
@@ -275,7 +275,7 @@ model = {
                 "C minor",
             ],
         },
-        {
+        "Eb minor": {
             "name": "Eb minor",
             "chords": [
                 "Eb minor",
@@ -286,7 +286,7 @@ model = {
                 "Db major",
             ],
         },
-        {
+        "E major": {
             "name": "E major",
             "chords": [
                 "E major",
@@ -297,7 +297,7 @@ model = {
                 "C# minor",
             ],
         },
-        {
+        "E minor": {
             "name": "E minor",
             "chords": [
                 "E minor",
@@ -308,7 +308,7 @@ model = {
                 "D major",
             ],
         },
-        {
+        "E# major": {
             "name": "E# major",
             "chords": [
                 "E# major",
@@ -319,7 +319,7 @@ model = {
                 "C## minor",
             ],
         },
-        {
+        "E# minor": {
             "name": "E# minor",
             "chords": [
                 "E# minor",
@@ -330,7 +330,7 @@ model = {
                 "D# major",
             ],
         },
-        {
+        "Fb major": {
             "name": "Fb major",
             "chords": [
                 "Fb major",
@@ -341,7 +341,7 @@ model = {
                 "Db minor",
             ],
         },
-        {
+        "Fb minor": {
             "name": "Fb minor",
             "chords": [
                 "Fb minor",
@@ -352,7 +352,7 @@ model = {
                 "Ebb major",
             ],
         },
-        {
+        "F major": {
             "name": "F major",
             "chords": [
                 "F major",
@@ -363,7 +363,7 @@ model = {
                 "D minor",
             ],
         },
-        {
+        "F minor": {
             "name": "F minor",
             "chords": [
                 "F minor",
@@ -374,7 +374,7 @@ model = {
                 "Eb major",
             ],
         },
-        {
+        "F# major": {
             "name": "F# major",
             "chords": [
                 "F# major",
@@ -385,7 +385,7 @@ model = {
                 "D# minor",
             ],
         },
-        {
+        "F# minor": {
             "name": "F# minor",
             "chords": [
                 "F# minor",
@@ -396,7 +396,7 @@ model = {
                 "E major",
             ],
         },
-        {
+        "Gb major": {
             "name": "Gb major",
             "chords": [
                 "Gb major",
@@ -407,7 +407,7 @@ model = {
                 "Eb minor",
             ],
         },
-        {
+        "Gb minor": {
             "name": "Gb minor",
             "chords": [
                 "Gb minor",
@@ -418,7 +418,7 @@ model = {
                 "Fb major",
             ],
         },
-        {
+        "G major": {
             "name": "G major",
             "chords": [
                 "G major",
@@ -429,7 +429,7 @@ model = {
                 "E minor",
             ],
         },
-        {
+        "G minor": {
             "name": "G minor",
             "chords": [
                 "G minor",
@@ -440,7 +440,7 @@ model = {
                 "F major",
             ],
         },
-        {
+        "G# major": {
             "name": "G# major",
             "chords": [
                 "G# major",
@@ -451,7 +451,7 @@ model = {
                 "E# minor",
             ],
         },
-        {
+        "G# minor": {
             "name": "G# minor",
             "chords": [
                 "G# minor",
@@ -462,73 +462,73 @@ model = {
                 "Gb major",
             ],
         },
-    ],
-    "chords": [
-        {"name": "Abb major", "notes": ["G", "B", "D"]},
-        {"name": "Ab major", "notes": ["G#", "C", "D#"]},
-        {"name": "Ab minor", "notes": ["G#", "B", "D#"]},
-        {"name": "A major", "notes": ["A", "C#", "E"]},
-        {"name": "A minor", "notes": ["A", "C", "E"]},
-        {"name": "A# major", "notes": ["A#", "D", "F"]},
-        {"name": "A# minor", "notes": ["A#", "C#", "F"]},
-        {"name": "Bbb major", "notes": ["A", "C#", "E"]},
-        {"name": "Bbb minor", "notes": ["A", "C", "E"]},
-        {"name": "Bb major", "notes": ["A#", "D", "F"]},
-        {"name": "Bb minor", "notes": ["A#", "C#", "F"]},
-        {"name": "B major", "notes": ["B", "D#", "F#"]},
-        {"name": "B minor", "notes": ["B", "D", "F#"]},
-        {"name": "B# major", "notes": ["C", "E", "G"]},
-        {"name": "B# minor", "notes": ["C", "D#", "G"]},
-        {"name": "Cb major", "notes": ["B", "D#", "F#"]},
-        {"name": "Cb minor", "notes": ["B", "D", "F#"]},
-        {"name": "C major", "notes": ["C", "E", "G"]},
-        {"name": "C minor", "notes": ["C", "D#", "G"]},
-        {"name": "C# major", "notes": ["C#", "F", "G#"]},
-        {"name": "C# minor", "notes": ["C#", "E", "G#"]},
-        {"name": "C## minor", "notes": ["D", "F", "A"]},
-        {"name": "Dbb major", "notes": ["C", "E", "G"]},
-        {"name": "Db major", "notes": ["C#", "F", "G#"]},
-        {"name": "Db minor", "notes": ["C#", "E", "G#"]},
-        {"name": "D major", "notes": ["D", "F#", "A"]},
-        {"name": "D minor", "notes": ["D", "F", "A"]},
-        {"name": "D# major", "notes": ["D#", "G", "A#"]},
-        {"name": "D# minor", "notes": ["D#", "F#", "A#"]},
-        {"name": "D## minor", "notes": ["E", "G", "B"]},
-        {"name": "Ebb major", "notes": ["D", "F#", "A"]},
-        {"name": "Eb major", "notes": ["D#", "G", "A#"]},
-        {"name": "Eb minor", "notes": ["D#", "F#", "A#"]},
-        {"name": "E major", "notes": ["E", "G#", "B"]},
-        {"name": "E minor", "notes": ["E", "G", "B"]},
-        {"name": "E# major", "notes": ["F", "A", "C"]},
-        {"name": "E# minor", "notes": ["F", "G#", "C"]},
-        {"name": "Fb major", "notes": ["E", "G#", "B"]},
-        {"name": "Fb minor", "notes": ["E", "G", "B"]},
-        {"name": "F major", "notes": ["F", "A", "C"]},
-        {"name": "F minor", "notes": ["F", "G#", "C"]},
-        {"name": "F# major", "notes": ["F#", "A#", "C#"]},
-        {"name": "F# minor", "notes": ["F#", "A", "C#"]},
-        {"name": "F## major", "notes": ["G", "B", "D"]},
-        {"name": "F## minor", "notes": ["G", "A#", "D"]},
-        {"name": "Gb major", "notes": ["F#", "A#", "C#"]},
-        {"name": "Gb minor", "notes": ["F#", "A", "C#"]},
-        {"name": "G major", "notes": ["G", "B", "D"]},
-        {"name": "G minor", "notes": ["G", "A#", "D"]},
-        {"name": "G# major", "notes": ["G#", "C", "D#"]},
-        {"name": "G# minor", "notes": ["G#", "B", "D#"]},
-        {"name": "G## minor", "notes": ["A", "C", "E"]},
-    ],
-    "pitches": [
-        {"name": "A", "note_numbers": [33, 45, 57], "base_frequency": 55.00},
-        {"name": "A#", "note_numbers": [34, 46, 58], "base_frequency": 58.27},
-        {"name": "B", "note_numbers": [35, 47, 59], "base_frequency": 61.74},
-        {"name": "C", "note_numbers": [36, 48, 60], "base_frequency": 65.41},
-        {"name": "C#", "note_numbers": [37, 49, 61], "base_frequency": 69.30},
-        {"name": "D", "note_numbers": [38, 50, 62], "base_frequency": 73.42},
-        {"name": "D#", "note_numbers": [39, 51, 63], "base_frequency": 77.78},
-        {"name": "E", "note_numbers": [40, 52, 64], "base_frequency": 82.41},
-        {"name": "F", "note_numbers": [41, 53, 65], "base_frequency": 87.31},
-        {"name": "F#", "note_numbers": [42, 54, 66], "base_frequency": 92.50},
-        {"name": "G", "note_numbers": [43, 55, 67], "base_frequency": 98.00},
-        {"name": "G#", "note_numbers": [44, 56, 68], "base_frequency": 103.83},
-    ],
+    },
+    "chords": {
+        "Abb major": {"name": "Abb major", "notes": ["G", "B", "D"]},
+        "Ab major": {"name": "Ab major", "notes": ["G#", "C", "D#"]},
+        "Ab minor": {"name": "Ab minor", "notes": ["G#", "B", "D#"]},
+        "A major": {"name": "A major", "notes": ["A", "C#", "E"]},
+        "A minor": {"name": "A minor", "notes": ["A", "C", "E"]},
+        "A# major": {"name": "A# major", "notes": ["A#", "D", "F"]},
+        "A# minor": {"name": "A# minor", "notes": ["A#", "C#", "F"]},
+        "Bbb major": {"name": "Bbb major", "notes": ["A", "C#", "E"]},
+        "Bbb minor": {"name": "Bbb minor", "notes": ["A", "C", "E"]},
+        "Bb major": {"name": "Bb major", "notes": ["A#", "D", "F"]},
+        "Bb minor": {"name": "Bb minor", "notes": ["A#", "C#", "F"]},
+        "B major": {"name": "B major", "notes": ["B", "D#", "F#"]},
+        "B minor": {"name": "B minor", "notes": ["B", "D", "F#"]},
+        "B# major": {"name": "B# major", "notes": ["C", "E", "G"]},
+        "B# minor": {"name": "B# minor", "notes": ["C", "D#", "G"]},
+        "Cb major": {"name": "Cb major", "notes": ["B", "D#", "F#"]},
+        "Cb minor": {"name": "Cb minor", "notes": ["B", "D", "F#"]},
+        "C major": {"name": "C major", "notes": ["C", "E", "G"]},
+        "C minor": {"name": "C minor", "notes": ["C", "D#", "G"]},
+        "C# major": {"name": "C# major", "notes": ["C#", "F", "G#"]},
+        "C# minor": {"name": "C# minor", "notes": ["C#", "E", "G#"]},
+        "C## minor": {"name": "C## minor", "notes": ["D", "F", "A"]},
+        "Dbb major": {"name": "Dbb major", "notes": ["C", "E", "G"]},
+        "Db major": {"name": "Db major", "notes": ["C#", "F", "G#"]},
+        "Db minor": {"name": "Db minor", "notes": ["C#", "E", "G#"]},
+        "D major": {"name": "D major", "notes": ["D", "F#", "A"]},
+        "D minor": {"name": "D minor", "notes": ["D", "F", "A"]},
+        "D# major": {"name": "D# major", "notes": ["D#", "G", "A#"]},
+        "D# minor": {"name": "D# minor", "notes": ["D#", "F#", "A#"]},
+        "D## minor": {"name": "D## minor", "notes": ["E", "G", "B"]},
+        "Ebb major": {"name": "Ebb major", "notes": ["D", "F#", "A"]},
+        "Eb major": {"name": "Eb major", "notes": ["D#", "G", "A#"]},
+        "Eb minor": {"name": "Eb minor", "notes": ["D#", "F#", "A#"]},
+        "E major": {"name": "E major", "notes": ["E", "G#", "B"]},
+        "E minor": {"name": "E minor", "notes": ["E", "G", "B"]},
+        "E# major": {"name": "E# major", "notes": ["F", "A", "C"]},
+        "E# minor": {"name": "E# minor", "notes": ["F", "G#", "C"]},
+        "Fb major": {"name": "Fb major", "notes": ["E", "G#", "B"]},
+        "Fb minor": {"name": "Fb minor", "notes": ["E", "G", "B"]},
+        "F major": {"name": "F major", "notes": ["F", "A", "C"]},
+        "F minor": {"name": "F minor", "notes": ["F", "G#", "C"]},
+        "F# major": {"name": "F# major", "notes": ["F#", "A#", "C#"]},
+        "F# minor": {"name": "F# minor", "notes": ["F#", "A", "C#"]},
+        "F## major": {"name": "F## major", "notes": ["G", "B", "D"]},
+        "F## minor": {"name": "F## minor", "notes": ["G", "A#", "D"]},
+        "Gb major": {"name": "Gb major", "notes": ["F#", "A#", "C#"]},
+        "Gb minor": {"name": "Gb minor", "notes": ["F#", "A", "C#"]},
+        "G major": {"name": "G major", "notes": ["G", "B", "D"]},
+        "G minor": {"name": "G minor", "notes": ["G", "A#", "D"]},
+        "G# major": {"name": "G# major", "notes": ["G#", "C", "D#"]},
+        "G# minor": {"name": "G# minor", "notes": ["G#", "B", "D#"]},
+        "G## minor": {"name": "G## minor", "notes": ["A", "C", "E"]},
+    },
+    "pitches": {
+        "A": {"name": "A", "note_numbers": [33, 45, 57], "base_frequency": 55.00},
+        "A#": {"name": "A#", "note_numbers": [34, 46, 58], "base_frequency": 58.27},
+        "B": {"name": "B", "note_numbers": [35, 47, 59], "base_frequency": 61.74},
+        "C": {"name": "C", "note_numbers": [36, 48, 60], "base_frequency": 65.41},
+        "C#": {"name": "C#", "note_numbers": [37, 49, 61], "base_frequency": 69.30},
+        "D": {"name": "D", "note_numbers": [38, 50, 62], "base_frequency": 73.42},
+        "D#": {"name": "D#", "note_numbers": [39, 51, 63], "base_frequency": 77.78},
+        "E": {"name": "E", "note_numbers": [40, 52, 64], "base_frequency": 82.41},
+        "F": {"name": "F", "note_numbers": [41, 53, 65], "base_frequency": 87.31},
+        "F#": {"name": "F#", "note_numbers": [42, 54, 66], "base_frequency": 92.50},
+        "G": {"name": "G", "note_numbers": [43, 55, 67], "base_frequency": 98.00},
+        "G#": {"name": "G#", "note_numbers": [44, 56, 68], "base_frequency": 103.83},
+    },
 }
