@@ -38,16 +38,18 @@ def harmonize(
     if harmonized_filename is None:
         harmonized_filename = input_filename[:-4] + "_harmonized.wav"
 
-    measure_length = (
+    measure_length_bins = (
         time_signature * (60 / tempo) * (44100 / 128)
     )  # (beats/measure) (seconds/ebat) * (bins/second) = frequency bins/measure
 
-    num_measures = ceil(len(frequencies) / measure_length)
+    measure_length_seconds = time_signature * (60 / tempo)
+
+    num_measures = ceil(len(frequencies) / measure_length_bins)
 
     measures = [
         frequencies[
-            int(i * measure_length) : int(
-                max(len(frequencies), (i + 1) * measure_length)
+            int(i * measure_length_bins) : int(
+                max(len(frequencies), (i + 1) * measure_length_bins)
             )
         ]
         for i in range(num_measures)
@@ -66,9 +68,9 @@ def harmonize(
 
     print(chords)
 
-    guitar = synthesize()
+    guitar = synthesize(chords, tempo, time_signature)
 
-    guitar_signal = [i[0] for i in guitar.render()]
+    guitar_signal = [i[0] for i in guitar.render(length=measure_length_seconds * num_measures)]
 
     #guitar.write("test.wav")
     #print(guitar_signal)

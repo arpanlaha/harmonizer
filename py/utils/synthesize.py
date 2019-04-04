@@ -15,10 +15,14 @@ def strum_stuff(guitar, chord, length, bpm, basebeat=0):
     guitar.queue(base + L1 + L2 + L1 + L2, (guitar.strum_down, (chord,)))
     guitar.queue(base + L1 + L2 + L1 + L2 + L2, (guitar.strum_up, (chord,)))
 
-def synthesize():
+def synthesize(chords, tempo, time_signature):
     guitar = sound.async.GuitarStrummer(Digitar)
-    strum_stuff(guitar, 'C', 2, 140)
-    strum_stuff(guitar, 'F', 2, 140, 2)
-    strum_stuff(guitar, 'G', 2, 140, 4)
-    strum_stuff(guitar, 'C', 2, 140, 6)
+    beat = 0
+    for chord in chords:
+        sound_chord = chord[:-6] 
+        if chord[-5:] == "minor":
+            sound_chord += "m"
+        strum_stuff(guitar, sound_chord, time_signature, tempo, beat)
+        beat += time_signature
+        print(sound_chord)
     return guitar
