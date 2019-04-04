@@ -6,15 +6,9 @@ from sound.signal import SliceSignal, Purifier, ReverseSignal, ConstantSignal
 
 def strum_stuff(guitar, chord, length, bpm, basebeat=0):
     base = basebeat * SAMPLE_RATE * 60 / bpm
-    L1 = length * 0.25 * SAMPLE_RATE * 60 / bpm
-    L2 = length * 0.125 * SAMPLE_RATE * 60 / bpm
     guitar.queue(base, (guitar.strum_down, (chord,)))
-    guitar.queue(base + L1, (guitar.strum_up, (chord,)))
-    guitar.queue(base + L1 + L2, (guitar.strum_down, (chord,)))
-    guitar.queue(base + L1 + L2 + L1, (guitar.strum_up, (chord,)))
-    guitar.queue(base + L1 + L2 + L1 + L2, (guitar.strum_down, (chord,)))
-    guitar.queue(base + L1 + L2 + L1 + L2 + L2, (guitar.strum_up, (chord,)))
 
+    
 def synthesize(chords, tempo, time_signature):
     guitar = sound.async.GuitarStrummer(Digitar)
     beat = 0
