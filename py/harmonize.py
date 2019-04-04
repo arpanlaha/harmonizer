@@ -66,4 +66,12 @@ def harmonize(
 
     print(chords)
 
+    guitar = synthesize()
+
+    guitar_signal = [i[0] for i in guitar.render()]
+
+    #guitar.write("test.wav")
+    #print(guitar_signal)
+    MonoWriter(filename="test.wav")(guitar_signal)
+
 harmonize("simple.wav")  # example
