@@ -3,9 +3,9 @@ from essentia.standard import KeyExtractor, MonoLoader, PitchMelodia, RhythmExtr
 
 def analyze(file):
     audio = MonoLoader(filename=file)()  # signal
-
+    
     frequencies = PitchMelodia()(audio)[0]  # binned list of frequencies
-
+    
     key, scale, strength = KeyExtractor()(
         audio
     )  # key (note) and scale (major vs. minor) matter

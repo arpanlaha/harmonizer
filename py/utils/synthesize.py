@@ -4,14 +4,16 @@ from sound.sample import Digitar
 
 def synthesize(chords, measure_length):
     # guitar = Guitar(tempo=((60 * 44100) / (128 * measure_length)))
-    measure_length_frames = measure_length * 44100 / 128
+    #measure_length_frames = measure_length * 44100 / 128
     guitar = GuitarStrummer(Digitar)
     for i in range(len(chords)):
         if chords[i][:-5] == "major":
             chord = chords[i][:-6]
         else:
             chord = chords[i][:-6] + "m"
+        print(chord)
         guitar.queue(i * measure_length, (guitar.strum_up, (chord)))
+    #print(guitar.play(guitar))
     return guitar.purify()
 
 

@@ -19,6 +19,7 @@ def harmonize(
 
     # must be obtained from analyze
     input_signal = np.array(analysis["audio"])
+
     frequencies = analysis["frequencies"]
 
     # optionally user-defined fields
@@ -66,17 +67,22 @@ def harmonize(
     print(chords)
 
     harmony = synthesize(chords, measure_length)
-    harmony.write(harmony_filename)
-    print(harmony_filename)
+    #print(harmony)
+    
+    #harmony_signal = harmony.play()
 
-    harmony_signal = np.array(
-        MonoLoader(filename=harmony_filename)()[: len(input_signal)]
-    )
-    harmonized_signal = (input_signal + harmonized_signal) / 2
+    #harmony.write(harmony_filename)
+
+    #print("hello")
+
+    #harmony_signal = np.array(
+        #MonoLoader(filename=harmony_filename)()[: len(input_signal)]
+    #)
+    #harmonized_signal = (input_signal + harmonized_signal) / 2
 
     # harmonized_signal = [(input_signal[i] + harmony_signal[i]) / 2 for i in range(min(len(input_signal), len(harmony_signal)))]
 
-    MonoWriter(harmonized_filename)(harmonized_signal)
+    #MonoWriter(harmonized_filename)(harmonized_signal)
 
 
 harmonize("simple.wav")  # exmple
