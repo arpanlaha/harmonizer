@@ -24,5 +24,4 @@ def synthesize(chords, tempo, time_signature):
             sound_chord += "m"
         strum_stuff(guitar, sound_chord, time_signature, tempo, beat)
         beat += time_signature
-        print(sound_chord)
     return guitar

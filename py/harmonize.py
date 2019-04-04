@@ -1,4 +1,5 @@
 import numpy as np
+from essentia import array as essentia_array
 from essentia.standard import MonoWriter
 from math import ceil
 from utils.analyze import analyze
@@ -68,12 +69,22 @@ def harmonize(
 
     print(chords)
 
-    guitar = synthesize(chords, tempo, time_signature)
+    harmony = synthesize(chords, tempo, time_signature)
 
-    guitar_signal = [i[0] for i in guitar.render(length=measure_length_seconds * num_measures)]
+    harmony_signal = np.array([i[0] for i in harmony.render(length=measure_length_seconds * num_measures)])[:len(input_signal)]
 
-    #guitar.write("test.wav")
-    #print(guitar_signal)
-    MonoWriter(filename="test.wav")(guitar_signal)
+    harmony_input_ratio = np.sqrt(np.sum(harmony_signal) / np.sum(input_signal))
+
+    input_normalization_factor = harmony_input_ratio / (harmony_input_ratio + 1)
+
+    harmony_normalization_factor = 1 - input_normalization_factor
+
+    input_signal_normalized = input_signal * input_normalization_factor
+
+    harmony_signal_normalized = harmony_signal * harmony_normalization_factor
+
+    harmonized_signal = essentia_array(input_signal_normalized + harmony_signal_normalized)
+
+    MonoWriter(filename=harmonized_filename)(harmonized_signal)
 
 harmonize("simple.wav")  # example
