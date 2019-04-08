@@ -50,11 +50,15 @@ def harmonize(
     measures = [
         frequencies[
             int(i * measure_length_bins) : int(
-                max(len(frequencies), (i + 1) * measure_length_bins)
+                min(len(frequencies), (i + 1) * measure_length_bins)
             )
         ]
         for i in range(num_measures)
     ]  # split frequencies into measures
+
+    measure_lengths_seconds = [len(measure) / (44100 / 128) for measure in measures]
+
+    print(measure_lengths_seconds)
 
     chords = [""] * num_measures  # stores string representation of chord progression
 

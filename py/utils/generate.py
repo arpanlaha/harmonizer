@@ -17,7 +17,7 @@ def generate(frequencies, key, next=None):
             pitch_histogram[pitch.name] += 1
         else:
             pitch_histogram[pitch.name] = 1
-
+    print(pitch_histogram)
     chord_scores = {}  # arbitrarily defined scores for each possible chord
     chords = model["keys"][key]["chords"]
 
