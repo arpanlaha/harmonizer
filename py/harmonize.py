@@ -73,24 +73,25 @@ def harmonize(
 
     print(chords)
 
-    harmony = synthesize(chords, tempo, time_signature)
+    #harmony = synthesize(chords, tempo, time_signature)
 
-    harmony_signal = np.array([i[0] for i in harmony.render(length=measure_length_seconds * num_measures)])[:len(input_signal)]
+    #harmony_signal = np.array([i[0] for i in harmony.render(length=measure_length_seconds * num_measures)])[:len(input_signal)]
 
+    #MonoWriter(filename=harmony_filename)(essentia_array(harmony_signal))
 
-    harmony_input_ratio = (np.sum(harmony_signal) / np.sum(input_signal)) ** (2 / 3)
+    # harmony_input_ratio = (np.sum(harmony_signal) / np.sum(input_signal)) ** (2 / 3)
 
-    input_normalization_factor = harmony_input_ratio / (harmony_input_ratio + 1)
+    # input_normalization_factor = harmony_input_ratio / (harmony_input_ratio + 1)
 
-    harmony_normalization_factor = 1 - input_normalization_factor
+    # harmony_normalization_factor = 1 - input_normalization_factor
 
-    input_signal_normalized = input_signal * input_normalization_factor
+    # input_signal_normalized = input_signal * input_normalization_factor
 
-    harmony_signal_normalized = harmony_signal * harmony_normalization_factor
+    # harmony_signal_normalized = harmony_signal * harmony_normalization_factor
 
-    harmonized_signal = essentia_array(input_signal_normalized + harmony_signal_normalized)
+    # harmonized_signal = essentia_array(input_signal_normalized + harmony_signal_normalized)
     #harmonized_signal = essentia_array(np.array(input_signal + harmony_signal) / 2)
 
-    MonoWriter(filename=harmonized_filename)(harmonized_signal)
+    #MonoWriter(filename=harmonized_filename)(harmonized_signal)
 
 harmonize("simple.wav")  # example
