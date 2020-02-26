@@ -58,8 +58,6 @@ def harmonize(
 
     measure_lengths_seconds = [len(measure) / (44100 / 128) for measure in measures]
 
-    print(measure_lengths_seconds)
-
     chords = [""] * num_measures  # stores string representation of chord progression
 
     # assume first and last chords are tonic
@@ -73,11 +71,11 @@ def harmonize(
 
     print(chords)
 
-    #harmony = synthesize(chords, tempo, time_signature)
+    harmony = synthesize(chords, tempo, time_signature)
 
-    #harmony_signal = np.array([i[0] for i in harmony.render(length=measure_length_seconds * num_measures)])[:len(input_signal)]
+    harmony_signal = np.array([i[0] for i in harmony.render(length=measure_length_seconds * num_measures)])[:len(input_signal)]
 
-    #MonoWriter(filename=harmony_filename)(essentia_array(harmony_signal))
+    MonoWriter(filename=harmony_filename)(essentia_array(harmony_signal))
 
     # harmony_input_ratio = (np.sum(harmony_signal) / np.sum(input_signal)) ** (2 / 3)
 
@@ -90,8 +88,8 @@ def harmonize(
     # harmony_signal_normalized = harmony_signal * harmony_normalization_factor
 
     # harmonized_signal = essentia_array(input_signal_normalized + harmony_signal_normalized)
-    #harmonized_signal = essentia_array(np.array(input_signal + harmony_signal) / 2)
+    harmonized_signal = essentia_array(np.array(input_signal + harmony_signal) / 2)
 
-    #MonoWriter(filename=harmonized_filename)(harmonized_signal)
+    MonoWriter(filename=harmonized_filename)(harmonized_signal)
 
 harmonize("simple.wav")  # example

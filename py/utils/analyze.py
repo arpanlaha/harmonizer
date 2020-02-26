@@ -1,8 +1,7 @@
-from essentia.standard import KeyExtractor, MonoLoader, PitchMelodia, RhythmExtractor
-
+from essentia.standard import KeyExtractor, MonoLoader, PitchMelodia, RhythmExtractor, PitchMelodia
 
 def analyze(file):
-    audio = MonoLoader(filename=file)()  # signal
+    audio = MonoLoader(filename=file)()
     
     frequencies = PitchMelodia()(audio)[0]  # binned list of frequencies
     

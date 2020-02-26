@@ -8,7 +8,6 @@ def strum_stuff(guitar, chord, length, bpm, basebeat=0):
     base = basebeat * SAMPLE_RATE * 60 / bpm
     guitar.queue(base, (guitar.strum_down, (chord,)))
 
-    
 def synthesize(chords, tempo, time_signature):
     guitar = sound.async.GuitarStrummer(Digitar)
     beat = 0
