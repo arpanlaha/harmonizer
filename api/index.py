@@ -14,12 +14,7 @@ def allowed_file(filename):
 app = Flask(__name__)
 
 
-@app.route("/api")
-def hello():
-    return "Hello World!"
-
-
-@app.route("/api/harmony", methods=["POST"])
+@app.route("/api", methods=["POST"])
 def harmonize():
     file = request.files.get("file")
 
