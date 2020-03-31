@@ -1,4 +1,0 @@
-flask>=1.1.1
-flask-cors>=3.0.8
-essentia>=2.1b6.dev184
-music21>=5.7.2
