@@ -15,7 +15,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Install dependencies"
-        run: pip install -r api/requirements.txt --user
+        run: python3 -m pip install -r api/requirements.txt --user
 
       - name: "Run Azure webapp deploy action using publish profile credentials"
         uses: azure/webapps-deploy@v2
