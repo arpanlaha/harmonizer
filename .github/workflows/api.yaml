@@ -29,4 +29,4 @@ jobs:
         with:
           app-name: Harmonizer
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          package: "api"
+          package: "api/"
