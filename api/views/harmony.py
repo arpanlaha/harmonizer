@@ -1,8 +1,7 @@
 from flask import Blueprint, request, jsonify
 import os
-import numpy as np
+import math
 from essentia.standard import MonoLoader, KeyExtractor, PitchMelodia, RhythmExtractor
-from music21.pitch import Pitch
 from operator import itemgetter
 from utils.model import model
 
@@ -31,8 +30,6 @@ def harmonize():
 
     analysis = analyze(file_path)
 
-    input_signal = np.array(analysis["audio"])
-
     frequencies = analysis["frequencies"]
     key = analysis["key"]
     tempo = analysis["bpm"]
@@ -44,7 +41,7 @@ def harmonize():
 
     measure_length_seconds = time_signature * (60 / tempo)
 
-    num_measures = int(np.ceil(len(frequencies) / measure_length_bins))
+    num_measures = math.ceil(len(frequencies) / measure_length_bins)
 
     measures = [
         frequencies[
@@ -103,18 +100,26 @@ def analyze(file):
 
 def generate(frequencies, key, next=None):
     pitch_histogram = {}  # stores number of occurences of each pitch
+    index_histogram = {}  # stores number of occurences of each pitch
 
     for frequency in frequencies:
         if frequency == 0.0:  # disregard invalid values
             continue
 
-        pitch = Pitch()
-        pitch.frequency = frequency
+        A1 = 55
+        pitches = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
 
-        if pitch.name in pitch_histogram:
-            pitch_histogram[pitch.name] += 1
+        pitch_index = round(12 * math.log2(frequency / A1)) % 12
+
+        pitch_name = pitches[pitch_index]
+
+        if pitch_name in pitch_histogram:
+            pitch_histogram[pitch_name] += 1
         else:
-            pitch_histogram[pitch.name] = 1
+            print(pitch_name)
+            pitch_histogram[pitch_name] = 1
+
+    print(pitch_histogram)
 
     chord_scores = {}  # arbitrarily defined scores for each possible chord
     chords = model["keys"][key]["chords"]
