@@ -25,7 +25,7 @@ def harmonize():
         if not allowed_file(file.filename):
             return jsonify({"success": False, "message": "Invalid file type"}), 400
 
-        file_path = os.path.join("uploads", file.filename)
+        file_path = file.filename
         file.save(file_path)
         file.close()
 
