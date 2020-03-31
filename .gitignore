@@ -1,1 +1,4 @@
 .vscode
+.now
+__pycache__
+*.pyc

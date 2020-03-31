@@ -10,9 +10,10 @@ harmony = Blueprint("harmony", __name__)
 
 ALLOWED_EXTENSIONS = {"mp3", "wav"}
 
+
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @harmony.route("/harmony", methods=["POST"])
 def harmonize():
@@ -69,13 +70,23 @@ def harmonize():
 
     os.remove(file_path)
 
-    return jsonify({"success": True, "message": "Input harmonized", "result": {"harmony": chords}}), 200
+    return (
+        jsonify(
+            {
+                "success": True,
+                "message": "Input harmonized",
+                "result": {"harmony": chords},
+            }
+        ),
+        200,
+    )
+
 
 def analyze(file):
     audio = MonoLoader(filename=file)()
-    
+
     frequencies = PitchMelodia()(audio)[0]  # binned list of frequencies
-    
+
     key, scale, strength = KeyExtractor()(
         audio
     )  # key (note) and scale (major vs. minor) matter
@@ -88,6 +99,7 @@ def analyze(file):
         "frequencies": frequencies,
         "key": key + " " + scale,
     }
+
 
 def generate(frequencies, key, next=None):
     pitch_histogram = {}  # stores number of occurences of each pitch
@@ -103,7 +115,7 @@ def generate(frequencies, key, next=None):
             pitch_histogram[pitch.name] += 1
         else:
             pitch_histogram[pitch.name] = 1
-    
+
     chord_scores = {}  # arbitrarily defined scores for each possible chord
     chords = model["keys"][key]["chords"]
 
