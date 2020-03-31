@@ -16,67 +16,72 @@ app = Flask(__name__)
 
 @app.route("/api", methods=["POST"])
 def harmonize():
-    file = request.files.get("file")
+    try:
+        file = request.files.get("file")
 
-    if file is None or file.filename == "":
-        return jsonify({"success": False, "message": "No file provided"}), 400
+        if file is None or file.filename == "":
+            return jsonify({"success": False, "message": "No file provided"}), 400
 
-    if not allowed_file(file.filename):
-        return jsonify({"success": False, "message": "Invalid file type"}), 400
+        if not allowed_file(file.filename):
+            return jsonify({"success": False, "message": "Invalid file type"}), 400
 
-    file_path = os.path.join("uploads", file.filename)
-    file.save(file_path)
-    file.close()
+        file_path = os.path.join("uploads", file.filename)
+        file.save(file_path)
+        file.close()
 
-    analysis = analyze(file_path)
+        analysis = analyze(file_path)
 
-    frequencies = analysis["frequencies"]
-    key = analysis["key"]
-    tempo = analysis["bpm"]
-    time_signature = 4
+        frequencies = analysis["frequencies"]
+        key = analysis["key"]
+        tempo = analysis["bpm"]
+        time_signature = 4
 
-    measure_length_bins = (
-        time_signature * (60 / tempo) * (44100 / 128)
-    )  # (beats/measure) (seconds/ebat) * (bins/second) = frequency bins/measure
+        measure_length_bins = (
+            time_signature * (60 / tempo) * (44100 / 128)
+        )  # (beats/measure) (seconds/ebat) * (bins/second) = frequency bins/measure
 
-    # measure_length_seconds = time_signature * (60 / tempo)
+        # measure_length_seconds = time_signature * (60 / tempo)
 
-    num_measures = math.ceil(len(frequencies) / measure_length_bins)
+        num_measures = math.ceil(len(frequencies) / measure_length_bins)
 
-    measures = [
-        frequencies[
-            int(i * measure_length_bins) : int(
-                min(len(frequencies), (i + 1) * measure_length_bins)
-            )
-        ]
-        for i in range(num_measures)
-    ]  # split frequencies into measures
+        measures = [
+            frequencies[
+                int(i * measure_length_bins) : int(
+                    min(len(frequencies), (i + 1) * measure_length_bins)
+                )
+            ]
+            for i in range(num_measures)
+        ]  # split frequencies into measures
 
-    # measure_lengths_seconds = [len(measure) / (44100 / 128) for measure in measures]
+        # measure_lengths_seconds = [len(measure) / (44100 / 128) for measure in measures]
 
-    chords = [""] * num_measures  # stores string representation of chord progression
+        chords = [
+            ""
+        ] * num_measures  # stores string representation of chord progression
 
-    # assume first and last chords are tonic
-    chords[0] = model["keys"][key]["chords"][0]
-    chords[len(measures) - 1] = chords[0]
+        # assume first and last chords are tonic
+        chords[0] = model["keys"][key]["chords"][0]
+        chords[len(measures) - 1] = chords[0]
 
-    for i in range(num_measures - 2):
-        # start from second last and go backwards (important for contextual scoring)
-        measure_number = len(chords) - 2 - i
-        chords[measure_number] = generate(measures[measure_number], key)
+        for i in range(num_measures - 2):
+            # start from second last and go backwards (important for contextual scoring)
+            measure_number = len(chords) - 2 - i
+            chords[measure_number] = generate(measures[measure_number], key)
 
-    os.remove(file_path)
+        os.remove(file_path)
 
-    return (
-        jsonify(
-            {
-                "success": True,
-                "message": "Input harmonized",
-                "result": {"harmony": chords},
-            }
-        ),
-        200,
-    )
+        return (
+            jsonify(
+                {
+                    "success": True,
+                    "message": "Input harmonized",
+                    "result": {"harmony": chords},
+                }
+            ),
+            200,
+        )
+    except Exception as err:
+        return jsonify({"success": False, "message": str(err)}), 500
 
 
 def analyze(file):
