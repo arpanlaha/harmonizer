@@ -137,5 +137,4 @@ def generate(frequencies, key, next=None):
     """
     To do: contextual scoring
     """
-    print(chord_scores)
     return max(chord_scores.items(), key=itemgetter(1))[0]
