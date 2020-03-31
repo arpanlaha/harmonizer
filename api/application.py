@@ -1,5 +1,5 @@
 import os
-from flask import Flask, Response
+from flask import Flask
 from views.harmony import harmony
 
 app = Flask(__name__)
