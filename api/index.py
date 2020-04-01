@@ -1,4 +1,5 @@
 import os
+import tempfile
 from flask import Flask, request, jsonify
 import math
 from essentia.standard import MonoLoader, KeyExtractor, PitchMelodia, RhythmExtractor
@@ -20,12 +21,21 @@ def harmonize():
         file = request.files.get("file")
 
         if file is None or file.filename == "":
-            return jsonify({"success": False, "message": "No file provided"}), 400
+            return (
+                jsonify(
+                    {
+                        "success": False,
+                        "message": "No file provided",
+                        "data": {"files": request.files},
+                    }
+                ),
+                400,
+            )
 
         if not allowed_file(file.filename):
             return jsonify({"success": False, "message": "Invalid file type"}), 400
 
-        file_path = file.filename
+        file_path = os.path.join(tempfile.mkdtemp(), file.filename)
         file.save(file_path)
         file.close()
 
