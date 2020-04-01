@@ -6,7 +6,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout Github Action"
+      - name: Checkout Github Action
         uses: actions/checkout@master
 
       - name: Set up Python
@@ -23,7 +23,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: "Run Azure webapp deploy action using publish profile credentials"
+      - name: Deploy to Azure App Services
         uses: azure/webapps-deploy@v2
         with:
           app-name: harmonizer
