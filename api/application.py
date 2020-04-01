@@ -1,6 +1,7 @@
 import os
 import tempfile
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import math
 from essentia.standard import MonoLoader, KeyExtractor, PitchMelodia, RhythmExtractor
 from operator import itemgetter
@@ -13,6 +14,7 @@ def allowed_file(filename):
 
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/api/harmony", methods=["POST"])
@@ -85,8 +87,7 @@ def harmonize():
             {
                 "success": True,
                 "message": "Input harmonized",
-                "result": {"harmony": chords},
-                "measureLength": measure_length_seconds,
+                "result": {"harmony": chords, "measureLength": measure_length_seconds},
             }
         ),
         200,
