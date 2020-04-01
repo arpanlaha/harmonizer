@@ -29,6 +29,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet": "^5.2.1",
+    "tone": "^13.8.25",
     "typescript": "^3.8.3"
   },
   "devDependencies": {
