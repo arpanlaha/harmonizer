@@ -12,6 +12,7 @@ jobs:
           node-version: 12
       - name: npm run format
         run: |
+          cd client
           npm install
           npm run format:check
 
@@ -24,6 +25,7 @@ jobs:
           node-version: 12
       - name: npm run lint
         run: |
+          cd client
           npm install
           npm run lint
 
@@ -36,6 +38,7 @@ jobs:
           node-version: 12
       - name: npm run build
         run: |
+          cd client
           npm install
           npm run typecheck
 
@@ -48,5 +51,6 @@ jobs:
           node-version: 12
       - name: npm run build
         run: |
+          cd client
           npm install
           npm run build
