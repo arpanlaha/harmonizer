@@ -1,5 +1,0 @@
-*.pyc
-.vscode/
-venv/
-__pycache__
-*.wav
