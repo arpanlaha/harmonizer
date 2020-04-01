@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 
-const BACKEND_URL = process.env.BACKEND_URL ?? "http://52.240.158.249:5000";
+const BACKEND_URL = process.env.BACKEND_URL ?? "https://52.240.158.249:5000";
 
 interface Response {
   type: string;

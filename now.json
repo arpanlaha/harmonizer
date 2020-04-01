@@ -8,7 +8,7 @@
   "build": {
     "env": {
       "GATSBY_TELEMETRY_DISABLED": "1",
-      "BACKEND_URL": "@harmonizer-backend-url"
+      "BACKEND_URL": "https://harmonizer.azurewebsites.net/"
     }
   },
   "routes": [
