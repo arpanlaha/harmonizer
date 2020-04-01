@@ -26,7 +26,7 @@ def harmonize():
                     {
                         "success": False,
                         "message": "No file provided",
-                        "data": {"files": request.files},
+                        "data": {"files": request.files, "file": ("missing" if file is None else file.filename)},
                     }
                 ),
                 400,
