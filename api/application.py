@@ -47,14 +47,12 @@ def harmonize():
 
     frequencies = analysis["frequencies"]
     key = analysis["key"]
-    tempo = analysis["bpm"]
+    bpm = analysis["bpm"]
     time_signature = 4
 
     measure_length_bins = (
-        time_signature * (60 / tempo) * (44100 / 128)
+        time_signature * (60 / bpm) * (44100 / 128)
     )  # (beats/measure) (seconds/ebat) * (bins/second) = frequency bins/measure
-
-    measure_length_seconds = time_signature * (60 / tempo)
 
     num_measures = math.ceil(len(frequencies) / measure_length_bins)
 
@@ -87,7 +85,7 @@ def harmonize():
             {
                 "success": True,
                 "message": "Input harmonized",
-                "result": {"harmony": chords, "measureLength": measure_length_seconds},
+                "result": {"harmony": chords, "bpm": bpm},
             }
         ),
         200,
