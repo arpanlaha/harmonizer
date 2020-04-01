@@ -1,8 +1,9 @@
 {
   "builds": [
     {
-      "src": "api/index.py",
+      "src": "api/harmony.py",
       "use": "@now/python"
     }
-  ]
+  ],
+  "routes": [{ "src": "/api/harmony", "dest": "api/harmony.py" }]
 }
