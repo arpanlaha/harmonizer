@@ -1,6 +1,9 @@
 name: client
 
-on: push
+on:
+  push:
+    paths:
+      - "client/**"
 
 jobs:
   format:

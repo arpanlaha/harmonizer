@@ -85,7 +85,7 @@ def harmonize():
             {
                 "success": True,
                 "message": "Input harmonized",
-                "result": {"harmony": chords, "bpm": bpm},
+                "result": {"chords": chords, "bpm": bpm},
             }
         ),
         200,

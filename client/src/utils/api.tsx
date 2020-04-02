@@ -1,15 +1,19 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
 
 const BACKEND_URL =
-  process.env.GATSBY_BACKEND_URL ?? "https://52.240.158.249:5000";
+  process.env.GATSBY_BACKEND_URL ?? "http://52.240.158.249:5000";
 
 interface Response {
+  bpm: number;
+  chords: string[];
+}
+interface ResponseWrapper {
   type: string;
-  response?: AxiosResponse;
+  result?: Response;
   error?: AxiosError;
 }
 
-export const getHarmony = (file: File): Promise<Response> => {
+export const getHarmony = (file: File | Blob): Promise<ResponseWrapper> => {
   const data = new FormData();
   data.append("file", file);
   return axios
