@@ -12,9 +12,9 @@ module.exports = {
         start_url: "/",
         background_color: "#1a1e23",
         theme_color: "#1a1e23",
-        display: "browser",
-        icon: "static/logo.svg",
-      },
+        display: "minimal-ui",
+        icon: "static/logo.svg"
+      }
     },
     "gatsby-plugin-offline",
     "gatsby-plugin-react-helmet",
@@ -24,8 +24,8 @@ module.exports = {
       resolve: "gatsby-plugin-typescript",
       options: {
         allExtensions: true,
-        isTSX: true,
-      },
-    },
-  ],
+        isTSX: true
+      }
+    }
+  ]
 };
