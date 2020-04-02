@@ -30,7 +30,7 @@ export default function Home(): ReactElement {
       }
       setLoading(false);
     } else if (status === "error") {
-      setError("Client-side error");
+      setError(response?.message ?? "Unknown error");
       setLoading(false);
     }
   };
