@@ -6,7 +6,7 @@ import math
 from essentia.standard import MonoLoader, KeyExtractor, PitchMelodia, RhythmExtractor
 from operator import itemgetter
 
-ALLOWED_EXTENSIONS = {"mp3", "wav"}
+ALLOWED_EXTENSIONS = {"mp3", "mp4", "wav"}
 
 
 def allowed_file(filename):

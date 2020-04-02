@@ -11,7 +11,7 @@ export default function Home(): ReactElement {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [percent, setPercent] = useState<number | null>(null);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [bpm, setBpm] = useState<number | null>(null);
   const [chords, setChords] = useState<string[] | null>(null);
 
@@ -26,17 +26,19 @@ export default function Home(): ReactElement {
         setBpm(result.bpm);
         setChords(result.chords);
       } else {
-        setError(true);
+        setError(response.message);
       }
       setLoading(false);
     } else if (status === "error") {
-      setError(true);
+      setError("Client-side error");
       setLoading(false);
     }
   };
 
   const beforeUpload = (file: RcFile): boolean => {
     setLoading(true);
+    setError(null);
+    setPercent(null);
     setBpm(null);
     setChords(null);
     setFile(file);
@@ -59,7 +61,7 @@ export default function Home(): ReactElement {
             }/api/harmony`}
             onChange={handleUpload}
             beforeUpload={beforeUpload}
-            accept=".wav,.mp3"
+            accept=".wav,.mp3,.mp4"
             showUploadList={false}
           >
             <Button type="primary">Upload</Button>
@@ -85,7 +87,10 @@ export default function Home(): ReactElement {
         {chords && <h3>Chords: {chords.join(", ")}</h3>}
 
         {error && (
-          <Alert type="error" message="An error has been encountered" />
+          <Alert
+            type="error"
+            message={`The following error has been encountered: ${error}`}
+          />
         )}
       </div>
     </>
