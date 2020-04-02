@@ -21,13 +21,9 @@ export default function Home(): ReactElement {
     if (status === "uploading") {
       setPercent(e.event?.percent ?? null);
     } else if (status === "done") {
-      if (response.success) {
-        const { result } = response;
-        setBpm(result.bpm);
-        setChords(result.chords);
-      } else {
-        setError(response.message);
-      }
+      const { result } = response;
+      setBpm(result.bpm);
+      setChords(result.chords);
       setLoading(false);
     } else if (status === "error") {
       setError(response?.message ?? "Unknown error");
