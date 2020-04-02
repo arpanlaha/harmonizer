@@ -36,15 +36,7 @@ body {
 
 .upload {
   @extend .center-vertical;
-  margin-bottom: 3vh;
-
-  .ant-upload-select {
-    margin: 0;
-  }
-
-  .ant-upload-list-picture-card-container {
-    margin: 0;
-  }
+  margin-bottom: 2vh;
 }
 
 .loader {

@@ -2,6 +2,7 @@
   "plugins": ["@h4iuiuc"],
   "extends": ["plugin:@h4iuiuc/recommended", "plugin:@h4iuiuc/typescript"],
   "rules": {
+    "@typescript-eslint/no-magic-numbers": "off",
     "no-console": "error"
   }
 }
