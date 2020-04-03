@@ -11,7 +11,8 @@
     "lint": "eslint src --ext .tsx,.ts && markdownlint README.md",
     "lint:fix": "eslint src --ext .tsx,.ts && markdownlint --fix README.md",
     "start": "react-scripts start",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "antd": "^4.1.0",
