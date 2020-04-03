@@ -1,8 +1,8 @@
-import React, { ReactElement, useState, useEffect, useCallback } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import { Head } from "./components";
-import { Alert, Button, Progress, Spin, Upload, Slider } from "antd";
+import { Alert, Button, Progress, Slider, Spin, Upload } from "antd";
 import Audio from "./utils/audio";
-import { UploadChangeParam, RcFile } from "antd/lib/upload";
+import { UploadChangeParam } from "antd/lib/upload";
 
 import "antd/dist/antd.css";
 import "antd/dist/antd.dark.css";
@@ -13,11 +13,11 @@ const PLAYBACK_INTERVAL = 0.05;
 export default function App(): ReactElement {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [percent, setPercent] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [bpm, setBpm] = useState<number | null>(null);
-  const [chords, setChords] = useState<string[] | null>(null);
-  const [audioSource, setAudioSource] = useState<any>(
+  const [percent, setPercent] = useState(-1);
+  const [error, setError] = useState("");
+  const [bpm, setBpm] = useState(0);
+  const [chords, setChords] = useState([]);
+  const [audioSource, setAudioSource] = useState(
     Audio.context.createBufferSource()
   );
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
@@ -49,8 +49,8 @@ export default function App(): ReactElement {
   const handleUpload = (e: UploadChangeParam): void => {
     const { response, status } = e.file;
 
-    if (status === "uploading") {
-      setPercent(e.event?.percent ?? null);
+    if (status === "uploading" && e.event !== undefined) {
+      setPercent(e.event.percent);
     } else if (status === "done") {
       const { result } = response;
       setBpm(result.bpm);
@@ -62,12 +62,12 @@ export default function App(): ReactElement {
     }
   };
 
-  const beforeUpload = (file: RcFile): boolean => {
+  const beforeUpload = (file: File): boolean => {
     setLoading(true);
-    setError(null);
-    setPercent(null);
-    setBpm(null);
-    setChords(null);
+    setError("null");
+    setPercent(-1);
+    setBpm(0);
+    setChords([]);
     setFile(file);
     return true;
   };
@@ -115,8 +115,8 @@ export default function App(): ReactElement {
           <Upload
             className="upload"
             action={`${
-              process.env.GATSBY_BACKEND_URL ??
-              `http://${process.env.VM_IP ?? "localhost"}:5000`
+              process.env.REACT_APP_BACKEND_URL ??
+              `http://${process.env.REACT_APP_VM_IP ?? "localhost"}:5000`
             }/api/harmony`}
             onChange={handleUpload}
             beforeUpload={beforeUpload}
@@ -132,7 +132,7 @@ export default function App(): ReactElement {
         {loading && (
           <>
             <Spin className="loader" />
-            {percent && (
+            {percent >= 0 && (
               <Progress
                 percent={percent}
                 status={percent < 100 ? "active" : "success"}
@@ -142,10 +142,10 @@ export default function App(): ReactElement {
           </>
         )}
 
-        {bpm && <h3>BPM: {bpm}</h3>}
-        {chords && <h3>Chords: {chords.join(", ")}</h3>}
+        {bpm > 0 && <h3>BPM: {bpm}</h3>}
+        {chords.length > 0 && <h3>Chords: {chords.join(", ")}</h3>}
 
-        {error && (
+        {error !== "" && (
           <Alert
             type="error"
             message={`The following error has been encountered: ${error}`}

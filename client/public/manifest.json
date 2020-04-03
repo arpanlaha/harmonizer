@@ -4,11 +4,11 @@
   "icons": [
     {
       "src": "logo.svg",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "512x512 192x192 64x64 32x32 24x24 16x16",
       "type": "image/svg"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "background_color": "#1a1e23",
   "theme_color": "#1a1e23",
   "display": "minimal-ui"
