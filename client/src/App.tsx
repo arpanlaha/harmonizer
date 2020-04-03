@@ -1,56 +1,50 @@
 import React, { ReactElement, useState, useEffect, useCallback } from "react";
-import { Head } from "../components";
+import { Head } from "./components";
 import { Alert, Button, Progress, Spin, Upload, Slider } from "antd";
+import Audio from "./utils/audio";
 import { UploadChangeParam, RcFile } from "antd/lib/upload";
 
 import "antd/dist/antd.css";
 import "antd/dist/antd.dark.css";
-import "../styles/style.scss";
+import "./styles/style.scss";
 
 const PLAYBACK_INTERVAL = 0.05;
 
-export default function Home(): ReactElement {
+export default function App(): ReactElement {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [percent, setPercent] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [bpm, setBpm] = useState<number | null>(null);
   const [chords, setChords] = useState<string[] | null>(null);
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [audioSource, setAudioSource] = useState<AudioBufferSourceNode | null>(
-    null
+  const [audioSource, setAudioSource] = useState<any>(
+    Audio.context.createBufferSource()
   );
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
 
-  useEffect((): void => {
-    const newAudioContext = new AudioContext();
-    setAudioContext(newAudioContext);
-    setAudioSource(newAudioContext.createBufferSource);
-  }, [setAudioContext, setAudioSource]);
-
   const resetAudioSource = useCallback((): void => {
-    if (audioContext !== null && audioBuffer !== null) {
-      const newAudioSource = audioContext.createBufferSource();
+    if (Audio.context !== null && audioBuffer !== null) {
+      const newAudioSource = Audio.context.createBufferSource();
       newAudioSource.buffer = audioBuffer;
       setAudioSource(newAudioSource);
     }
-  }, [audioBuffer, audioContext, setAudioSource]);
+  }, [audioBuffer, setAudioSource]);
 
   useEffect((): void => {
     resetAudioSource();
   }, [audioBuffer, resetAudioSource]);
 
   useEffect((): void => {
-    if (audioContext !== null && file !== null) {
+    if (Audio.context !== null && file !== null) {
       file
         .arrayBuffer()
-        .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+        .then((arrayBuffer) => Audio.context.decodeAudioData(arrayBuffer))
         .then(setAudioBuffer)
         .catch(() => setError(`Error loading ${file.name} in browser`));
     }
-  }, [file, setAudioBuffer, audioContext]);
+  }, [file, setAudioBuffer]);
 
   const handleUpload = (e: UploadChangeParam): void => {
     const { response, status } = e.file;
@@ -79,25 +73,26 @@ export default function Home(): ReactElement {
   };
 
   const handlePlay = (): void => {
-    if (audioContext !== null && audioSource !== null) {
-      audioSource.connect(audioContext.destination);
+    if (Audio.context !== null && audioSource !== null) {
+      audioSource.connect(Audio.context.destination);
       audioSource.start();
       setPlaying(true);
 
       if (audioBuffer !== null && time >= audioBuffer.duration) {
         setTime(0);
       }
-      const startTime = audioContext.currentTime;
+      const startTime = Audio.context.currentTime;
       const timer = setInterval(
-        (): void => setTime(audioContext.currentTime - startTime),
+        (): void => setTime(Audio.context.currentTime - startTime),
         PLAYBACK_INTERVAL * 1000
       );
 
       audioSource.onended = () => {
         clearInterval(timer);
-        const newAudioSource = audioContext.createBufferSource();
+        const newAudioSource = Audio.context.createBufferSource();
         newAudioSource.buffer = audioBuffer;
         setAudioSource(newAudioSource);
+        setPlaying(false);
       };
     }
   };

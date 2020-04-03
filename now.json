@@ -2,7 +2,10 @@
   "builds": [
     {
       "src": "client/package.json",
-      "use": "@now/static-build"
+      "use": "@now/static-build",
+      "config": {
+        "distDir": "build"
+      }
     }
   ],
   "build": {
