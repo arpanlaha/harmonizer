@@ -16,16 +16,22 @@ export default function Home(): ReactElement {
   const [error, setError] = useState<string | null>(null);
   const [bpm, setBpm] = useState<number | null>(null);
   const [chords, setChords] = useState<string[] | null>(null);
-  const [audioContext] = useState(new AudioContext());
-  const [audioSource, setAudioSource] = useState(
-    audioContext.createBufferSource()
+  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+  const [audioSource, setAudioSource] = useState<AudioBufferSourceNode | null>(
+    null
   );
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
 
+  useEffect((): void => {
+    const newAudioContext = new AudioContext();
+    setAudioContext(newAudioContext);
+    setAudioSource(newAudioContext.createBufferSource);
+  }, [setAudioContext, setAudioSource]);
+
   const resetAudioSource = useCallback((): void => {
-    if (audioBuffer !== null) {
+    if (audioContext !== null && audioBuffer !== null) {
       const newAudioSource = audioContext.createBufferSource();
       newAudioSource.buffer = audioBuffer;
       setAudioSource(newAudioSource);
@@ -37,7 +43,7 @@ export default function Home(): ReactElement {
   }, [audioBuffer, resetAudioSource]);
 
   useEffect((): void => {
-    if (file !== null) {
+    if (audioContext !== null && file !== null) {
       file
         .arrayBuffer()
         .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
@@ -73,33 +79,34 @@ export default function Home(): ReactElement {
   };
 
   const handlePlay = (): void => {
-    audioSource.connect(audioContext.destination);
-    audioSource.start();
+    if (audioContext !== null && audioSource !== null) {
+      audioSource.connect(audioContext.destination);
+      audioSource.start();
+      setPlaying(true);
 
-    const startTime = audioContext.currentTime;
+      if (audioBuffer !== null && time >= audioBuffer.duration) {
+        setTime(0);
+      }
+      const startTime = audioContext.currentTime;
+      const timer = setInterval(
+        (): void => setTime(audioContext.currentTime - startTime),
+        PLAYBACK_INTERVAL * 1000
+      );
 
-    if (audioBuffer !== null && time >= audioBuffer.duration) {
-      setTime(0);
+      audioSource.onended = () => {
+        clearInterval(timer);
+        const newAudioSource = audioContext.createBufferSource();
+        newAudioSource.buffer = audioBuffer;
+        setAudioSource(newAudioSource);
+      };
     }
-
-    const timer = setInterval(
-      (): void => setTime(audioContext.currentTime - startTime),
-      PLAYBACK_INTERVAL * 1000
-    );
-
-    audioSource.onended = () => {
-      clearInterval(timer);
-
-      const newAudioSource = audioContext.createBufferSource();
-      newAudioSource.buffer = audioBuffer;
-      setAudioSource(newAudioSource);
-    };
-    setPlaying(true);
   };
 
   const handleStop = (): void => {
-    audioSource.stop();
-    setPlaying(false);
+    if (audioSource !== null) {
+      audioSource.stop();
+      setPlaying(false);
+    }
   };
 
   return (
