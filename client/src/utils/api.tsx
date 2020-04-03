@@ -1,7 +1,9 @@
 import axios, { AxiosError } from "axios";
 
-const BACKEND_URL =
-  process.env.GATSBY_BACKEND_URL ?? "http://52.240.158.249:5000";
+const BACKEND_URL = `${
+  process.env.REACT_APP_BACKEND_URL ??
+  `http://${process.env.REACT_APP_VM_IP ?? "localhost"}:5000`
+}`;
 
 interface Response {
   bpm: number;

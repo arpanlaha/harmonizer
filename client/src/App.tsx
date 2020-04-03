@@ -1,62 +1,56 @@
-import React, { ReactElement, useState, useEffect, useCallback } from "react";
-import { Head } from "../components";
-import { Alert, Button, Progress, Spin, Upload, Slider } from "antd";
-import { UploadChangeParam, RcFile } from "antd/lib/upload";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import { Head } from "./components";
+import { Alert, Button, Progress, Slider, Spin, Upload } from "antd";
+import Audio from "./utils/audio";
+import { UploadChangeParam } from "antd/lib/upload";
 
 import "antd/dist/antd.css";
 import "antd/dist/antd.dark.css";
-import "../styles/style.scss";
+import "./styles/style.scss";
 
 const PLAYBACK_INTERVAL = 0.05;
 
-export default function Home(): ReactElement {
+export default function App(): ReactElement {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [percent, setPercent] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [bpm, setBpm] = useState<number | null>(null);
-  const [chords, setChords] = useState<string[] | null>(null);
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [audioSource, setAudioSource] = useState<AudioBufferSourceNode | null>(
-    null
+  const [percent, setPercent] = useState(-1);
+  const [error, setError] = useState("");
+  const [bpm, setBpm] = useState(0);
+  const [chords, setChords] = useState([]);
+  const [audioSource, setAudioSource] = useState(
+    Audio.context.createBufferSource()
   );
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
 
-  useEffect((): void => {
-    const newAudioContext = new AudioContext();
-    setAudioContext(newAudioContext);
-    setAudioSource(newAudioContext.createBufferSource);
-  }, [setAudioContext, setAudioSource]);
-
   const resetAudioSource = useCallback((): void => {
-    if (audioContext !== null && audioBuffer !== null) {
-      const newAudioSource = audioContext.createBufferSource();
+    if (Audio.context !== null && audioBuffer !== null) {
+      const newAudioSource = Audio.context.createBufferSource();
       newAudioSource.buffer = audioBuffer;
       setAudioSource(newAudioSource);
     }
-  }, [audioBuffer, audioContext, setAudioSource]);
+  }, [audioBuffer, setAudioSource]);
 
   useEffect((): void => {
     resetAudioSource();
   }, [audioBuffer, resetAudioSource]);
 
   useEffect((): void => {
-    if (audioContext !== null && file !== null) {
+    if (Audio.context !== null && file !== null) {
       file
         .arrayBuffer()
-        .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+        .then((arrayBuffer) => Audio.context.decodeAudioData(arrayBuffer))
         .then(setAudioBuffer)
         .catch(() => setError(`Error loading ${file.name} in browser`));
     }
-  }, [file, setAudioBuffer, audioContext]);
+  }, [file, setAudioBuffer]);
 
   const handleUpload = (e: UploadChangeParam): void => {
     const { response, status } = e.file;
 
-    if (status === "uploading") {
-      setPercent(e.event?.percent ?? null);
+    if (status === "uploading" && e.event !== undefined) {
+      setPercent(e.event.percent);
     } else if (status === "done") {
       const { result } = response;
       setBpm(result.bpm);
@@ -68,36 +62,37 @@ export default function Home(): ReactElement {
     }
   };
 
-  const beforeUpload = (file: RcFile): boolean => {
+  const beforeUpload = (file: File): boolean => {
     setLoading(true);
-    setError(null);
-    setPercent(null);
-    setBpm(null);
-    setChords(null);
+    setError("null");
+    setPercent(-1);
+    setBpm(0);
+    setChords([]);
     setFile(file);
     return true;
   };
 
   const handlePlay = (): void => {
-    if (audioContext !== null && audioSource !== null) {
-      audioSource.connect(audioContext.destination);
+    if (Audio.context !== null && audioSource !== null) {
+      audioSource.connect(Audio.context.destination);
       audioSource.start();
       setPlaying(true);
 
       if (audioBuffer !== null && time >= audioBuffer.duration) {
         setTime(0);
       }
-      const startTime = audioContext.currentTime;
+      const startTime = Audio.context.currentTime;
       const timer = setInterval(
-        (): void => setTime(audioContext.currentTime - startTime),
+        (): void => setTime(Audio.context.currentTime - startTime),
         PLAYBACK_INTERVAL * 1000
       );
 
       audioSource.onended = () => {
         clearInterval(timer);
-        const newAudioSource = audioContext.createBufferSource();
+        const newAudioSource = Audio.context.createBufferSource();
         newAudioSource.buffer = audioBuffer;
         setAudioSource(newAudioSource);
+        setPlaying(false);
       };
     }
   };
@@ -120,8 +115,8 @@ export default function Home(): ReactElement {
           <Upload
             className="upload"
             action={`${
-              process.env.GATSBY_BACKEND_URL ??
-              `http://${process.env.VM_IP ?? "localhost"}:5000`
+              process.env.REACT_APP_BACKEND_URL ??
+              `http://${process.env.REACT_APP_VM_IP ?? "localhost"}:5000`
             }/api/harmony`}
             onChange={handleUpload}
             beforeUpload={beforeUpload}
@@ -137,7 +132,7 @@ export default function Home(): ReactElement {
         {loading && (
           <>
             <Spin className="loader" />
-            {percent && (
+            {percent >= 0 && (
               <Progress
                 percent={percent}
                 status={percent < 100 ? "active" : "success"}
@@ -147,10 +142,10 @@ export default function Home(): ReactElement {
           </>
         )}
 
-        {bpm && <h3>BPM: {bpm}</h3>}
-        {chords && <h3>Chords: {chords.join(", ")}</h3>}
+        {bpm > 0 && <h3>BPM: {bpm}</h3>}
+        {chords.length > 0 && <h3>Chords: {chords.join(", ")}</h3>}
 
-        {error && (
+        {error !== "" && (
           <Alert
             type="error"
             message={`The following error has been encountered: ${error}`}

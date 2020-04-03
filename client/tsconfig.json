@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
@@ -14,6 +16,5 @@
     "strict": true,
     "target": "es2019"
   },
-  "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"]
+  "include": ["src"]
 }
