@@ -1,11 +1,13 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useState, useEffect, useCallback } from "react";
 import { Head } from "../components";
-import { Alert, Button, Progress, Spin, Upload } from "antd";
+import { Alert, Button, Progress, Spin, Upload, Slider } from "antd";
 import { UploadChangeParam, RcFile } from "antd/lib/upload";
 
 import "antd/dist/antd.css";
 import "antd/dist/antd.dark.css";
 import "../styles/style.scss";
+
+const PLAYBACK_INTERVAL = 0.05;
 
 export default function Home(): ReactElement {
   const [file, setFile] = useState<File | null>(null);
@@ -14,6 +16,35 @@ export default function Home(): ReactElement {
   const [error, setError] = useState<string | null>(null);
   const [bpm, setBpm] = useState<number | null>(null);
   const [chords, setChords] = useState<string[] | null>(null);
+  const [audioContext] = useState(new AudioContext());
+  const [audioSource, setAudioSource] = useState(
+    audioContext.createBufferSource()
+  );
+  const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [time, setTime] = useState(0);
+
+  const resetAudioSource = useCallback((): void => {
+    if (audioBuffer !== null) {
+      const newAudioSource = audioContext.createBufferSource();
+      newAudioSource.buffer = audioBuffer;
+      setAudioSource(newAudioSource);
+    }
+  }, [audioBuffer, audioContext, setAudioSource]);
+
+  useEffect((): void => {
+    resetAudioSource();
+  }, [audioBuffer, resetAudioSource]);
+
+  useEffect((): void => {
+    if (file !== null) {
+      file
+        .arrayBuffer()
+        .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+        .then(setAudioBuffer)
+        .catch(() => setError(`Error loading ${file.name} in browser`));
+    }
+  }, [file, setAudioBuffer, audioContext]);
 
   const handleUpload = (e: UploadChangeParam): void => {
     const { response, status } = e.file;
@@ -39,6 +70,36 @@ export default function Home(): ReactElement {
     setChords(null);
     setFile(file);
     return true;
+  };
+
+  const handlePlay = (): void => {
+    audioSource.connect(audioContext.destination);
+    audioSource.start();
+
+    const startTime = audioContext.currentTime;
+
+    if (audioBuffer !== null && time >= audioBuffer.duration) {
+      setTime(0);
+    }
+
+    const timer = setInterval(
+      (): void => setTime(audioContext.currentTime - startTime),
+      PLAYBACK_INTERVAL * 1000
+    );
+
+    audioSource.onended = () => {
+      clearInterval(timer);
+
+      const newAudioSource = audioContext.createBufferSource();
+      newAudioSource.buffer = audioBuffer;
+      setAudioSource(newAudioSource);
+    };
+    setPlaying(true);
+  };
+
+  const handleStop = (): void => {
+    audioSource.stop();
+    setPlaying(false);
   };
 
   return (
@@ -87,6 +148,23 @@ export default function Home(): ReactElement {
             type="error"
             message={`The following error has been encountered: ${error}`}
           />
+        )}
+
+        {file && (
+          <>
+            {playing ? (
+              <Button onClick={handleStop}>Stop</Button>
+            ) : (
+              <Button onClick={handlePlay}>Play</Button>
+            )}
+
+            <Slider
+              value={time}
+              min={0}
+              max={audioBuffer?.duration}
+              step={PLAYBACK_INTERVAL}
+            />
+          </>
         )}
       </div>
     </>
