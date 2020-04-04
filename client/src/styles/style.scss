@@ -4,6 +4,9 @@
   font-display: block;
 }
 
+$antd-button-primary: #1890ff;
+$antd-button-primary-hover: #096dd9;
+
 @mixin center-vertical {
   display: flex;
   flex-direction: column;
@@ -73,7 +76,7 @@ body {
 .player {
   @include center-horizontal;
 
-  background-color: hsl(215, 24, 6);
+  background-color: hsl(215, 16, 6);
   border-radius: 10vh;
   padding: 2vh 2.5vh;
   margin: 2vh;
@@ -84,7 +87,7 @@ body {
     margin: 0 2vh;
 
     background-color: #fff;
-    color: #1890ff;
+    color: $antd-button-primary;
     justify-content: center;
     padding: 0;
     border-radius: 100%;
@@ -101,12 +104,12 @@ body {
 
   button:focus {
     background-color: #fff;
-    color: #1890ff;
+    color: $antd-button-primary;
   }
 
   button:hover {
     background-color: #fff;
-    color: #096dd9;
+    color: $antd-button-primary-hover;
   }
 
   .time {
