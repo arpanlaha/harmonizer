@@ -2,6 +2,7 @@ import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import Audio from "./utils/audio";
 import { Head } from "./components";
 import { Alert, Button, Progress, Slider, Spin, Upload } from "antd";
+import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
 import { SliderValue } from "antd/lib/slider";
 import { UploadChangeParam } from "antd/lib/upload";
 
@@ -76,13 +77,16 @@ export default function App(): ReactElement {
   const handlePlay = useCallback((): void => {
     if (audioBuffer !== null) {
       audioSource.connect(Audio.context.destination);
+
       let newTime = time;
-      if (time >= audioBuffer.duration - PLAYBACK_INTERVAL) {
+      if (time >= audioBuffer.duration - PLAYBACK_INTERVAL * 2) {
         newTime = 0;
         setTime(newTime);
       }
+
       audioSource.start(0, newTime);
       setPlaying(true);
+
       const startTime = Audio.context.currentTime;
       const timer = setInterval(
         (): void => setTime(Audio.context.currentTime - startTime + newTime),
@@ -93,10 +97,6 @@ export default function App(): ReactElement {
         clearInterval(timer);
         resetAudioSource();
         setPlaying(false);
-
-        if (time >= audioBuffer.duration - PLAYBACK_INTERVAL) {
-          // setTime(0)
-        }
       };
     }
   }, [audioSource, audioBuffer, resetAudioSource, time]);
@@ -149,7 +149,7 @@ export default function App(): ReactElement {
             accept=".wav,.mp3,.mp4"
             showUploadList={false}
           >
-            <Button type="primary">Upload</Button>
+            <Button type={file === null ? "primary" : "default"}>Upload</Button>
           </Upload>
         </div>
 
@@ -178,15 +178,15 @@ export default function App(): ReactElement {
           />
         )}
 
-        {file && (
-          <>
-            {playing ? (
-              <Button onClick={handleStop}>Stop</Button>
-            ) : (
-              <Button onClick={handlePlay}>Play</Button>
-            )}
+        {file && audioBuffer && (
+          <div className="player">
+            <span className="time">
+              {formatTime(time)} / {formatTime(audioBuffer.duration)}
+            </span>
+            <Button type="primary" onClick={playing ? handleStop : handlePlay}>
+              {playing ? <PauseCircleFilled /> : <PlayCircleFilled />}
+            </Button>
 
-            <span>{formatTime(time)}</span>
             <Slider
               value={time}
               min={0}
@@ -195,7 +195,7 @@ export default function App(): ReactElement {
               onChange={handleSlider}
               tooltipVisible={false}
             />
-          </>
+          </div>
         )}
       </div>
     </>

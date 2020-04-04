@@ -4,14 +4,25 @@
   font-display: block;
 }
 
-.center-vertical {
+@mixin center-vertical {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+@mixin center-horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+@mixin audio-button {
+  width: 5vh;
+  height: 5vh;
+}
+
 body {
-  @extend .center-vertical;
+  @include center-vertical;
 
   margin: 0;
   font-family: "Nunito Sans Light", sans-serif;
@@ -22,6 +33,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+.center-vertical {
+  @include center-vertical;
+}
+
 .title {
   font-size: 6vw;
   text-align: center;
@@ -29,13 +44,13 @@ body {
 }
 
 .upload-container {
-  @extend .center-vertical;
+  @include center-vertical;
 
   margin-bottom: 3vh;
 }
 
 .upload {
-  @extend .center-vertical;
+  @include center-vertical;
   margin-bottom: 2vh;
 }
 
@@ -55,6 +70,50 @@ body {
   }
 }
 
-.ant-slider {
-  width: 20vw;
+.player {
+  @include center-horizontal;
+
+  background-color: hsl(215, 24, 6);
+  border-radius: 10vh;
+  padding: 2vh 2.5vh;
+  margin: 2vh;
+
+  button {
+    @include center-vertical;
+    @include audio-button;
+    margin: 0 2vh;
+
+    background-color: #fff;
+    color: #1890ff;
+    justify-content: center;
+    padding: 0;
+    border-radius: 100%;
+    border-style: solid;
+
+    span {
+      @include audio-button;
+
+      svg {
+        @include audio-button;
+      }
+    }
+  }
+
+  button:focus {
+    background-color: #fff;
+    color: #1890ff;
+  }
+
+  button:hover {
+    background-color: #fff;
+    color: #096dd9;
+  }
+
+  .time {
+    font-size: 2vh;
+  }
+
+  .ant-slider {
+    width: 20vw;
+  }
 }
