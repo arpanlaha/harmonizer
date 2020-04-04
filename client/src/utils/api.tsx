@@ -19,7 +19,7 @@ export const getHarmony = (file: File | Blob): Promise<ResponseWrapper> => {
   const data = new FormData();
   data.append("file", file);
   return axios
-    .post(`${BACKEND_URL}/api/harmony`, data, {
+    .post(`${BACKEND_URL}/harmony`, data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

@@ -141,7 +141,7 @@ export default function App(): ReactElement {
             action={`${
               process.env.REACT_APP_BACKEND_URL ??
               `http://${process.env.REACT_APP_VM_IP ?? "localhost"}:5000`
-            }/api/harmony`}
+            }/harmony`}
             onChange={handleUpload}
             beforeUpload={beforeUpload}
             accept=".wav,.mp3,.mp4"
