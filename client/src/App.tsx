@@ -22,16 +22,16 @@ export default function App(): ReactElement {
   const [audioSource, setAudioSource] = useState(
     Audio.context.createBufferSource()
   );
-  const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
+  const [audioBuffer, setAudioBuffer] = useState(
+    Audio.context.createBuffer(1, 1, 44100)
+  );
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
 
   const resetAudioSource = useCallback((): void => {
-    if (audioBuffer !== null) {
-      const newAudioSource = Audio.context.createBufferSource();
-      newAudioSource.buffer = audioBuffer;
-      setAudioSource(newAudioSource);
-    }
+    const newAudioSource = Audio.context.createBufferSource();
+    newAudioSource.buffer = audioBuffer;
+    setAudioSource(newAudioSource);
   }, [audioBuffer, setAudioSource]);
 
   useEffect((): void => {
@@ -75,30 +75,28 @@ export default function App(): ReactElement {
   };
 
   const handlePlay = useCallback((): void => {
-    if (audioBuffer !== null) {
-      audioSource.connect(Audio.context.destination);
+    audioSource.connect(Audio.context.destination);
 
-      let newTime = time;
-      if (time >= audioBuffer.duration - PLAYBACK_INTERVAL * 2) {
-        newTime = 0;
-        setTime(newTime);
-      }
-
-      audioSource.start(0, newTime);
-      setPlaying(true);
-
-      const startTime = Audio.context.currentTime;
-      const timer = setInterval(
-        (): void => setTime(Audio.context.currentTime - startTime + newTime),
-        PLAYBACK_INTERVAL * 1000
-      );
-
-      audioSource.onended = () => {
-        clearInterval(timer);
-        resetAudioSource();
-        setPlaying(false);
-      };
+    let newTime = time;
+    if (time >= audioBuffer.duration - PLAYBACK_INTERVAL * 2) {
+      newTime = 0;
+      setTime(newTime);
     }
+
+    audioSource.start(0, newTime);
+    setPlaying(true);
+
+    const startTime = Audio.context.currentTime;
+    const timer = setInterval(
+      (): void => setTime(Audio.context.currentTime - startTime + newTime),
+      PLAYBACK_INTERVAL * 1000
+    );
+
+    audioSource.onended = () => {
+      clearInterval(timer);
+      resetAudioSource();
+      setPlaying(false);
+    };
   }, [audioSource, audioBuffer, resetAudioSource, time]);
 
   const handleStop = useCallback((): void => {
@@ -178,7 +176,7 @@ export default function App(): ReactElement {
           />
         )}
 
-        {file && audioBuffer && (
+        {file && (
           <div className="player">
             <span className="time">
               {formatTime(time)} / {formatTime(audioBuffer.duration)}
@@ -190,7 +188,7 @@ export default function App(): ReactElement {
             <Slider
               value={time}
               min={0}
-              max={audioBuffer?.duration}
+              max={audioBuffer.duration}
               step={PLAYBACK_INTERVAL}
               onChange={handleSlider}
               tooltipVisible={false}
