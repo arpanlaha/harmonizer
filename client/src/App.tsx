@@ -1,14 +1,15 @@
 import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import Audio from "./utils/audio";
 import { Head } from "./components";
 import { Alert, Button, Progress, Slider, Spin, Upload } from "antd";
-import Audio from "./utils/audio";
+import { SliderValue } from "antd/lib/slider";
 import { UploadChangeParam } from "antd/lib/upload";
 
 import "antd/dist/antd.css";
 import "antd/dist/antd.dark.css";
 import "./styles/style.scss";
 
-const PLAYBACK_INTERVAL = 0.05;
+const PLAYBACK_INTERVAL = 0.02;
 
 export default function App(): ReactElement {
   const [file, setFile] = useState<File | null>(null);
@@ -25,7 +26,7 @@ export default function App(): ReactElement {
   const [time, setTime] = useState(0);
 
   const resetAudioSource = useCallback((): void => {
-    if (Audio.context !== null && audioBuffer !== null) {
+    if (audioBuffer !== null) {
       const newAudioSource = Audio.context.createBufferSource();
       newAudioSource.buffer = audioBuffer;
       setAudioSource(newAudioSource);
@@ -37,7 +38,7 @@ export default function App(): ReactElement {
   }, [audioBuffer, resetAudioSource]);
 
   useEffect((): void => {
-    if (Audio.context !== null && file !== null) {
+    if (file !== null) {
       file
         .arrayBuffer()
         .then((arrayBuffer) => Audio.context.decodeAudioData(arrayBuffer))
@@ -64,7 +65,7 @@ export default function App(): ReactElement {
 
   const beforeUpload = (file: File): boolean => {
     setLoading(true);
-    setError("null");
+    setError("");
     setPercent(-1);
     setBpm(0);
     setChords([]);
@@ -72,36 +73,61 @@ export default function App(): ReactElement {
     return true;
   };
 
-  const handlePlay = (): void => {
-    if (Audio.context !== null && audioSource !== null) {
+  const handlePlay = useCallback((): void => {
+    if (audioBuffer !== null) {
       audioSource.connect(Audio.context.destination);
-      audioSource.start();
-      setPlaying(true);
-
-      if (audioBuffer !== null && time >= audioBuffer.duration) {
-        setTime(0);
+      let newTime = time;
+      if (time >= audioBuffer.duration - PLAYBACK_INTERVAL) {
+        newTime = 0;
+        setTime(newTime);
       }
+      audioSource.start(0, newTime);
+      setPlaying(true);
       const startTime = Audio.context.currentTime;
       const timer = setInterval(
-        (): void => setTime(Audio.context.currentTime - startTime),
+        (): void => setTime(Audio.context.currentTime - startTime + newTime),
         PLAYBACK_INTERVAL * 1000
       );
 
       audioSource.onended = () => {
         clearInterval(timer);
-        const newAudioSource = Audio.context.createBufferSource();
-        newAudioSource.buffer = audioBuffer;
-        setAudioSource(newAudioSource);
+        resetAudioSource();
         setPlaying(false);
+
+        if (time >= audioBuffer.duration - PLAYBACK_INTERVAL) {
+          // setTime(0)
+        }
       };
     }
-  };
+  }, [audioSource, audioBuffer, resetAudioSource, time]);
 
-  const handleStop = (): void => {
-    if (audioSource !== null) {
-      audioSource.stop();
-      setPlaying(false);
-    }
+  const handleStop = useCallback((): void => {
+    audioSource.stop();
+    setPlaying(false);
+  }, [audioSource]);
+
+  const handleSlider = useCallback(
+    (value: SliderValue): void => {
+      if (typeof value !== "number") {
+        return;
+      }
+      if (playing) {
+        audioSource.stop();
+        resetAudioSource();
+        setPlaying(false);
+      }
+      setTime(value);
+    },
+    [audioSource, playing, resetAudioSource]
+  );
+
+  const formatTime = (seconds: number): string => {
+    let secondsLeft = seconds;
+    const minutes = Math.floor(secondsLeft / 60);
+    secondsLeft -= minutes * 60;
+    const secondsInt = Math.floor(secondsLeft);
+
+    return `${minutes}:${seconds > 10 ? "" : "0"}${secondsInt}`;
   };
 
   return (
@@ -160,11 +186,14 @@ export default function App(): ReactElement {
               <Button onClick={handlePlay}>Play</Button>
             )}
 
+            <span>{formatTime(time)}</span>
             <Slider
               value={time}
               min={0}
               max={audioBuffer?.duration}
               step={PLAYBACK_INTERVAL}
+              onChange={handleSlider}
+              tooltipVisible={false}
             />
           </>
         )}
