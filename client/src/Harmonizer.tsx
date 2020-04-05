@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback, useEffect, useState } from "react";
-import { Audio, ChordName, Model } from "./utils";
+import { AudioContext, ChordName, Chords, KeyName } from "./utils";
 import { Head } from "./components";
 import { Alert, Button, Progress, Slider, Spin, Upload } from "antd";
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
@@ -13,12 +13,14 @@ import "./styles/style.scss";
 
 const PLAYBACK_INTERVAL = 0.02;
 const Synth = FMSynth;
-const { ctx } = Audio;
-const timeSignature = 4;
+const { ctx } = AudioContext;
 
 interface HarmonizeResult {
   bpm: number;
   chords: ChordName[];
+  key: KeyName;
+  meter: number;
+  start: number;
 }
 
 export default function Harmonizer(): ReactElement {
@@ -58,9 +60,10 @@ export default function Harmonizer(): ReactElement {
    */
   useEffect((): void => {
     if (result !== null) {
-      const { bpm, chords } = result;
+      const { bpm, chords, meter, start } = result;
       Transport.bpm.value = bpm;
-      const measureLength = (60 * timeSignature) / bpm;
+      const measureLength = (60 * meter) / bpm;
+      console.log(measureLength);
 
       // synthesize audio and render into output buffer
       Offline((): void => {
@@ -76,9 +79,9 @@ export default function Harmonizer(): ReactElement {
           synths.forEach(
             (synth, synthIndex): FMSynth =>
               synth.triggerAttackRelease(
-                `${Model.chords[chord].notes[synthIndex]}3`,
+                `${Chords[chord].notes[synthIndex]}3`,
                 measureLength,
-                measureLength * chordIndex
+                measureLength * chordIndex + start
               )
           )
         );
@@ -106,7 +109,7 @@ export default function Harmonizer(): ReactElement {
     const harmonyBufferChannel = harmonyBuffer.getChannelData(0);
 
     // melody has arbitrary channels
-    for (let channel = 0; channel < melodyBuffer.numberOfChannels; channel++) {
+    for (let channel = 0; channel < 1; channel++) {
       const newOverlayBufferChannel = newOverlayBuffer.getChannelData(channel);
       const melodyBufferChannel = melodyBuffer.getChannelData(channel);
       for (let i = 0; i < melodyBuffer.length; i++) {
@@ -277,8 +280,10 @@ export default function Harmonizer(): ReactElement {
 
         {result !== null && (
           <>
-            <h3>BPM: {Math.round(result.bpm)}</h3>{" "}
-            <h3>Chords: {result.chords.join(", ")}</h3>{" "}
+            <h3>Key: {result.key}</h3>
+            <h3>Chords: {result.chords.join(", ")}</h3>
+            <h3>Meter: {Math.round(result.meter)}</h3>
+            <h3>BPM: {Math.round(result.bpm)}</h3>
             <div className="player">
               <h3 className="time">
                 {formatTime(playTime)} / {formatTime(melodyBuffer.duration)}

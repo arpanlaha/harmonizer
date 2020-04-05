@@ -1,5 +1,13 @@
 from flask import Blueprint, request, jsonify
-from essentia.standard import MonoLoader, KeyExtractor, PitchMelodia, RhythmExtractor
+from essentia.standard import (
+    MonoLoader,
+    KeyExtractor,
+    PitchMelodia,
+    RhythmExtractor,
+    Meter,
+    Beatogram,
+    BeatsLoudness,
+)
 from operator import itemgetter
 from .utils import model
 import os
@@ -48,13 +56,16 @@ def harmonize():
     frequencies = analysis["frequencies"]
     key = analysis["key"]
     bpm = analysis["bpm"]
-    time_signature = 4
+    meter = analysis["meter"]
+    start = analysis["start"].item()
+
+    print("hello")
 
     measure_length_bins = (
-        time_signature * (60 / bpm) * (44100 / 128)
+        meter * (60 / bpm) * (44100 / 128)
     )  # (beats/measure) (seconds/ebat) * (bins/second) = frequency bins/measure
 
-    num_measures = math.ceil(len(frequencies) / measure_length_bins)
+    num_measures = round(len(frequencies) / measure_length_bins)
 
     measures = [
         frequencies[
@@ -85,7 +96,13 @@ def harmonize():
             {
                 "success": True,
                 "message": "Input harmonized",
-                "result": {"chords": chords, "bpm": bpm},
+                "result": {
+                    "chords": chords,
+                    "bpm": bpm,
+                    "key": key,
+                    "meter": meter,
+                    "start": start,
+                },
             }
         ),
         200,
@@ -101,13 +118,20 @@ def analyze(file):
         audio
     )  # key (note) and scale (major vs. minor) matter
 
-    bpm = RhythmExtractor()(audio)[0]  # tempo in beats per minute
+    bpm, beats = RhythmExtractor()(audio)[:2]  # tempo in beats per minute
+
+    loudness, loudness_band_ratio = BeatsLoudness(beats=beats)(audio)
+    beatogram = Beatogram()(loudness, loudness_band_ratio)
+    meter = Meter()(beatogram)
+    print(beats[0])
 
     return {
         "audio": audio,
         "bpm": bpm,
         "frequencies": frequencies,
         "key": key + " " + scale,
+        "meter": meter,
+        "start": beats[0],
     }
 
 
