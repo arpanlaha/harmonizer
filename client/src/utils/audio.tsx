@@ -1,3 +1,3 @@
 export default class Audio {
-  static context = new window.AudioContext();
+  static audioContext = new window.AudioContext();
 }

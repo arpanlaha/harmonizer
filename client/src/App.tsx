@@ -5,12 +5,17 @@ import { Alert, Button, Progress, Slider, Spin, Upload } from "antd";
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
 import { SliderValue } from "antd/lib/slider";
 import { UploadChangeParam } from "antd/lib/upload";
+import { FMSynth, Transport, Offline } from "tone";
 
 import "antd/dist/antd.css";
 import "antd/dist/antd.dark.css";
 import "./styles/style.scss";
 
 const PLAYBACK_INTERVAL = 0.02;
+
+const Synth = FMSynth;
+
+const { audioContext } = Audio;
 
 export default function App(): ReactElement {
   const [file, setFile] = useState<File | null>(null);
@@ -19,34 +24,79 @@ export default function App(): ReactElement {
   const [error, setError] = useState("");
   const [bpm, setBpm] = useState(0);
   const [chords, setChords] = useState([]);
-  const [audioSource, setAudioSource] = useState(
-    Audio.context.createBufferSource()
+  const [melodySource, setMelodySource] = useState(
+    audioContext.createBufferSource()
   );
-  const [audioBuffer, setAudioBuffer] = useState(
-    Audio.context.createBuffer(1, 1, 44100)
+  const [harmonySource, setHarmonySource] = useState(
+    audioContext.createBufferSource()
+  );
+  const [melodyBuffer, setMelodyBuffer] = useState(
+    audioContext.createBuffer(1, 1, 44100)
+  );
+  const [harmonyBuffer, setHarmonyBuffer] = useState(
+    audioContext.createBuffer(1, 1, 44100)
   );
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
 
-  const resetAudioSource = useCallback((): void => {
-    const newAudioSource = Audio.context.createBufferSource();
-    newAudioSource.buffer = audioBuffer;
-    setAudioSource(newAudioSource);
-  }, [audioBuffer, setAudioSource]);
+  const resetMelodySource = useCallback((): void => {
+    const newMelodySource = audioContext.createBufferSource();
+    newMelodySource.buffer = melodyBuffer;
+    setMelodySource(newMelodySource);
+  }, [melodyBuffer, setMelodySource]);
+
+  const resetHarmonySource = useCallback((): void => {
+    const newHarmonySource = audioContext.createBufferSource();
+    newHarmonySource.buffer = harmonyBuffer;
+    setHarmonySource(newHarmonySource);
+  }, [harmonyBuffer, setHarmonySource]);
 
   useEffect((): void => {
-    resetAudioSource();
-  }, [audioBuffer, resetAudioSource]);
+    resetMelodySource();
+  }, [melodyBuffer, resetMelodySource]);
+
+  useEffect((): void => {
+    resetHarmonySource();
+  }, [harmonyBuffer, resetHarmonySource]);
 
   useEffect((): void => {
     if (file !== null) {
       file
         .arrayBuffer()
-        .then((arrayBuffer) => Audio.context.decodeAudioData(arrayBuffer))
-        .then(setAudioBuffer)
+        .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+        .then(setMelodyBuffer)
         .catch(() => setError(`Error loading ${file.name} in browser`));
     }
-  }, [file, setAudioBuffer]);
+  }, [file, setMelodyBuffer]);
+
+  useEffect((): void => {
+    Transport.bpm.value = bpm;
+  }, [bpm]);
+
+  useEffect((): void => {
+    Offline((): void => {
+      const synth1 = new Synth().toDestination();
+      const synth2 = new Synth().toDestination();
+      const synth3 = new Synth().toDestination();
+      synth1.triggerAttackRelease("C3", 2);
+      synth2.triggerAttackRelease("E3", 2);
+      synth3.triggerAttackRelease("G3", 2);
+      synth1.triggerAttackRelease("F3", 2, 2);
+      synth2.triggerAttackRelease("A3", 2, 2);
+      synth3.triggerAttackRelease("C4", 2, 2);
+      synth1.triggerAttackRelease("G3", 2, 4);
+      synth2.triggerAttackRelease("B3", 2, 4);
+      synth3.triggerAttackRelease("D4", 2, 4);
+      synth1.triggerAttackRelease("C3", 2, 6);
+      synth2.triggerAttackRelease("E3", 2, 6);
+      synth3.triggerAttackRelease("G3", 2, 6);
+    }, melodyBuffer.duration).then((buffer): void => {
+      const newBuffer = buffer.get();
+      if (newBuffer !== undefined) {
+        setHarmonyBuffer(newBuffer);
+      }
+    });
+  }, [chords, bpm, melodyBuffer]);
 
   const handleUpload = (e: UploadChangeParam): void => {
     const { response, status } = e.file;
@@ -75,34 +125,47 @@ export default function App(): ReactElement {
   };
 
   const handlePlay = useCallback((): void => {
-    audioSource.connect(Audio.context.destination);
-
+    melodySource.connect(audioContext.destination);
+    harmonySource.connect(audioContext.destination);
     let newTime = time;
-    if (time >= audioBuffer.duration - PLAYBACK_INTERVAL * 2) {
+    if (time >= melodyBuffer.duration - PLAYBACK_INTERVAL * 2) {
       newTime = 0;
       setTime(newTime);
     }
 
-    audioSource.start(0, newTime);
+    melodySource.start(0, newTime);
+    harmonySource.start(0, newTime);
     setPlaying(true);
 
-    const startTime = Audio.context.currentTime;
+    const startTime = audioContext.currentTime;
     const timer = setInterval(
-      (): void => setTime(Audio.context.currentTime - startTime + newTime),
+      (): void => setTime(audioContext.currentTime - startTime + newTime),
       PLAYBACK_INTERVAL * 1000
     );
 
-    audioSource.onended = () => {
+    melodySource.onended = (): void => {
       clearInterval(timer);
-      resetAudioSource();
+      resetMelodySource();
       setPlaying(false);
     };
-  }, [audioSource, audioBuffer, resetAudioSource, time]);
+
+    harmonySource.onended = (): void => {
+      resetHarmonySource();
+    };
+  }, [
+    melodySource,
+    harmonySource,
+    melodyBuffer,
+    resetMelodySource,
+    resetHarmonySource,
+    time,
+  ]);
 
   const handleStop = useCallback((): void => {
-    audioSource.stop();
+    melodySource.stop();
+    harmonySource.stop();
     setPlaying(false);
-  }, [audioSource]);
+  }, [melodySource, harmonySource]);
 
   const handleSlider = useCallback(
     (value: SliderValue): void => {
@@ -110,13 +173,21 @@ export default function App(): ReactElement {
         return;
       }
       if (playing) {
-        audioSource.stop();
-        resetAudioSource();
+        melodySource.stop();
+        harmonySource.stop();
+        resetMelodySource();
+        resetHarmonySource();
         setPlaying(false);
       }
       setTime(value);
     },
-    [audioSource, playing, resetAudioSource]
+    [
+      melodySource,
+      harmonySource,
+      playing,
+      resetMelodySource,
+      resetHarmonySource,
+    ]
   );
 
   const formatTime = (seconds: number): string => {
@@ -175,11 +246,10 @@ export default function App(): ReactElement {
             message={`The following error has been encountered: ${error}`}
           />
         )}
-
         {file && (
           <div className="player">
             <span className="time">
-              {formatTime(time)} / {formatTime(audioBuffer.duration)}
+              {formatTime(time)} / {formatTime(melodyBuffer.duration)}
             </span>
             <Button type="primary" onClick={playing ? handleStop : handlePlay}>
               {playing ? <PauseCircleFilled /> : <PlayCircleFilled />}
@@ -188,7 +258,7 @@ export default function App(): ReactElement {
             <Slider
               value={time}
               min={0}
-              max={audioBuffer.duration}
+              max={melodyBuffer.duration}
               step={PLAYBACK_INTERVAL}
               onChange={handleSlider}
               tooltipVisible={false}
