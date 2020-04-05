@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback, useEffect, useState } from "react";
-import Audio from "./utils/audio";
+import { Audio, ChordName, Model } from "./utils";
 import { Head } from "./components";
 import { Alert, Button, Progress, Slider, Spin, Upload } from "antd";
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
@@ -17,13 +17,15 @@ const Synth = FMSynth;
 
 const { audioContext } = Audio;
 
-export default function App(): ReactElement {
+const timeSignature = 4;
+
+export default function Harmonizer(): ReactElement {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [percent, setPercent] = useState(-1);
   const [error, setError] = useState("");
   const [bpm, setBpm] = useState(0);
-  const [chords, setChords] = useState([]);
+  const [chords, setChords] = useState<ChordName[]>([]);
   const [melodySource, setMelodySource] = useState(
     audioContext.createBufferSource()
   );
@@ -74,28 +76,32 @@ export default function App(): ReactElement {
   }, [bpm]);
 
   useEffect((): void => {
-    Offline((): void => {
-      const synth1 = new Synth().toDestination();
-      const synth2 = new Synth().toDestination();
-      const synth3 = new Synth().toDestination();
-      synth1.triggerAttackRelease("C3", 2);
-      synth2.triggerAttackRelease("E3", 2);
-      synth3.triggerAttackRelease("G3", 2);
-      synth1.triggerAttackRelease("F3", 2, 2);
-      synth2.triggerAttackRelease("A3", 2, 2);
-      synth3.triggerAttackRelease("C4", 2, 2);
-      synth1.triggerAttackRelease("G3", 2, 4);
-      synth2.triggerAttackRelease("B3", 2, 4);
-      synth3.triggerAttackRelease("D4", 2, 4);
-      synth1.triggerAttackRelease("C3", 2, 6);
-      synth2.triggerAttackRelease("E3", 2, 6);
-      synth3.triggerAttackRelease("G3", 2, 6);
-    }, melodyBuffer.duration).then((buffer): void => {
-      const newBuffer = buffer.get();
-      if (newBuffer !== undefined) {
-        setHarmonyBuffer(newBuffer);
-      }
-    });
+    if (chords.length > 0) {
+      const measureLength = (60 * timeSignature) / bpm;
+      Offline((): void => {
+        const synths = [
+          new Synth().toDestination(),
+          new Synth().toDestination(),
+          new Synth().toDestination(),
+        ];
+
+        chords.forEach((chord, chordIndex): void =>
+          synths.forEach(
+            (synth, synthIndex): FMSynth =>
+              synth.triggerAttackRelease(
+                `${Model.chords[chord].notes[synthIndex]}3`,
+                measureLength,
+                measureLength * chordIndex
+              )
+          )
+        );
+      }, melodyBuffer.duration).then((buffer): void => {
+        const newBuffer = buffer.get();
+        if (newBuffer !== undefined) {
+          setHarmonyBuffer(newBuffer);
+        }
+      });
+    }
   }, [chords, bpm, melodyBuffer]);
 
   const handleUpload = (e: UploadChangeParam): void => {
@@ -246,7 +252,7 @@ export default function App(): ReactElement {
             message={`The following error has been encountered: ${error}`}
           />
         )}
-        {file && (
+        {chords.length > 0 && (
           <div className="player">
             <span className="time">
               {formatTime(time)} / {formatTime(melodyBuffer.duration)}

@@ -69,7 +69,7 @@ model = {
         "Bb major": {
             "name": "Bb major",
             "chords": [
-                "Bb manor",
+                "Bb major",
                 "C minor",
                 "D minor",
                 "Eb major",

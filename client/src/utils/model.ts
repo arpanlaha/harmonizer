@@ -1,4 +1,138 @@
-export default {
+interface Model {
+  readonly keys: Record<KeyName, Key>;
+  readonly chords: Record<ChordName, Chord>;
+  readonly pitches: Record<PitchName, Pitch>;
+}
+
+export type ChordName =
+  | "Abb major"
+  | "Ab major"
+  | "Ab minor"
+  | "A major"
+  | "A minor"
+  | "A# major"
+  | "A# minor"
+  | "Bbb major"
+  | "Bbb minor"
+  | "Bb major"
+  | "Bb minor"
+  | "B major"
+  | "B minor"
+  | "B# major"
+  | "B# minor"
+  | "Cb major"
+  | "Cb minor"
+  | "C major"
+  | "C minor"
+  | "C# major"
+  | "C# minor"
+  | "C## minor"
+  | "Dbb major"
+  | "Db major"
+  | "Db minor"
+  | "D major"
+  | "D minor"
+  | "D# major"
+  | "D# minor"
+  | "D## minor"
+  | "Ebb major"
+  | "Eb major"
+  | "Eb minor"
+  | "E major"
+  | "E minor"
+  | "E# major"
+  | "E# minor"
+  | "Fb major"
+  | "Fb minor"
+  | "F major"
+  | "F minor"
+  | "F# major"
+  | "F# minor"
+  | "F## major"
+  | "F## minor"
+  | "Gb major"
+  | "Gb minor"
+  | "G major"
+  | "G minor"
+  | "G# major"
+  | "G# minor"
+  | "G## minor";
+
+export interface Key {
+  readonly name: KeyName;
+  readonly chords: ChordName[];
+}
+
+export type KeyName =
+  | "Ab major"
+  | "Ab minor"
+  | "A major"
+  | "A minor"
+  | "A# major"
+  | "A# minor"
+  | "Bb major"
+  | "Bb minor"
+  | "B major"
+  | "B minor"
+  | "B# major"
+  | "B# minor"
+  | "Cb major"
+  | "Cb minor"
+  | "C major"
+  | "C minor"
+  | "C# major"
+  | "C# minor"
+  | "Db major"
+  | "Db minor"
+  | "D major"
+  | "D minor"
+  | "D# major"
+  | "D# minor"
+  | "Eb major"
+  | "Eb minor"
+  | "E major"
+  | "E minor"
+  | "E# major"
+  | "E# minor"
+  | "Fb major"
+  | "Fb minor"
+  | "F major"
+  | "F minor"
+  | "F# major"
+  | "F# minor"
+  | "Gb major"
+  | "Gb minor"
+  | "G major"
+  | "G minor"
+  | "G# major"
+  | "G# minor";
+
+export type PitchName =
+  | "A"
+  | "A#"
+  | "B"
+  | "C"
+  | "C#"
+  | "D"
+  | "D#"
+  | "E"
+  | "F"
+  | "F#"
+  | "G"
+  | "G#";
+
+export interface Chord {
+  readonly name: ChordName;
+  readonly notes: PitchName[];
+}
+
+export interface Pitch {
+  readonly name: PitchName;
+  readonly noteNumbers: readonly [number, number, number];
+  readonly baseFrequency: number;
+}
+
+export const Model: Model = {
   keys: {
     "Ab major": {
       name: "Ab major",
@@ -69,7 +203,7 @@ export default {
     "Bb major": {
       name: "Bb major",
       chords: [
-        "Bb manor",
+        "Bb major",
         "C minor",
         "D minor",
         "Eb major",
@@ -203,7 +337,7 @@ export default {
       chords: [
         "Db major",
         "Eb minor",
-        " F minor",
+        "F minor",
         "Gb major",
         "Ab major",
         "Bb minor",

@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+import Harmonizer from "./Harmonizer";
 import { register } from "./serviceWorker";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<Harmonizer />, document.getElementById("root"));
 register();
