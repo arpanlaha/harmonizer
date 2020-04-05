@@ -12,11 +12,8 @@ import "antd/dist/antd.dark.css";
 import "./styles/style.scss";
 
 const PLAYBACK_INTERVAL = 0.02;
-
 const Synth = FMSynth;
-
-const { audioContext } = Audio;
-
+const { ctx } = Audio;
 const timeSignature = 4;
 
 interface HarmonizeResult {
@@ -25,55 +22,34 @@ interface HarmonizeResult {
 }
 
 export default function Harmonizer(): ReactElement {
-  const [file, setFile] = useState<File | null>(null);
+  const [melodyFile, setMelodyFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [percent, setPercent] = useState(-1);
   const [error, setError] = useState("");
   const [result, setResult] = useState<HarmonizeResult | null>(null);
-  const [melodySource, setMelodySource] = useState(
-    audioContext.createBufferSource()
-  );
-  const [harmonySource, setHarmonySource] = useState(
-    audioContext.createBufferSource()
-  );
+  const [audioSource, setAudioSource] = useState(ctx.createBufferSource());
+
   const [melodyBuffer, setMelodyBuffer] = useState(
-    audioContext.createBuffer(1, 1, 44100)
+    ctx.createBuffer(1, 1, ctx.sampleRate)
   );
   const [harmonyBuffer, setHarmonyBuffer] = useState(
-    audioContext.createBuffer(1, 1, 44100)
+    ctx.createBuffer(1, 1, ctx.sampleRate)
+  );
+  const [overlayBuffer, setOverlayBuffer] = useState(
+    ctx.createBuffer(1, 1, ctx.sampleRate)
   );
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
 
-  const resetMelodySource = useCallback((): void => {
-    const newMelodySource = audioContext.createBufferSource();
-    newMelodySource.buffer = melodyBuffer;
-    setMelodySource(newMelodySource);
-  }, [melodyBuffer, setMelodySource]);
-
-  const resetHarmonySource = useCallback((): void => {
-    const newHarmonySource = audioContext.createBufferSource();
-    newHarmonySource.buffer = harmonyBuffer;
-    setHarmonySource(newHarmonySource);
-  }, [harmonyBuffer, setHarmonySource]);
-
   useEffect((): void => {
-    resetMelodySource();
-  }, [melodyBuffer, resetMelodySource]);
-
-  useEffect((): void => {
-    resetHarmonySource();
-  }, [harmonyBuffer, resetHarmonySource]);
-
-  useEffect((): void => {
-    if (file !== null) {
-      file
+    if (melodyFile !== null) {
+      melodyFile
         .arrayBuffer()
-        .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+        .then((arrayBuffer) => ctx.decodeAudioData(arrayBuffer))
         .then(setMelodyBuffer)
-        .catch(() => setError(`Error loading ${file.name} in browser`));
+        .catch(() => setError(`Error loading ${melodyFile.name} in browser`));
     }
-  }, [file, setMelodyBuffer]);
+  }, [melodyFile, setMelodyBuffer]);
 
   useEffect((): void => {
     if (result !== null) {
@@ -106,6 +82,41 @@ export default function Harmonizer(): ReactElement {
     }
   }, [result, melodyBuffer]);
 
+  useEffect((): void => {
+    const newOverlayBuffer = ctx.createBuffer(
+      melodyBuffer.numberOfChannels,
+      melodyBuffer.length,
+      ctx.sampleRate
+    );
+    const harmonyBufferChannel = harmonyBuffer.getChannelData(0);
+    for (let channel = 0; channel < melodyBuffer.numberOfChannels; channel++) {
+      const newOverlayBufferChannel = newOverlayBuffer.getChannelData(channel);
+      const melodyBufferChannel = melodyBuffer.getChannelData(channel);
+      for (let i = 0; i < melodyBuffer.length; i++) {
+        newOverlayBufferChannel[i] =
+          melodyBufferChannel[i] + harmonyBufferChannel[i];
+      }
+    }
+    setOverlayBuffer(newOverlayBuffer);
+  }, [melodyBuffer, harmonyBuffer]);
+
+  const resetAudioSource = useCallback((): void => {
+    const newAudioSource = ctx.createBufferSource();
+    newAudioSource.buffer = overlayBuffer;
+    setAudioSource(newAudioSource);
+  }, [overlayBuffer, setAudioSource]);
+
+  useEffect((): void => resetAudioSource(), [overlayBuffer, resetAudioSource]);
+
+  const beforeUpload = (file: File): boolean => {
+    setLoading(true);
+    setError("");
+    setPercent(-1);
+    setResult(null);
+    setMelodyFile(file);
+    return true;
+  };
+
   const handleUpload = (e: UploadChangeParam): void => {
     const { response, status } = e.file;
 
@@ -120,57 +131,34 @@ export default function Harmonizer(): ReactElement {
     }
   };
 
-  const beforeUpload = (upload: File): boolean => {
-    setLoading(true);
-    setError("");
-    setPercent(-1);
-    setResult(null);
-    setFile(upload);
-    return true;
-  };
-
   const handlePlay = useCallback((): void => {
-    melodySource.connect(audioContext.destination);
-    harmonySource.connect(audioContext.destination);
+    audioSource.connect(ctx.destination);
     let newTime = time;
     if (time >= melodyBuffer.duration - PLAYBACK_INTERVAL * 2) {
       newTime = 0;
       setTime(newTime);
     }
 
-    melodySource.start(0, newTime);
-    harmonySource.start(0, newTime);
+    audioSource.start(0, newTime);
     setPlaying(true);
 
-    const startTime = audioContext.currentTime;
+    const startTime = ctx.currentTime;
     const timer = setInterval(
-      (): void => setTime(audioContext.currentTime - startTime + newTime),
+      (): void => setTime(ctx.currentTime - startTime + newTime),
       PLAYBACK_INTERVAL * 1000
     );
 
-    melodySource.onended = (): void => {
+    audioSource.onended = (): void => {
       clearInterval(timer);
-      resetMelodySource();
+      resetAudioSource();
       setPlaying(false);
     };
-
-    harmonySource.onended = (): void => {
-      resetHarmonySource();
-    };
-  }, [
-    melodySource,
-    harmonySource,
-    melodyBuffer,
-    resetMelodySource,
-    resetHarmonySource,
-    time,
-  ]);
+  }, [audioSource, melodyBuffer, time, resetAudioSource]);
 
   const handleStop = useCallback((): void => {
-    melodySource.stop();
-    harmonySource.stop();
+    audioSource.stop();
     setPlaying(false);
-  }, [melodySource, harmonySource]);
+  }, [audioSource]);
 
   const handleSlider = useCallback(
     (value: SliderValue): void => {
@@ -208,16 +196,18 @@ export default function Harmonizer(): ReactElement {
               process.env.REACT_APP_BACKEND_URL ??
               `http://${process.env.REACT_APP_VM_IP ?? "localhost"}:5000`
             }/harmony`}
-            onChange={handleUpload}
             beforeUpload={beforeUpload}
+            onChange={handleUpload}
             accept=".wav,.mp3,.mp4"
             showUploadList={false}
           >
-            <Button type={file === null ? "primary" : "default"}>Upload</Button>
+            <Button type={melodyFile === null ? "primary" : "default"}>
+              Upload
+            </Button>
           </Upload>
         </div>
 
-        {file !== null && <h2>{file.name}</h2>}
+        {melodyFile !== null && <h2>{melodyFile.name}</h2>}
 
         {loading && (
           <>

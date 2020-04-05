@@ -1,3 +1,3 @@
 export class Audio {
-  static audioContext = new window.AudioContext();
+  static ctx = new window.AudioContext({ sampleRate: 44100 });
 }
