@@ -74,6 +74,11 @@ export default function Harmonizer(): ReactElement {
           new Synth().toDestination(),
         ];
 
+        // decreasing order of volume: tonic, dominant, mediant
+        const decibelDiff = 2;
+        synths[1].volume.value -= decibelDiff * 2;
+        synths[2].volume.value -= decibelDiff;
+
         // trigger 3 * chord progression length attack/releases
         chords.forEach((chord, chordIndex): void =>
           synths.forEach(
@@ -144,6 +149,7 @@ export default function Harmonizer(): ReactElement {
     setPercent(-1);
     setResult(null);
     setMelodyFile(file);
+    setPlayTime(0);
     return true;
   };
 
