@@ -19,13 +19,17 @@ const { audioContext } = Audio;
 
 const timeSignature = 4;
 
+interface HarmonizeResult {
+  bpm: number;
+  chords: ChordName[];
+}
+
 export default function Harmonizer(): ReactElement {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [percent, setPercent] = useState(-1);
   const [error, setError] = useState("");
-  const [bpm, setBpm] = useState(0);
-  const [chords, setChords] = useState<ChordName[]>([]);
+  const [result, setResult] = useState<HarmonizeResult | null>(null);
   const [melodySource, setMelodySource] = useState(
     audioContext.createBufferSource()
   );
@@ -72,11 +76,9 @@ export default function Harmonizer(): ReactElement {
   }, [file, setMelodyBuffer]);
 
   useEffect((): void => {
-    Transport.bpm.value = bpm;
-  }, [bpm]);
-
-  useEffect((): void => {
-    if (chords.length > 0) {
+    if (result !== null) {
+      const { bpm, chords } = result;
+      Transport.bpm.value = bpm;
       const measureLength = (60 * timeSignature) / bpm;
       Offline((): void => {
         const synths = [
@@ -102,7 +104,7 @@ export default function Harmonizer(): ReactElement {
         }
       });
     }
-  }, [chords, bpm, melodyBuffer]);
+  }, [result, melodyBuffer]);
 
   const handleUpload = (e: UploadChangeParam): void => {
     const { response, status } = e.file;
@@ -110,9 +112,7 @@ export default function Harmonizer(): ReactElement {
     if (status === "uploading" && e.event !== undefined) {
       setPercent(e.event.percent);
     } else if (status === "done") {
-      const { result } = response;
-      setBpm(result.bpm);
-      setChords(result.chords);
+      setResult(response.result);
       setLoading(false);
     } else if (status === "error") {
       setError(response?.message ?? "Unknown error");
@@ -120,13 +120,12 @@ export default function Harmonizer(): ReactElement {
     }
   };
 
-  const beforeUpload = (file: File): boolean => {
+  const beforeUpload = (upload: File): boolean => {
     setLoading(true);
     setError("");
     setPercent(-1);
-    setBpm(0);
-    setChords([]);
-    setFile(file);
+    setResult(null);
+    setFile(upload);
     return true;
   };
 
@@ -179,21 +178,11 @@ export default function Harmonizer(): ReactElement {
         return;
       }
       if (playing) {
-        melodySource.stop();
-        harmonySource.stop();
-        resetMelodySource();
-        resetHarmonySource();
-        setPlaying(false);
+        handleStop();
       }
       setTime(value);
     },
-    [
-      melodySource,
-      harmonySource,
-      playing,
-      resetMelodySource,
-      resetHarmonySource,
-    ]
+    [playing, handleStop]
   );
 
   const formatTime = (seconds: number): string => {
@@ -228,7 +217,7 @@ export default function Harmonizer(): ReactElement {
           </Upload>
         </div>
 
-        {file && <h2>{file.name}</h2>}
+        {file !== null && <h2>{file.name}</h2>}
 
         {loading && (
           <>
@@ -243,33 +232,38 @@ export default function Harmonizer(): ReactElement {
           </>
         )}
 
-        {bpm > 0 && <h3>BPM: {bpm}</h3>}
-        {chords.length > 0 && <h3>Chords: {chords.join(", ")}</h3>}
+        {result !== null && (
+          <>
+            <h3>BPM: {Math.round(result.bpm)}</h3>{" "}
+            <h3>Chords: {result.chords.join(", ")}</h3>{" "}
+            <div className="player">
+              <h3 className="time">
+                {formatTime(time)} / {formatTime(melodyBuffer.duration)}
+              </h3>
+              <Button
+                type="primary"
+                onClick={playing ? handleStop : handlePlay}
+              >
+                {playing ? <PauseCircleFilled /> : <PlayCircleFilled />}
+              </Button>
+
+              <Slider
+                value={time}
+                min={0}
+                max={melodyBuffer.duration}
+                step={PLAYBACK_INTERVAL}
+                onChange={handleSlider}
+                tooltipVisible={false}
+              />
+            </div>
+          </>
+        )}
 
         {error !== "" && (
           <Alert
             type="error"
             message={`The following error has been encountered: ${error}`}
           />
-        )}
-        {chords.length > 0 && (
-          <div className="player">
-            <span className="time">
-              {formatTime(time)} / {formatTime(melodyBuffer.duration)}
-            </span>
-            <Button type="primary" onClick={playing ? handleStop : handlePlay}>
-              {playing ? <PauseCircleFilled /> : <PlayCircleFilled />}
-            </Button>
-
-            <Slider
-              value={time}
-              min={0}
-              max={melodyBuffer.duration}
-              step={PLAYBACK_INTERVAL}
-              onChange={handleSlider}
-              tooltipVisible={false}
-            />
-          </div>
         )}
       </div>
     </>
