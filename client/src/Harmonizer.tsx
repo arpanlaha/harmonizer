@@ -63,7 +63,6 @@ export default function Harmonizer(): ReactElement {
       const { bpm, chords, meter, start } = result;
       Transport.bpm.value = bpm;
       const measureLength = (60 * meter) / bpm;
-      console.log(measureLength);
 
       // synthesize audio and render into output buffer
       Offline((): void => {
