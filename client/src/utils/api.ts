@@ -12,6 +12,11 @@ export interface HarmonyParams {
   key?: KeyName;
   meter?: number;
 }
+
+type HarmonyParamName = "bpm" | "chords" | "key" | "meter";
+
+const harmonyParamNames: HarmonyParamName[] = ["bpm", "chords", "key", "meter"];
+
 export interface HarmonyResult {
   bpm: number;
   chords: ChordName[];
@@ -30,13 +35,19 @@ export const getHarmony = (
   params: HarmonyParams
 ): Promise<HarmonyResponseWrapper> => {
   const data = new FormData();
-  data.append("file", file);
+  data.append("melody", file);
+  harmonyParamNames.forEach((paramName) => {
+    const param = params[paramName];
+    if (param !== undefined) {
+      data.append(
+        paramName,
+        typeof param === "string" ? param : JSON.stringify(param)
+      );
+    }
+  });
+
   return axios
-    .post(`${BACKEND_URL}/harmony`, data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
+    .post(`${BACKEND_URL}/harmony`, data)
     .then((response) => ({
       type: "GET_HARMONY_SUCCESS",
       result: response.data.result,

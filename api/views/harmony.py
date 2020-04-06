@@ -19,15 +19,18 @@ harmony = Blueprint("harmony", __name__, url_prefix="/harmony")
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in {
+        "aiff",
+        "flac",
         "mp3",
         "mp4",
+        "ogg",
         "wav",
     }
 
 
 @harmony.route("", methods=["POST"])
 def harmonize():
-    file = request.files.get("file")
+    file = request.files.get("melody")
 
     if file is None or file.filename == "":
         return (
@@ -54,12 +57,11 @@ def harmonize():
     analysis = analyze(file_path)
 
     frequencies = analysis["frequencies"]
-    key = analysis["key"]
-    bpm = analysis["bpm"]
-    meter = analysis["meter"]
     start = analysis["start"].item()
 
-    print("hello")
+    key = request.form.get("key", analysis["key"])
+    bpm = float(request.form.get("bpm", analysis["bpm"]))
+    meter = float(request.form.get("meter", analysis["meter"]))
 
     measure_length_bins = (
         meter * (60 / bpm) * (44100 / 128)
@@ -83,6 +85,8 @@ def harmonize():
     # assume first and last chords are tonic
     chords[0] = model["keys"][key]["chords"][0]
     chords[len(measures) - 1] = chords[0]
+
+    chords = request.form.get("chords", chords)
 
     for i in range(num_measures - 2):
         # start from second last and go backwards (important for contextual scoring)
@@ -123,7 +127,6 @@ def analyze(file):
     loudness, loudness_band_ratio = BeatsLoudness(beats=beats)(audio)
     beatogram = Beatogram()(loudness, loudness_band_ratio)
     meter = Meter()(beatogram)
-    print(beats[0])
 
     return {
         "audio": audio,
