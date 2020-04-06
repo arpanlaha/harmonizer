@@ -118,7 +118,11 @@ export default function Harmonizer(): ReactElement {
       const harmonyBufferChannel = harmonyBuffer.getChannelData(0);
 
       // melody has arbitrary channels
-      for (let channel = 0; channel < 1; channel++) {
+      for (
+        let channel = 0;
+        channel < melodyBuffer.numberOfChannels;
+        channel++
+      ) {
         const newOverlayBufferChannel = newOverlayBuffer.getChannelData(
           channel
         );
@@ -215,12 +219,22 @@ export default function Harmonizer(): ReactElement {
     return `${minutes}:${seconds > 10 ? "" : "0"}${secondsInt}`;
   };
 
+  const resetResult = (): void => {
+    setError("");
+    setResult(null);
+    setPlayTime(0);
+  };
+
+  const handleFile = (files: File[]): void => {
+    resetResult();
+    setMelodyFile(files[0]);
+  };
+
   const handleSubmit = (): void => {
     if (melodyFile !== null) {
+      resetResult();
       setLoading(true);
-      setError("");
-      setResult(null);
-      setPlayTime(0);
+
       getHarmony(melodyFile, params)
         .then((response) => {
           response.result
@@ -254,7 +268,7 @@ export default function Harmonizer(): ReactElement {
         <div className="upload-container">
           <h2>Add melody file here:</h2>
           <Dropzone
-            onDropAccepted={(files) => setMelodyFile(files[0])}
+            onDropAccepted={handleFile}
             onDropRejected={handleInvalidFile}
             accept=".aiff,.flac,.mp3,.mp4,.ogg,.wav"
             multiple={false}
