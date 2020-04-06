@@ -248,7 +248,11 @@ export default function Harmonizer(): ReactElement {
 
         <div className="upload-container">
           <h2>Add melody file here:</h2>
-          <Dropzone onDrop={(files) => setMelodyFile(files[0])}>
+          <Dropzone
+            onDrop={(files) => setMelodyFile(files[0])}
+            accept={["aiff", "flac", "mp3", "mp4", "ogg", "wav"]}
+            multiple={false}
+          >
             {({ getRootProps, getInputProps }) => (
               <section>
                 <Button
