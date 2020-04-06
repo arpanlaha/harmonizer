@@ -1,21 +1,17 @@
 import React, { ReactElement, useCallback, useEffect, useState } from "react";
-import { AudioContext, ChordName, Chords, KeyName, Keys } from "./utils";
-import { Head } from "./components";
 import {
-  Alert,
-  Button,
-  Input,
-  InputNumber,
-  Progress,
-  Slider,
-  Spin,
-  Upload,
-  Select,
-} from "antd";
+  AudioContext,
+  Chords,
+  getHarmony,
+  HarmonyParams,
+  HarmonyResult,
+  Keys,
+} from "./utils";
+import { Head } from "./components";
+import { Alert, Button, Form, InputNumber, Slider, Spin, Select } from "antd";
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
 import Dropzone from "react-dropzone";
 import { SliderValue } from "antd/lib/slider";
-import { UploadChangeParam } from "antd/lib/upload";
 import { FMSynth, Transport, Offline } from "tone";
 
 import "antd/dist/antd.css";
@@ -25,22 +21,16 @@ import "./styles/style.scss";
 const PLAYBACK_INTERVAL = 0.02;
 const Synth = FMSynth;
 const { ctx } = AudioContext;
+const { Item } = Form;
 const { Option } = Select;
-
-interface HarmonizeResult {
-  bpm: number;
-  chords: ChordName[];
-  key: KeyName;
-  meter: number;
-  start: number;
-}
 
 export default function Harmonizer(): ReactElement {
   const [melodyFile, setMelodyFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [percent, setPercent] = useState(-1);
+  // const [percent, setPercent] = useState(-1);
+  const [params, setParams] = useState<HarmonyParams>({});
   const [error, setError] = useState("");
-  const [result, setResult] = useState<HarmonizeResult | null>(null);
+  const [result, setResult] = useState<HarmonyResult | null>(null);
   const [audioSource, setAudioSource] = useState(ctx.createBufferSource());
   const [melodyBuffer, setMelodyBuffer] = useState(
     ctx.createBuffer(1, 1, ctx.sampleRate)
@@ -53,6 +43,8 @@ export default function Harmonizer(): ReactElement {
   );
   const [playing, setPlaying] = useState(false);
   const [playTime, setPlayTime] = useState(0);
+
+  const [form] = Form.useForm();
 
   /**
    * Set melody buffer on file upload
@@ -150,45 +142,9 @@ export default function Harmonizer(): ReactElement {
   }, [overlayBuffer, setAudioSource]);
 
   /**
-   * Reset audioSource on chnange to overlayBuffer
+   * Reset audioSource on change to overlayBuffer
    */
   useEffect((): void => resetAudioSource(), [overlayBuffer, resetAudioSource]);
-
-  /**
-   * Reset application state prior to new upload
-   * @param file the melody file being uploaded
-   */
-  const beforeUpload = (file: File): boolean => {
-    setLoading(true);
-    setError("");
-    setPercent(-1);
-    setResult(null);
-    setMelodyFile(file);
-    setPlayTime(0);
-    return true;
-  };
-
-  /**
-   * Update application state on upload change
-   * @param uploadChange the upload change object
-   */
-  const handleUpload = (uploadChange: UploadChangeParam): void => {
-    const { file, event } = uploadChange;
-    const { response, status } = file;
-
-    if (status === "uploading" && event !== undefined) {
-      // update progress bar
-      setPercent(event.percent);
-    } else if (status === "done") {
-      // set result and end loading
-      setResult(response.result);
-      setLoading(false);
-    } else if (status === "error") {
-      // set error and end loading
-      setError(response?.message ?? "Unknown error");
-      setLoading(false);
-    }
-  };
 
   /**
    * Start harmonized audio playback
@@ -259,7 +215,30 @@ export default function Harmonizer(): ReactElement {
     return `${minutes}:${seconds > 10 ? "" : "0"}${secondsInt}`;
   };
 
-  const handleSubmit = (): void => {};
+  const handleSubmit = (): void => {
+    if (melodyFile !== null) {
+      setLoading(true);
+      setError("");
+      setResult(null);
+      setPlayTime(0);
+      getHarmony(melodyFile, params)
+        .then((response) => {
+          response.result
+            ? setResult(response.result)
+            : setError(response.error ?? "");
+          setLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setLoading(false);
+        });
+    }
+  };
+
+  const handleReset = (): void => {
+    form.resetFields();
+    setParams({});
+  };
 
   return (
     <>
@@ -269,21 +248,6 @@ export default function Harmonizer(): ReactElement {
 
         <div className="upload-container">
           <h2>Add melody file here:</h2>
-          <Upload
-            className="upload"
-            action={`${
-              process.env.REACT_APP_BACKEND_URL ??
-              `http://${process.env.REACT_APP_VM_IP ?? "localhost"}:5000`
-            }/harmony`}
-            beforeUpload={beforeUpload}
-            onChange={handleUpload}
-            accept=".wav,.mp3,.mp4"
-            showUploadList={false}
-          >
-            <Button type={melodyFile === null ? "primary" : "default"}>
-              Upload
-            </Button>
-          </Upload>
           <Dropzone onDrop={(files) => setMelodyFile(files[0])}>
             {({ getRootProps, getInputProps }) => (
               <section>
@@ -297,37 +261,67 @@ export default function Harmonizer(): ReactElement {
               </section>
             )}
           </Dropzone>
-          <Button
-            type="primary"
-            onClick={handleSubmit}
-            disabled={melodyFile === null}
-          >
-            Harmonize
-          </Button>
-          Key:{" "}
-          <Select placeholder="Key" showSearch>
-            {Object.keys(Keys).map((keyName) => (
-              <Option value={keyName}>{keyName}</Option>
-            ))}
-          </Select>
-          BPM: <InputNumber placeholder="BPM" />
-          Meter: <InputNumber placeholder="Meter" />
+
+          <Form onFinish={handleSubmit} onValuesChange={setParams} form={form}>
+            <Item label="Key" name="key">
+              <Select
+                placeholder="Key"
+                showSearch
+                disabled={melodyFile === null}
+                value={params.key}
+              >
+                {Object.keys(Keys).map((keyName) => (
+                  <Option key={keyName} value={keyName}>
+                    {keyName}
+                  </Option>
+                ))}
+              </Select>
+            </Item>
+            <Item label="BPM" name="bpm">
+              <InputNumber
+                placeholder="BPM"
+                disabled={melodyFile === null}
+                value={params.bpm}
+              />
+            </Item>
+            <Item label="Meter" name="meter">
+              <InputNumber
+                placeholder="Meter"
+                disabled={melodyFile === null}
+                value={params.meter}
+              />
+            </Item>
+            <Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={melodyFile === null}
+              >
+                Harmonize
+              </Button>
+            </Item>
+            <Item>
+              <Button
+                type="danger"
+                // htmlType="reset"
+                onClick={handleReset}
+                disabled={
+                  melodyFile === null ||
+                  (params.key === undefined &&
+                    params.chords === undefined &&
+                    params.bpm === undefined &&
+                    params.meter === undefined)
+                }
+              >
+                Clear inputs
+              </Button>
+            </Item>
+          </Form>
         </div>
 
         {melodyFile !== null && <h2>{melodyFile.name}</h2>}
 
-        {loading && (
-          <>
-            <Spin className="loader" />
-            {percent >= 0 && (
-              <Progress
-                percent={percent}
-                status={percent < 100 ? "active" : "success"}
-                showInfo={false}
-              />
-            )}
-          </>
-        )}
+        {loading && <Spin className="loader" />}
 
         {result !== null && (
           <>
