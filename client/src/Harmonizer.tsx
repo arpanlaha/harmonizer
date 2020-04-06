@@ -151,9 +151,67 @@ export default function Harmonizer(): ReactElement {
   useEffect((): void => resetAudioSource(), [overlayBuffer, resetAudioSource]);
 
   /**
+   * Reset harmony results on new file submission or harmonization
+   */
+  const resetResult = (): void => {
+    setError("");
+    setResult(null);
+    setPlayTime(0);
+  };
+
+  /**
+   * Sets melody file on drop
+   * @param files list of added files (singleton)
+   */
+  const handleFile = (files: File[]): void => {
+    if (files.length > 0) {
+      resetResult();
+      setMelodyFile(files[0]);
+    }
+  };
+
+  /**
+   * Sets error state on invalid file type drop
+   */
+  const handleInvalidFile = (): void =>
+    setError(
+      "Invalid file type - use one of .aiff, .flac, .mp3, .mp4, .ogg, .wav"
+    );
+
+  /**
+   * Sends melody file to harmony enndpoint
+   */
+  const handleSubmit = (): void => {
+    if (melodyFile !== null) {
+      resetResult();
+      setLoading(true);
+
+      getHarmony(melodyFile, params)
+        .then((response) => {
+          response.result
+            ? setResult(response.result)
+            : setError(response.error ?? "");
+          setLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setLoading(false);
+        });
+    }
+  };
+
+  /**
+   * Resets user parameter overloads
+   */
+  const handleReset = (): void => {
+    form.resetFields();
+    setParams({});
+  };
+
+  /**
    * Start harmonized audio playback
    */
-  const handlePlay = useCallback((): void => {
+  const handlePlay = (): void => {
     audioSource.connect(ctx.destination);
 
     // Fetch current time and reset to start if previous playback finished
@@ -179,32 +237,29 @@ export default function Harmonizer(): ReactElement {
       resetAudioSource();
       setPlaying(false);
     };
-  }, [audioSource, melodyBuffer, playTime, resetAudioSource]);
+  };
 
   /**
    * Stop harmonized audio playback
    */
-  const handleStop = useCallback((): void => {
+  const handleStop = (): void => {
     audioSource.stop();
     setPlaying(false);
-  }, [audioSource]);
+  };
 
   /**
    * Update playTime from slider input
    * @param newPlayTime slider input value
    */
-  const handleSlider = useCallback(
-    (newPlayTime: SliderValue): void => {
-      if (typeof newPlayTime !== "number") {
-        return;
-      }
-      if (playing) {
-        handleStop();
-      }
-      setPlayTime(newPlayTime);
-    },
-    [playing, handleStop]
-  );
+  const handleSlider = (newPlayTime: SliderValue): void => {
+    if (typeof newPlayTime !== "number") {
+      return;
+    }
+    if (playing) {
+      handleStop();
+    }
+    setPlayTime(newPlayTime);
+  };
 
   /**
    * Convert time to standard mm:ss format
@@ -219,169 +274,134 @@ export default function Harmonizer(): ReactElement {
     return `${minutes}:${seconds > 10 ? "" : "0"}${secondsInt}`;
   };
 
-  const resetResult = (): void => {
-    setError("");
-    setResult(null);
-    setPlayTime(0);
-  };
-
-  const handleFile = (files: File[]): void => {
-    resetResult();
-    setMelodyFile(files[0]);
-  };
-
-  const handleSubmit = (): void => {
-    if (melodyFile !== null) {
-      resetResult();
-      setLoading(true);
-
-      getHarmony(melodyFile, params)
-        .then((response) => {
-          response.result
-            ? setResult(response.result)
-            : setError(response.error ?? "");
-          setLoading(false);
-        })
-        .catch((error) => {
-          setError(error);
-          setLoading(false);
-        });
-    }
-  };
-
-  const handleReset = (): void => {
-    form.resetFields();
-    setParams({});
-  };
-
-  const handleInvalidFile = (): void =>
-    setError(
-      "invalid file type - use one of .aiff, .flac, .mp3, .mp4, .ogg, .wav"
-    );
-
   return (
     <>
       <Head />
       <div className="center-vertical">
         <h1 className="title">Harmonizer </h1>
 
-        <div className="upload-container">
-          <h2>Add melody file here:</h2>
-          <Dropzone
-            onDropAccepted={handleFile}
-            onDropRejected={handleInvalidFile}
-            accept=".aiff,.flac,.mp3,.mp4,.ogg,.wav"
-            multiple={false}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <section>
-                <Button
-                  type={melodyFile === null ? "primary" : "default"}
-                  {...getRootProps()}
-                >
-                  <input {...getInputProps()} />
-                  Select file
-                </Button>
-              </section>
-            )}
-          </Dropzone>
+        <div className="content">
+          <div className="upload-container">
+            <div className="dropzone-container">
+              <h2>Add melody file here:</h2>
+              <Dropzone
+                onDropAccepted={handleFile}
+                onDropRejected={handleInvalidFile}
+                accept=".aiff,.flac,.mp3,.mp4,.ogg,.wav"
+                multiple={false}
+                noKeyboard
+              >
+                {({ getRootProps, getInputProps }) => (
+                  <section>
+                    <Button
+                      type={melodyFile === null ? "primary" : "default"}
+                      {...getRootProps()}
+                    >
+                      <input {...getInputProps()} />
+                      Select file
+                    </Button>
+                  </section>
+                )}
+              </Dropzone>
+            </div>
 
-          <Form onFinish={handleSubmit} onValuesChange={setParams} form={form}>
-            <Item label="Key" name="key">
-              <Select
-                placeholder="Key"
-                showSearch
-                disabled={melodyFile === null}
-                value={params.key}
-              >
-                {Object.keys(Keys).map((keyName) => (
-                  <Option key={keyName} value={keyName}>
-                    {keyName}
-                  </Option>
-                ))}
-              </Select>
-            </Item>
-            <Item label="BPM" name="bpm">
-              <InputNumber
-                placeholder="BPM"
-                disabled={melodyFile === null}
-                value={params.bpm}
-              />
-            </Item>
-            <Item label="Meter" name="meter">
-              <InputNumber
-                placeholder="Meter"
-                disabled={melodyFile === null}
-                value={params.meter}
-              />
-            </Item>
-            <Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                disabled={melodyFile === null}
-              >
-                Harmonize
-              </Button>
-            </Item>
-            <Item>
-              <Button
-                type="danger"
-                // htmlType="reset"
-                onClick={handleReset}
-                disabled={
-                  melodyFile === null ||
-                  (params.key === undefined &&
-                    params.chords === undefined &&
-                    params.bpm === undefined &&
-                    params.meter === undefined)
-                }
-              >
-                Clear inputs
-              </Button>
-            </Item>
-          </Form>
+            <Form
+              onFinish={handleSubmit}
+              onValuesChange={setParams}
+              form={form}
+            >
+              <Item label="Key" name="key">
+                <Select
+                  placeholder="Key"
+                  showSearch
+                  disabled={melodyFile === null}
+                  value={params.key}
+                >
+                  {Object.keys(Keys).map((keyName) => (
+                    <Option key={keyName} value={keyName}>
+                      {keyName}
+                    </Option>
+                  ))}
+                </Select>
+              </Item>
+              <Item label="BPM" name="bpm">
+                <InputNumber
+                  placeholder="BPM"
+                  disabled={melodyFile === null}
+                  value={params.bpm}
+                />
+              </Item>
+              <Item label="Meter" name="meter">
+                <InputNumber
+                  placeholder="Meter"
+                  disabled={melodyFile === null}
+                  value={params.meter}
+                />
+              </Item>
+              <Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  disabled={melodyFile === null}
+                >
+                  Harmonize
+                </Button>
+              </Item>
+              <Item>
+                <Button
+                  type="danger"
+                  // htmlType="reset"
+                  onClick={handleReset}
+                  disabled={
+                    melodyFile === null ||
+                    (params.key === undefined &&
+                      params.chords === undefined &&
+                      params.bpm === undefined &&
+                      params.meter === undefined)
+                  }
+                >
+                  Clear inputs
+                </Button>
+              </Item>
+            </Form>
+          </div>
+
+          <div className="result-container">
+            {melodyFile !== null && <h2>{melodyFile.name}</h2>}
+            {loading && <Spin className="loader" />}
+
+            {result !== null && (
+              <>
+                <h3>Key: {result.key}</h3>
+                <h3>Chords: {result.chords.join(", ")}</h3>
+                <h3>Meter: {Math.round(result.meter)}</h3>
+                <h3>BPM: {Math.round(result.bpm)}</h3>
+                <div className="player">
+                  <h3 className="time">
+                    {formatTime(playTime)} / {formatTime(melodyBuffer.duration)}
+                  </h3>
+                  <Button
+                    type="primary"
+                    onClick={playing ? handleStop : handlePlay}
+                  >
+                    {playing ? <PauseCircleFilled /> : <PlayCircleFilled />}
+                  </Button>
+
+                  <Slider
+                    value={playTime}
+                    min={0}
+                    max={melodyBuffer.duration}
+                    step={PLAYBACK_INTERVAL}
+                    onChange={handleSlider}
+                    tooltipVisible={false}
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
-        {melodyFile !== null && <h2>{melodyFile.name}</h2>}
-
-        {loading && <Spin className="loader" />}
-
-        {result !== null && (
-          <>
-            <h3>Key: {result.key}</h3>
-            <h3>Chords: {result.chords.join(", ")}</h3>
-            <h3>Meter: {Math.round(result.meter)}</h3>
-            <h3>BPM: {Math.round(result.bpm)}</h3>
-            <div className="player">
-              <h3 className="time">
-                {formatTime(playTime)} / {formatTime(melodyBuffer.duration)}
-              </h3>
-              <Button
-                type="primary"
-                onClick={playing ? handleStop : handlePlay}
-              >
-                {playing ? <PauseCircleFilled /> : <PlayCircleFilled />}
-              </Button>
-
-              <Slider
-                value={playTime}
-                min={0}
-                max={melodyBuffer.duration}
-                step={PLAYBACK_INTERVAL}
-                onChange={handleSlider}
-                tooltipVisible={false}
-              />
-            </div>
-          </>
-        )}
-
-        {error !== "" && (
-          <Alert
-            type="error"
-            message={`The following error has been encountered: ${error}`}
-          />
-        )}
+        {error !== "" && <Alert type="error" message={`Error: ${error}`} />}
       </div>
     </>
   );

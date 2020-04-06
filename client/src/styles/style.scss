@@ -46,15 +46,29 @@ body {
   margin: 2vw;
 }
 
-.upload-container {
-  @include center-vertical;
-
-  margin-bottom: 3vh;
+.content {
+  display: flex;
+  flex-direction: row;
 }
 
-.upload {
+@mixin container {
+  width: 50vw;
+}
+
+.upload-container {
   @include center-vertical;
+  @include container;
+}
+
+.dropzone-container {
+  @include center-vertical;
+
   margin-bottom: 2vh;
+}
+
+.result-container {
+  @include container;
+  @include center-vertical;
 }
 
 .loader {
