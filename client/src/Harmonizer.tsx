@@ -1,8 +1,19 @@
 import React, { ReactElement, useCallback, useEffect, useState } from "react";
-import { AudioContext, ChordName, Chords, KeyName } from "./utils";
+import { AudioContext, ChordName, Chords, KeyName, Keys } from "./utils";
 import { Head } from "./components";
-import { Alert, Button, Progress, Slider, Spin, Upload } from "antd";
+import {
+  Alert,
+  Button,
+  Input,
+  InputNumber,
+  Progress,
+  Slider,
+  Spin,
+  Upload,
+  Select,
+} from "antd";
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
+import Dropzone from "react-dropzone";
 import { SliderValue } from "antd/lib/slider";
 import { UploadChangeParam } from "antd/lib/upload";
 import { FMSynth, Transport, Offline } from "tone";
@@ -14,6 +25,7 @@ import "./styles/style.scss";
 const PLAYBACK_INTERVAL = 0.02;
 const Synth = FMSynth;
 const { ctx } = AudioContext;
+const { Option } = Select;
 
 interface HarmonizeResult {
   bpm: number;
@@ -104,24 +116,28 @@ export default function Harmonizer(): ReactElement {
    */
   useEffect((): void => {
     // initialize new overlay buffer
-    const newOverlayBuffer = ctx.createBuffer(
-      melodyBuffer.numberOfChannels,
-      melodyBuffer.length,
-      ctx.sampleRate
-    );
-    // harmony is mono
-    const harmonyBufferChannel = harmonyBuffer.getChannelData(0);
+    if (harmonyBuffer.length > 1) {
+      const newOverlayBuffer = ctx.createBuffer(
+        melodyBuffer.numberOfChannels,
+        melodyBuffer.length,
+        ctx.sampleRate
+      );
+      // harmony is mono
+      const harmonyBufferChannel = harmonyBuffer.getChannelData(0);
 
-    // melody has arbitrary channels
-    for (let channel = 0; channel < 1; channel++) {
-      const newOverlayBufferChannel = newOverlayBuffer.getChannelData(channel);
-      const melodyBufferChannel = melodyBuffer.getChannelData(channel);
-      for (let i = 0; i < melodyBuffer.length; i++) {
-        newOverlayBufferChannel[i] =
-          melodyBufferChannel[i] + harmonyBufferChannel[i];
+      // melody has arbitrary channels
+      for (let channel = 0; channel < 1; channel++) {
+        const newOverlayBufferChannel = newOverlayBuffer.getChannelData(
+          channel
+        );
+        const melodyBufferChannel = melodyBuffer.getChannelData(channel);
+        for (let i = 0; i < melodyBuffer.length; i++) {
+          newOverlayBufferChannel[i] =
+            melodyBufferChannel[i] + harmonyBufferChannel[i];
+        }
       }
+      setOverlayBuffer(newOverlayBuffer);
     }
-    setOverlayBuffer(newOverlayBuffer);
   }, [melodyBuffer, harmonyBuffer]);
 
   /**
@@ -243,6 +259,8 @@ export default function Harmonizer(): ReactElement {
     return `${minutes}:${seconds > 10 ? "" : "0"}${secondsInt}`;
   };
 
+  const handleSubmit = (): void => {};
+
   return (
     <>
       <Head />
@@ -266,6 +284,34 @@ export default function Harmonizer(): ReactElement {
               Upload
             </Button>
           </Upload>
+          <Dropzone onDrop={(files) => setMelodyFile(files[0])}>
+            {({ getRootProps, getInputProps }) => (
+              <section>
+                <Button
+                  type={melodyFile === null ? "primary" : "default"}
+                  {...getRootProps()}
+                >
+                  <input {...getInputProps()} />
+                  Select file
+                </Button>
+              </section>
+            )}
+          </Dropzone>
+          <Button
+            type="primary"
+            onClick={handleSubmit}
+            disabled={melodyFile === null}
+          >
+            Harmonize
+          </Button>
+          Key:{" "}
+          <Select placeholder="Key" showSearch>
+            {Object.keys(Keys).map((keyName) => (
+              <Option value={keyName}>{keyName}</Option>
+            ))}
+          </Select>
+          BPM: <InputNumber placeholder="BPM" />
+          Meter: <InputNumber placeholder="Meter" />
         </div>
 
         {melodyFile !== null && <h2>{melodyFile.name}</h2>}
