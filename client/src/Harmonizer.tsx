@@ -197,6 +197,7 @@ export default function Harmonizer(): ReactElement {
     if (files.length > 0) {
       resetResult();
       setMelodyFile(files[0]);
+      resetParams();
     }
   };
 
@@ -261,7 +262,7 @@ export default function Harmonizer(): ReactElement {
   /**
    * Resets user parameter overloads
    */
-  const handleReset = (): void => {
+  const resetParams = (): void => {
     form.resetFields();
     setParams({});
   };
@@ -444,8 +445,7 @@ export default function Harmonizer(): ReactElement {
                   <Item>
                     <Button
                       type="danger"
-                      // htmlType="reset"
-                      onClick={handleReset}
+                      onClick={resetParams}
                       disabled={
                         params.key === undefined &&
                         params.chords === undefined &&
