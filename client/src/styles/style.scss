@@ -52,11 +52,13 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  flex: 1;
 }
 
 @mixin container {
   width: 40vw;
-  height: 50vh;
+  min-height: 50vh;
+  height: auto;
   margin: 5vh 2vw;
   padding: 2vh 2vw;
 
@@ -148,6 +150,45 @@ body {
     height: 8vh;
     margin: 1vh;
   }
+}
+
+.result-field {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1vh;
+
+  h3 {
+    margin: 0;
+    margin-right: 0.5em;
+  }
+}
+
+.flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+}
+
+.ant-tag {
+  font-size: 2vh;
+  height: 3vh;
+  margin: 0.5vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  line-height: 3vh;
+}
+
+.current-chord-tag {
+  @extend .ant-tag;
+
+  font-size: 3vh;
+  height: 4vh;
+  margin: 0 0.5vh;
+  line-height: 4vh;
 }
 
 .player {

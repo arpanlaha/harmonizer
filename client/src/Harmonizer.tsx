@@ -225,12 +225,27 @@ export default function Harmonizer(): ReactElement {
     setParams({});
   };
 
+  /**
+   * Assigns a chord a badge color depending on its scale degree in the current key
+   * @param chord the chord to assign a color to
+   */
   const getBadgeColor = (chord: ChordName): string =>
     result !== null
       ? ["magenta", "red", "volcano", "orange", "gold", "lime"][
           Keys[result.key].chords.indexOf(chord)
         ]
       : "blue";
+
+  /**
+   * Determines the current chord index being played based off of the current playTime
+   */
+  const getCurrentChordIndex = (): number =>
+    result !== null && melodyBuffer !== null
+      ? Math.min(
+          Math.floor((playTime * result.chords.length) / melodyBuffer.duration),
+          result.chords.length
+        )
+      : -1;
 
   /**
    * Start harmonized audio playback
@@ -320,7 +335,9 @@ export default function Harmonizer(): ReactElement {
                     {...getRootProps()}
                   >
                     <input {...getInputProps()} />
-                    Select file
+                    {melodyFile === null
+                      ? "Select file"
+                      : "Select another file"}
                   </Button>
                 )}
               </Dropzone>
@@ -391,40 +408,55 @@ export default function Harmonizer(): ReactElement {
 
           <Card className="result-container" title="Results">
             {melodyFile !== null && (
-              <h2 className="file-name">{melodyFile.name}</h2>
+              <h2 className="file-name">Melody: {melodyFile.name}</h2>
             )}
 
             {loading && <Spin className="loader" />}
 
             {result !== null && (
               <>
-                <Tooltip title={keyDescription} placement="left">
-                  <h3>
-                    Key: <Tag color="blue">{result.key}</Tag>
-                  </h3>
-                </Tooltip>
-                <Tooltip title={chordsDescription} placement="left">
-                  <h3>
-                    Chords:{" "}
+                <div className="result-field">
+                  <Tooltip title={keyDescription} placement="left">
+                    <h3>Key:</h3>
+                  </Tooltip>
+                  <Tag color="blue">{result.key}</Tag>
+                </div>
+                <div className="result-field">
+                  <Tooltip title={chordsDescription} placement="left">
+                    <h3>Chords:</h3>
+                  </Tooltip>
+                  <div className="flex-row">
                     {result.chords.map(
-                      (chord): ReactElement<TagProps> => (
-                        <Tag color={getBadgeColor(chord)} key={chord}>
+                      (chord, chordIndex): ReactElement<TagProps> => (
+                        <Tag
+                          className={
+                            chordIndex === getCurrentChordIndex()
+                              ? "current-chord-tag"
+                              : ""
+                          }
+                          color={getBadgeColor(chord)}
+                          key={chord}
+                        >
                           {chord}
                         </Tag>
                       )
                     )}
-                  </h3>
-                </Tooltip>
-                <Tooltip title={bpmDescription} placement="left">
-                  <h3>
-                    BPM: <Tag color="blue">{Math.round(result.bpm)}</Tag>
-                  </h3>
-                </Tooltip>
-                <Tooltip title={meterDescription} placement="left">
-                  <h3>
-                    Meter: <Tag color="blue">{Math.round(result.meter)}</Tag>
-                  </h3>
-                </Tooltip>
+                  </div>
+                </div>
+
+                <div className="result-field">
+                  <Tooltip title={bpmDescription} placement="left">
+                    <h3>BPM:</h3>
+                  </Tooltip>
+                  <Tag color="blue">{Math.round(result.bpm)}</Tag>
+                </div>
+                <div className="result-field">
+                  <Tooltip title={meterDescription} placement="left">
+                    <h3>Meter:</h3>
+                  </Tooltip>
+                  <Tag color="blue">{Math.round(result.meter)}</Tag>
+                </div>
+
                 <div className="player">
                   <div className="time">
                     {formatTime(playTime)} / {formatTime(melodyBuffer.duration)}

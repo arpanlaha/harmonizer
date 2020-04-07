@@ -15,7 +15,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "antd": "^4.1.0",
+    "antd": "^4.1.1",
     "axios": "^0.19.2",
     "node-sass": "^4.13.1",
     "react": "^16.13.1",
@@ -23,7 +23,7 @@
     "react-dropzone": "^10.2.2",
     "react-helmet": "^5.2.1",
     "react-scripts": "3.4.1",
-    "tone": "^14.5.43",
+    "tone": "^14.5.44",
     "typescript": "^3.8.3"
   },
   "devDependencies": {
@@ -34,7 +34,7 @@
     "@types/react-helmet": "^5.0.15",
     "eslint": "^6.8.0",
     "markdownlint-cli": "^0.22.0",
-    "prettier": "^2.0.2"
+    "prettier": "^2.0.1"
   },
   "repository": {
     "type": "git",
