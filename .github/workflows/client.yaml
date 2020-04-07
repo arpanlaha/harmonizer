@@ -10,11 +10,15 @@ jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout Github Action
+        uses: actions/checkout@v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: npm run format
+
+      - name: Run format script
         run: |
           cd client
           npm install
@@ -23,11 +27,15 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout Github Action
+        uses: actions/checkout@v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: npm run lint
+
+      - name: Run lint script
         run: |
           cd client
           npm install
@@ -36,11 +44,15 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout Github Action
+        uses: actions/checkout@v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: npm run build
+
+      - name: Run typecheck script
         run: |
           cd client
           npm install
@@ -49,11 +61,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout Github Action
+        uses: actions/checkout@v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: npm run build
+
+      - name: Run build script
         run: |
           cd client
           npm install

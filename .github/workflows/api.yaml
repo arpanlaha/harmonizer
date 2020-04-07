@@ -7,6 +7,26 @@ on:
       - ".github/workflows/api.yaml"
 
 jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Github Action
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.6"
+
+      - name: Install dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r api/requirements-dev.txt
+
+      - name: "Run black"
+        run: |
+          black api
+
   deploy:
     runs-on: ubuntu-latest
     steps:
