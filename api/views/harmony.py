@@ -67,7 +67,7 @@ def harmonize():
         meter * (60 / bpm) * (44100 / 128)
     )  # (beats/measure) (seconds/ebat) * (bins/second) = frequency bins/measure
 
-    num_measures = round(len(frequencies) / measure_length_bins)
+    num_measures = max(round(len(frequencies) / measure_length_bins), 1)
 
     measures = [
         frequencies[

@@ -10,11 +10,11 @@ import {
 } from "./utils";
 import { Head } from "./components";
 import {
-  Alert,
   Button,
   Card,
   Form,
   InputNumber,
+  notification,
   Slider,
   Spin,
   Select,
@@ -79,6 +79,16 @@ export default function Harmonizer(): ReactElement {
     }
   }, [melodyFile, setMelodyBuffer]);
 
+  useEffect((): void => {
+    if (error !== "") {
+      notification.error({
+        message: "Error",
+        description: error,
+        duration: 0,
+      });
+    }
+  }, [error]);
+
   /**
    * Synthesize harmony and sets buffer on harmony parameter change
    */
@@ -90,7 +100,7 @@ export default function Harmonizer(): ReactElement {
 
       // synthesize audio and render into output buffer
       Offline((): void => {
-        // Ooe synth per chord note
+        // nne synth per chord note
         const synths = [
           new Synth().toDestination(),
           new Synth().toDestination(),
@@ -103,7 +113,6 @@ export default function Harmonizer(): ReactElement {
         synths[2].volume.value -= decibelDiff;
 
         // trigger 3 * chord progression length attack/releases
-
         chords.forEach((chord, chordIndex): void =>
           synths.forEach(
             (synth, synthIndex): FMSynth =>
@@ -211,11 +220,35 @@ export default function Harmonizer(): ReactElement {
           response.result
             ? setResult(response.result)
             : setError(response.error ?? "");
-          setLoading(false);
         })
         .catch(setError)
         .then(() => setLoading(false));
     }
+  };
+
+  /**
+   * Sets error state if user input measure length exceeds melody duration
+   */
+  const handleSubmitFail = (): void => {
+    setError(
+      "Measure length exceeds melody duration - increase BPM and/or decrease meter"
+    );
+  };
+
+  /**
+   * Validates that meter and bpm don't lead to a measure length above the melody duration if both are set
+   */
+  const validateMeasureLength = {
+    validator: (): Promise<void> => {
+      const bpm = form.getFieldValue("bpm");
+      const meter = form.getFieldValue("meter");
+      return bpm === undefined ||
+        meter === undefined ||
+        melodyBuffer === undefined ||
+        (60 * meter) / bpm < melodyBuffer.duration
+        ? Promise.resolve()
+        : Promise.reject("");
+    },
   };
 
   /**
@@ -347,6 +380,7 @@ export default function Harmonizer(): ReactElement {
             {melodyFile !== null && (
               <Form
                 onFinish={handleSubmit}
+                onFinishFailed={handleSubmitFail}
                 onValuesChange={setParams}
                 form={form}
               >
@@ -365,13 +399,31 @@ export default function Harmonizer(): ReactElement {
                     </Item>
                   </Tooltip>
                   <Tooltip title={bpmDescription} placement="top">
-                    <Item className="number-input" label="BPM" name="bpm">
-                      <InputNumber placeholder="BPM" value={params.bpm} />
+                    <Item
+                      className="number-input"
+                      label="BPM"
+                      name="bpm"
+                      rules={[validateMeasureLength]}
+                    >
+                      <InputNumber
+                        placeholder="BPM"
+                        value={params.bpm}
+                        min={40}
+                      />
                     </Item>
                   </Tooltip>
                   <Tooltip title={meterDescription} placement="top">
-                    <Item className="number-input" label="Meter" name="meter">
-                      <InputNumber placeholder="Meter" value={params.meter} />
+                    <Item
+                      className="number-input"
+                      label="Meter"
+                      name="meter"
+                      rules={[validateMeasureLength]}
+                    >
+                      <InputNumber
+                        placeholder="Meter"
+                        value={params.meter}
+                        min={1}
+                      />
                     </Item>
                   </Tooltip>
                 </div>
@@ -420,7 +472,12 @@ export default function Harmonizer(): ReactElement {
                   <Tooltip title={keyDescription} placement="left">
                     <h3>Key:</h3>
                   </Tooltip>
-                  <Tag color="blue">{result.key}</Tag>
+                  <Tooltip
+                    title={`Chords: ${Keys[result.key].chords.join(", ")}`}
+                    placement="top"
+                  >
+                    <Tag color="blue">{result.key}</Tag>
+                  </Tooltip>
                 </div>
                 <div className="result-field">
                   <Tooltip title={chordsDescription} placement="left">
@@ -482,8 +539,6 @@ export default function Harmonizer(): ReactElement {
             )}
           </Card>
         </div>
-
-        {error !== "" && <Alert type="error" message={`Error: ${error}`} />}
       </div>
     </>
   );
