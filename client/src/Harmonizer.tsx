@@ -19,6 +19,7 @@ import {
   Spin,
   Select,
   Tag,
+  Tooltip,
 } from "antd";
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
 import Dropzone from "react-dropzone";
@@ -37,10 +38,16 @@ const { ctx } = AudioContext;
 const { Item } = Form;
 const { Option } = Select;
 
+const keyDescription =
+  "The key determines which chords are available for a given melody.";
+const chordsDescription = "The chords make up the harmony.";
+const bpmDescription = "The BPM (Beats Per Minute) sets the tempo.";
+const meterDescription =
+  "The meter corresponds to how many beats make up a measure.";
+
 export default function Harmonizer(): ReactElement {
   const [melodyFile, setMelodyFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  // const [percent, setPercent] = useState(-1);
   const [params, setParams] = useState<HarmonyParams>({});
   const [error, setError] = useState("");
   const [result, setResult] = useState<HarmonyResult | null>(null);
@@ -328,21 +335,27 @@ export default function Harmonizer(): ReactElement {
                 <h2 className="params-title">Parameters (optional)</h2>
 
                 <div className="params">
-                  <Item className="key-input" label="Key" name="key">
-                    <Select placeholder="Key" showSearch value={params.key}>
-                      {Object.keys(Keys).map((keyName) => (
-                        <Option key={keyName} value={keyName}>
-                          {keyName}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Item>
-                  <Item className="number-input" label="BPM" name="bpm">
-                    <InputNumber placeholder="BPM" value={params.bpm} />
-                  </Item>
-                  <Item className="number-input" label="Meter" name="meter">
-                    <InputNumber placeholder="Meter" value={params.meter} />
-                  </Item>
+                  <Tooltip title={keyDescription} placement="top">
+                    <Item className="key-input" label="Key" name="key">
+                      <Select placeholder="Key" showSearch value={params.key}>
+                        {Object.keys(Keys).map((keyName) => (
+                          <Option key={keyName} value={keyName}>
+                            {keyName}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Item>
+                  </Tooltip>
+                  <Tooltip title={bpmDescription} placement="top">
+                    <Item className="number-input" label="BPM" name="bpm">
+                      <InputNumber placeholder="BPM" value={params.bpm} />
+                    </Item>
+                  </Tooltip>
+                  <Tooltip title={meterDescription} placement="top">
+                    <Item className="number-input" label="Meter" name="meter">
+                      <InputNumber placeholder="Meter" value={params.meter} />
+                    </Item>
+                  </Tooltip>
                 </div>
                 <p className="params-instructions">
                   Harmonizer's backend will automatically detect the above
@@ -380,29 +393,38 @@ export default function Harmonizer(): ReactElement {
             {melodyFile !== null && (
               <h2 className="file-name">{melodyFile.name}</h2>
             )}
+
             {loading && <Spin className="loader" />}
 
             {result !== null && (
               <>
-                <h3>
-                  Key: <Tag color="blue">{result.key}</Tag>
-                </h3>
-                <h3>
-                  Chords:{" "}
-                  {result.chords.map(
-                    (chord): ReactElement<TagProps> => (
-                      <Tag color={getBadgeColor(chord)} key={chord}>
-                        {chord}
-                      </Tag>
-                    )
-                  )}
-                </h3>
-                <h3>
-                  Meter: <Tag color="blue">{Math.round(result.meter)}</Tag>
-                </h3>
-                <h3>
-                  BPM: <Tag color="blue">{Math.round(result.bpm)}</Tag>
-                </h3>
+                <Tooltip title={keyDescription} placement="left">
+                  <h3>
+                    Key: <Tag color="blue">{result.key}</Tag>
+                  </h3>
+                </Tooltip>
+                <Tooltip title={chordsDescription} placement="left">
+                  <h3>
+                    Chords:{" "}
+                    {result.chords.map(
+                      (chord): ReactElement<TagProps> => (
+                        <Tag color={getBadgeColor(chord)} key={chord}>
+                          {chord}
+                        </Tag>
+                      )
+                    )}
+                  </h3>
+                </Tooltip>
+                <Tooltip title={bpmDescription} placement="left">
+                  <h3>
+                    BPM: <Tag color="blue">{Math.round(result.bpm)}</Tag>
+                  </h3>
+                </Tooltip>
+                <Tooltip title={meterDescription} placement="left">
+                  <h3>
+                    Meter: <Tag color="blue">{Math.round(result.meter)}</Tag>
+                  </h3>
+                </Tooltip>
                 <div className="player">
                   <div className="time">
                     {formatTime(playTime)} / {formatTime(melodyBuffer.duration)}
