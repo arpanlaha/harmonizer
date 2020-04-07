@@ -6,6 +6,7 @@
 
 $antd-button-primary: #1890ff;
 $antd-button-primary-hover: #096dd9;
+$card-background: hsl(215, 16, 2);
 
 @mixin center-vertical {
   display: flex;
@@ -20,8 +21,8 @@ $antd-button-primary-hover: #096dd9;
 }
 
 @mixin audio-button {
-  width: 5vh;
-  height: 5vh;
+  width: 4vh;
+  height: 4vh;
 }
 
 body {
@@ -43,21 +44,51 @@ body {
 .title {
   font-size: 6vw;
   text-align: center;
-  margin: 2vw;
+  margin: 0;
+  margin-top: 2vw;
 }
 
 .content {
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 @mixin container {
-  width: 50vw;
+  width: 40vw;
+  height: 50vh;
+  margin: 5vh 2vw;
+  padding: 2vh 2vw;
+
+  background-color: $card-background;
+  border: none;
+  border-radius: 5%;
+
+  .ant-card-head {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .ant-card-head-title {
+    font-size: 3vw;
+    padding: 0;
+    // padding-top: 1vh;
+  }
+
+  .ant-card-body {
+    padding: 2vh;
+  }
 }
 
 .upload-container {
   @include center-vertical;
   @include container;
+
+  form {
+    width: 100%;
+  }
 }
 
 .dropzone-container {
@@ -66,23 +97,55 @@ body {
   margin-bottom: 2vh;
 }
 
+.params-title {
+  text-align: center;
+}
+
+.params {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.params-instructions {
+  text-align: center;
+}
+
+.key-input {
+  width: 10vw;
+}
+
+.upload-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  button {
+    margin: 0 1vw;
+  }
+}
+
 .result-container {
   @include container;
   @include center-vertical;
 }
 
+.file-name {
+  text-align: center;
+}
+
 .loader {
   width: 100%;
   height: 100%;
-  padding: 5vh;
+  padding: 8vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
   .ant-spin-dot-item {
-    width: 5vh;
-    height: 5vh;
+    width: 8vh;
+    height: 8vh;
     margin: 1vh;
   }
 }
@@ -131,6 +194,6 @@ body {
   }
 
   .ant-slider {
-    width: 20vw;
+    width: 14vw;
   }
 }

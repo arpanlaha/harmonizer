@@ -122,6 +122,9 @@ def analyze(file):
         audio
     )  # key (note) and scale (major vs. minor) matter
 
+    if scale == "major":
+        scale = "Major"
+
     bpm, beats = RhythmExtractor()(audio)[:2]  # tempo in beats per minute
 
     loudness, loudness_band_ratio = BeatsLoudness(beats=beats)(audio)

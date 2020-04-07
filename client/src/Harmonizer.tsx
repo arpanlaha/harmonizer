@@ -2,17 +2,30 @@ import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import {
   AudioContext,
   Chords,
+  ChordName,
   getHarmony,
   HarmonyParams,
   HarmonyResult,
   Keys,
 } from "./utils";
 import { Head } from "./components";
-import { Alert, Button, Form, InputNumber, Slider, Spin, Select } from "antd";
+import {
+  Alert,
+  Button,
+  Card,
+  Form,
+  InputNumber,
+  Slider,
+  Spin,
+  Select,
+  Tag,
+} from "antd";
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
 import Dropzone from "react-dropzone";
-import { SliderValue } from "antd/lib/slider";
 import { FMSynth, Transport, Offline } from "tone";
+
+import { SliderValue } from "antd/lib/slider";
+import { TagProps } from "antd/lib/tag";
 
 import "antd/dist/antd.css";
 import "antd/dist/antd.dark.css";
@@ -185,7 +198,6 @@ export default function Harmonizer(): ReactElement {
     if (melodyFile !== null) {
       resetResult();
       setLoading(true);
-
       getHarmony(melodyFile, params)
         .then((response) => {
           response.result
@@ -205,6 +217,13 @@ export default function Harmonizer(): ReactElement {
     form.resetFields();
     setParams({});
   };
+
+  const getBadgeColor = (chord: ChordName): string =>
+    result !== null
+      ? ["magenta", "red", "volcano", "orange", "gold", "lime"][
+          Keys[result.key].chords.indexOf(chord)
+        ]
+      : "blue";
 
   /**
    * Start harmonized audio playback
@@ -279,9 +298,8 @@ export default function Harmonizer(): ReactElement {
         <h1 className="title">Harmonizer</h1>
 
         <div className="content">
-          <div className="upload-container">
+          <Card className="upload-container" title="Upload">
             <div className="dropzone-container">
-              <h2>Add melody file here:</h2>
               <Dropzone
                 onDropAccepted={handleFile}
                 onDropRejected={handleInvalidFile}
@@ -301,81 +319,94 @@ export default function Harmonizer(): ReactElement {
               </Dropzone>
             </div>
 
-            <Form
-              onFinish={handleSubmit}
-              onValuesChange={setParams}
-              form={form}
-            >
-              <Item label="Key" name="key">
-                <Select
-                  placeholder="Key"
-                  showSearch
-                  disabled={melodyFile === null}
-                  value={params.key}
-                >
-                  {Object.keys(Keys).map((keyName) => (
-                    <Option key={keyName} value={keyName}>
-                      {keyName}
-                    </Option>
-                  ))}
-                </Select>
-              </Item>
-              <Item label="BPM" name="bpm">
-                <InputNumber
-                  placeholder="BPM"
-                  disabled={melodyFile === null}
-                  value={params.bpm}
-                />
-              </Item>
-              <Item label="Meter" name="meter">
-                <InputNumber
-                  placeholder="Meter"
-                  disabled={melodyFile === null}
-                  value={params.meter}
-                />
-              </Item>
-              <Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  disabled={melodyFile === null}
-                >
-                  Harmonize
-                </Button>
-              </Item>
-              <Item>
-                <Button
-                  type="danger"
-                  // htmlType="reset"
-                  onClick={handleReset}
-                  disabled={
-                    melodyFile === null ||
-                    (params.key === undefined &&
-                      params.chords === undefined &&
-                      params.bpm === undefined &&
-                      params.meter === undefined)
-                  }
-                >
-                  Clear inputs
-                </Button>
-              </Item>
-            </Form>
-          </div>
+            {melodyFile !== null && (
+              <Form
+                onFinish={handleSubmit}
+                onValuesChange={setParams}
+                form={form}
+              >
+                <h2 className="params-title">Parameters (optional)</h2>
 
-          <div className="result-container">
-            {melodyFile !== null && <h2>{melodyFile.name}</h2>}
+                <div className="params">
+                  <Item className="key-input" label="Key" name="key">
+                    <Select placeholder="Key" showSearch value={params.key}>
+                      {Object.keys(Keys).map((keyName) => (
+                        <Option key={keyName} value={keyName}>
+                          {keyName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Item>
+                  <Item className="number-input" label="BPM" name="bpm">
+                    <InputNumber placeholder="BPM" value={params.bpm} />
+                  </Item>
+                  <Item className="number-input" label="Meter" name="meter">
+                    <InputNumber placeholder="Meter" value={params.meter} />
+                  </Item>
+                </div>
+                <p className="params-instructions">
+                  Harmonizer's backend will automatically detect the above
+                  fields upon submission. However, if you wish to manually set
+                  or override the backend's results, you can do so with the
+                  parameters above.
+                </p>
+                <div className="upload-buttons">
+                  <Item>
+                    <Button
+                      type="danger"
+                      // htmlType="reset"
+                      onClick={handleReset}
+                      disabled={
+                        params.key === undefined &&
+                        params.chords === undefined &&
+                        params.bpm === undefined &&
+                        params.meter === undefined
+                      }
+                    >
+                      Clear parameters
+                    </Button>
+                  </Item>
+                  <Item>
+                    <Button type="primary" htmlType="submit">
+                      Harmonize
+                    </Button>
+                  </Item>
+                </div>
+              </Form>
+            )}
+          </Card>
+
+          <Card className="result-container" title="Results">
+            {melodyFile !== null && (
+              <h2 className="file-name">{melodyFile.name}</h2>
+            )}
             {loading && <Spin className="loader" />}
 
             {result !== null && (
               <>
-                <h3>Key: {result.key}</h3>
-                <h3>Chords: {result.chords.join(", ")}</h3>
-                <h3>Meter: {Math.round(result.meter)}</h3>
-                <h3>BPM: {Math.round(result.bpm)}</h3>
+                <h3>
+                  Key: <Tag color="blue">{result.key}</Tag>
+                </h3>
+                <h3>
+                  Chords:{" "}
+                  {result.chords.map(
+                    (chord): ReactElement<TagProps> => (
+                      <Tag color={getBadgeColor(chord)} key={chord}>
+                        {chord}
+                      </Tag>
+                    )
+                  )}
+                </h3>
+                <h3>
+                  Meter: <Tag color="blue">{Math.round(result.meter)}</Tag>
+                </h3>
+                <h3>
+                  BPM: <Tag color="blue">{Math.round(result.bpm)}</Tag>
+                </h3>
                 <div className="player">
-                  <h3 className="time">
+                  <div className="time">
                     {formatTime(playTime)} / {formatTime(melodyBuffer.duration)}
-                  </h3>
+                  </div>
                   <Button
                     type="primary"
                     onClick={playing ? handleStop : handlePlay}
@@ -394,7 +425,7 @@ export default function Harmonizer(): ReactElement {
                 </div>
               </>
             )}
-          </div>
+          </Card>
         </div>
 
         {error !== "" && <Alert type="error" message={`Error: ${error}`} />}
