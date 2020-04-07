@@ -209,6 +209,13 @@ export default function Harmonizer(): ReactElement {
     );
 
   /**
+   * Replaces 'b' with '♭' and '#' with '♯' for keys, chords, or notes with accidentals
+   * @param str the key, chord, or note to be converted
+   */
+  const replaceAccidentals = (str: String) =>
+    str.replace(/b/g, "♭").replace(/#/g, "♯");
+
+  /**
    * Sends melody file to harmony enndpoint
    */
   const handleSubmit = (): void => {
@@ -392,7 +399,7 @@ export default function Harmonizer(): ReactElement {
                       <Select placeholder="Key" showSearch value={params.key}>
                         {Object.keys(Keys).map((keyName) => (
                           <Option key={keyName} value={keyName}>
-                            {keyName}
+                            {replaceAccidentals(keyName)}
                           </Option>
                         ))}
                       </Select>
@@ -473,10 +480,12 @@ export default function Harmonizer(): ReactElement {
                     <h3>Key:</h3>
                   </Tooltip>
                   <Tooltip
-                    title={`Chords: ${Keys[result.key].chords.join(", ")}`}
+                    title={`Chords: ${replaceAccidentals(
+                      Keys[result.key].chords.join(", ")
+                    )}`}
                     placement="top"
                   >
-                    <Tag color="blue">{result.key}</Tag>
+                    <Tag color="blue">{replaceAccidentals(result.key)}</Tag>
                   </Tooltip>
                 </div>
                 <div className="result-field">
@@ -487,7 +496,9 @@ export default function Harmonizer(): ReactElement {
                     {result.chords.map(
                       (chord, chordIndex): ReactElement<TagProps> => (
                         <Tooltip
-                          title={`Notes: ${Chords[chord].notes.join(", ")}`}
+                          title={`Notes: ${replaceAccidentals(
+                            Chords[chord].notes.join(", ")
+                          )}`}
                           placement="top"
                           key={chordIndex}
                         >
@@ -499,7 +510,7 @@ export default function Harmonizer(): ReactElement {
                             }
                             color={getBadgeColor(chord)}
                           >
-                            {chord}
+                            {replaceAccidentals(chord)}
                           </Tag>
                         </Tooltip>
                       )
