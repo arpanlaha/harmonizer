@@ -103,6 +103,7 @@ export default function Harmonizer(): ReactElement {
         synths[2].volume.value -= decibelDiff;
 
         // trigger 3 * chord progression length attack/releases
+
         chords.forEach((chord, chordIndex): void =>
           synths.forEach(
             (synth, synthIndex): FMSynth =>
@@ -435,7 +436,7 @@ export default function Harmonizer(): ReactElement {
                               : ""
                           }
                           color={getBadgeColor(chord)}
-                          key={chord}
+                          key={chordIndex}
                         >
                           {chord}
                         </Tag>
