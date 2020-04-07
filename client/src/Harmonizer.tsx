@@ -97,7 +97,7 @@ export default function Harmonizer(): ReactElement {
     if (result !== null) {
       const { bpm, chords, meter, start } = result;
       Transport.bpm.value = bpm;
-      const measureLength = Math.max((60 * meter) / bpm, melodyBuffer.duration);
+      const measureLength = Math.min((60 * meter) / bpm, melodyBuffer.duration);
 
       // synthesize audio and render into overlay buffer
       Offline((): void => {
