@@ -6,7 +6,8 @@
 
 $antd-button-primary: #1890ff;
 $antd-button-primary-hover: #096dd9;
-$card-background: hsl(215, 16, 2);
+$card-background: hsl(215, 16, 4);
+$player-background: hsl(215, 16, 8);
 
 @mixin center-vertical {
   display: flex;
@@ -194,7 +195,7 @@ body {
 .player {
   @include center-horizontal;
 
-  background-color: hsl(215, 16, 6);
+  background-color: $player-background;
   border-radius: 10vh;
   padding: 2vh 2.5vh;
   margin: 2vh;

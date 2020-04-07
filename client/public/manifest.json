@@ -1,6 +1,8 @@
 {
   "short_name": "Harmonizer",
   "name": "Harmonizer",
+  "description": "Harmonize your melodies",
+  "author": "Arpan Laha",
   "icons": [
     {
       "src": "logo.svg",
