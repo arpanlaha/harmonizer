@@ -1,54 +1,54 @@
 export type ChordName =
-  | "Abb major"
-  | "Ab major"
+  | "Abb Major"
+  | "Ab Major"
   | "Ab minor"
-  | "A major"
+  | "A Major"
   | "A minor"
-  | "A# major"
+  | "A# Major"
   | "A# minor"
-  | "Bbb major"
+  | "Bbb Major"
   | "Bbb minor"
-  | "Bb major"
+  | "Bb Major"
   | "Bb minor"
-  | "B major"
+  | "B Major"
   | "B minor"
-  | "B# major"
+  | "B# Major"
   | "B# minor"
-  | "Cb major"
+  | "Cb Major"
   | "Cb minor"
-  | "C major"
+  | "C Major"
   | "C minor"
-  | "C# major"
+  | "C# Major"
   | "C# minor"
   | "C## minor"
-  | "Dbb major"
-  | "Db major"
+  | "Dbb Major"
+  | "Db Major"
   | "Db minor"
-  | "D major"
+  | "D Major"
   | "D minor"
-  | "D# major"
+  | "D# Major"
   | "D# minor"
   | "D## minor"
-  | "Ebb major"
-  | "Eb major"
+  | "Ebb Major"
+  | "Eb Major"
   | "Eb minor"
-  | "E major"
+  | "E Major"
   | "E minor"
-  | "E# major"
+  | "E# Major"
   | "E# minor"
-  | "Fb major"
+  | "Fb Major"
   | "Fb minor"
-  | "F major"
+  | "F Major"
   | "F minor"
-  | "F# major"
+  | "F# Major"
   | "F# minor"
-  | "F## major"
+  | "F## Major"
   | "F## minor"
-  | "Gb major"
+  | "Gb Major"
   | "Gb minor"
-  | "G major"
+  | "G Major"
   | "G minor"
-  | "G# major"
+  | "G# Major"
   | "G# minor"
   | "G## minor";
 
@@ -58,47 +58,47 @@ export interface Key {
 }
 
 export type KeyName =
-  | "Ab major"
+  | "Ab Major"
   | "Ab minor"
-  | "A major"
+  | "A Major"
   | "A minor"
-  | "A# major"
+  | "A# Major"
   | "A# minor"
-  | "Bb major"
+  | "Bb Major"
   | "Bb minor"
-  | "B major"
+  | "B Major"
   | "B minor"
-  | "B# major"
+  | "B# Major"
   | "B# minor"
-  | "Cb major"
+  | "Cb Major"
   | "Cb minor"
-  | "C major"
+  | "C Major"
   | "C minor"
-  | "C# major"
+  | "C# Major"
   | "C# minor"
-  | "Db major"
+  | "Db Major"
   | "Db minor"
-  | "D major"
+  | "D Major"
   | "D minor"
-  | "D# major"
+  | "D# Major"
   | "D# minor"
-  | "Eb major"
+  | "Eb Major"
   | "Eb minor"
-  | "E major"
+  | "E Major"
   | "E minor"
-  | "E# major"
+  | "E# Major"
   | "E# minor"
-  | "Fb major"
+  | "Fb Major"
   | "Fb minor"
-  | "F major"
+  | "F Major"
   | "F minor"
-  | "F# major"
+  | "F# Major"
   | "F# minor"
-  | "Gb major"
+  | "Gb Major"
   | "Gb minor"
-  | "G major"
+  | "G Major"
   | "G minor"
-  | "G# major"
+  | "G# Major"
   | "G# minor";
 
 export type PitchName =
@@ -127,14 +127,14 @@ export interface Pitch {
 }
 
 export const Keys: Record<KeyName, Key> = {
-  "Ab major": {
-    name: "Ab major",
+  "Ab Major": {
+    name: "Ab Major",
     chords: [
-      "Ab major",
+      "Ab Major",
       "Bb minor",
       "C minor",
-      "Db major",
-      "Eb major",
+      "Db Major",
+      "Eb Major",
       "F minor",
     ],
   },
@@ -142,36 +142,36 @@ export const Keys: Record<KeyName, Key> = {
     name: "Ab minor",
     chords: [
       "Ab minor",
-      "Cb major",
+      "Cb Major",
       "Db minor",
       "Eb minor",
-      "Fb major",
-      "Gb major",
+      "Fb Major",
+      "Gb Major",
     ],
   },
-  "A major": {
-    name: "A major",
+  "A Major": {
+    name: "A Major",
     chords: [
-      "A major",
+      "A Major",
       "B minor",
       "C# minor",
-      "D major",
-      "E major",
+      "D Major",
+      "E Major",
       "F# minor",
     ],
   },
   "A minor": {
     name: "A minor",
-    chords: ["A minor", "C major", "D minor", "E minor", "F major", "G major"],
+    chords: ["A minor", "C Major", "D minor", "E minor", "F Major", "G Major"],
   },
-  "A# major": {
-    name: "A# major",
+  "A# Major": {
+    name: "A# Major",
     chords: [
-      "A# major",
+      "A# Major",
       "B# minor",
       "C## minor",
-      "D# major",
-      "E# major",
+      "D# Major",
+      "E# Major",
       "F## minor",
     ],
   },
@@ -179,21 +179,21 @@ export const Keys: Record<KeyName, Key> = {
     name: "A# minor",
     chords: [
       "A# minor",
-      "C# major",
+      "C# Major",
       "D# minor",
       "E# minor",
-      "F# major",
-      "G# major",
+      "F# Major",
+      "G# Major",
     ],
   },
-  "Bb major": {
-    name: "Bb major",
+  "Bb Major": {
+    name: "Bb Major",
     chords: [
-      "Bb major",
+      "Bb Major",
       "C minor",
       "D minor",
-      "Eb major",
-      "F major",
+      "Eb Major",
+      "F Major",
       "G minor",
     ],
   },
@@ -201,36 +201,36 @@ export const Keys: Record<KeyName, Key> = {
     name: "Bb minor",
     chords: [
       "Bb minor",
-      "Db major",
+      "Db Major",
       "Eb minor",
       "F minor",
-      "Gb major",
-      "Ab major",
+      "Gb Major",
+      "Ab Major",
     ],
   },
-  "B major": {
-    name: "B major",
+  "B Major": {
+    name: "B Major",
     chords: [
-      "B major",
+      "B Major",
       "C# minor",
       "D# minor",
-      "E major",
-      "F# major",
+      "E Major",
+      "F# Major",
       "G# minor",
     ],
   },
   "B minor": {
     name: "B minor",
-    chords: ["B minor", "D major", "E minor", "F# minor", "G major", "A major"],
+    chords: ["B minor", "D Major", "E minor", "F# minor", "G Major", "A Major"],
   },
-  "B# major": {
-    name: "B# major",
+  "B# Major": {
+    name: "B# Major",
     chords: [
-      "B# major",
+      "B# Major",
       "C## minor",
       "D## minor",
-      "E# major",
-      "F## major",
+      "E# Major",
+      "F## Major",
       "G## minor",
     ],
   },
@@ -238,21 +238,21 @@ export const Keys: Record<KeyName, Key> = {
     name: "B# minor",
     chords: [
       "B# minor",
-      "D# major",
+      "D# Major",
       "E# minor",
       "F## minor",
-      "G# major",
-      "A# major",
+      "G# Major",
+      "A# Major",
     ],
   },
-  "Cb major": {
-    name: "Cb major",
+  "Cb Major": {
+    name: "Cb Major",
     chords: [
-      "Cb major",
+      "Cb Major",
       "Db minor",
       "Eb minor",
-      "Fb major",
-      "Gb major",
+      "Fb Major",
+      "Gb Major",
       "Ab minor",
     ],
   },
@@ -260,36 +260,36 @@ export const Keys: Record<KeyName, Key> = {
     name: "Cb minor",
     chords: [
       "Cb minor",
-      "Ebb major",
+      "Ebb Major",
       "Fb minor",
       "Gb minor",
-      "Abb major",
-      "Bbb major",
+      "Abb Major",
+      "Bbb Major",
     ],
   },
-  "C major": {
-    name: "C major",
-    chords: ["C major", "D minor", "E minor", "F major", "G major", "A minor"],
+  "C Major": {
+    name: "C Major",
+    chords: ["C Major", "D minor", "E minor", "F Major", "G Major", "A minor"],
   },
   "C minor": {
     name: "C minor",
     chords: [
       "C minor",
-      "Eb major",
+      "Eb Major",
       "F minor",
       "G minor",
-      "Ab major",
-      "Bb major",
+      "Ab Major",
+      "Bb Major",
     ],
   },
-  "C# major": {
-    name: "C# major",
+  "C# Major": {
+    name: "C# Major",
     chords: [
-      "C# major",
+      "C# Major",
       "D# minor",
       "E# minor",
-      "F# major",
-      "G# major",
+      "F# Major",
+      "G# Major",
       "A# minor",
     ],
   },
@@ -297,21 +297,21 @@ export const Keys: Record<KeyName, Key> = {
     name: "C# minor",
     chords: [
       "C# minor",
-      "E major",
+      "E Major",
       "F# minor",
       "G# minor",
-      "A major",
-      "B major",
+      "A Major",
+      "B Major",
     ],
   },
-  "Db major": {
-    name: "Db major",
+  "Db Major": {
+    name: "Db Major",
     chords: [
-      "Db major",
+      "Db Major",
       "Eb minor",
       "F minor",
-      "Gb major",
-      "Ab major",
+      "Gb Major",
+      "Ab Major",
       "Bb minor",
     ],
   },
@@ -319,29 +319,29 @@ export const Keys: Record<KeyName, Key> = {
     name: "Db minor",
     chords: [
       "Db minor",
-      "Fb major",
+      "Fb Major",
       "Gb minor",
       "Ab minor",
-      "Bbb major",
-      "Cb major",
+      "Bbb Major",
+      "Cb Major",
     ],
   },
-  "D major": {
-    name: "D major",
-    chords: ["D major", "E minor", "F# minor", "G major", "A major", "B minor"],
+  "D Major": {
+    name: "D Major",
+    chords: ["D Major", "E minor", "F# minor", "G Major", "A Major", "B minor"],
   },
   "D minor": {
     name: "D minor",
-    chords: ["D minor", "F major", "G minor", "A minor", "Bb major", "C major"],
+    chords: ["D minor", "F Major", "G minor", "A minor", "Bb Major", "C Major"],
   },
-  "D# major": {
-    name: "D# major",
+  "D# Major": {
+    name: "D# Major",
     chords: [
-      "D# major",
+      "D# Major",
       "E# minor",
       "F## minor",
-      "G# major",
-      "A# major",
+      "G# Major",
+      "A# Major",
       "B# minor",
     ],
   },
@@ -349,21 +349,21 @@ export const Keys: Record<KeyName, Key> = {
     name: "D# minor",
     chords: [
       "D# minor",
-      "F# major",
+      "F# Major",
       "G# minor",
       "A# minor",
-      "B major",
-      "C# major",
+      "B Major",
+      "C# Major",
     ],
   },
-  "Eb major": {
-    name: "Eb major",
+  "Eb Major": {
+    name: "Eb Major",
     chords: [
-      "Eb major",
+      "Eb Major",
       "F minor",
       "G minor",
-      "Ab major",
-      "Bb major",
+      "Ab Major",
+      "Bb Major",
       "C minor",
     ],
   },
@@ -371,36 +371,36 @@ export const Keys: Record<KeyName, Key> = {
     name: "Eb minor",
     chords: [
       "Eb minor",
-      "Gb major",
+      "Gb Major",
       "Ab minor",
       "Bb minor",
-      "Cb major",
-      "Db major",
+      "Cb Major",
+      "Db Major",
     ],
   },
-  "E major": {
-    name: "E major",
+  "E Major": {
+    name: "E Major",
     chords: [
-      "E major",
+      "E Major",
       "F# minor",
       "G# minor",
-      "A major",
-      "B major",
+      "A Major",
+      "B Major",
       "C# minor",
     ],
   },
   "E minor": {
     name: "E minor",
-    chords: ["E minor", "G major", "A minor", "B minor", "C major", "D major"],
+    chords: ["E minor", "G Major", "A minor", "B minor", "C Major", "D Major"],
   },
-  "E# major": {
-    name: "E# major",
+  "E# Major": {
+    name: "E# Major",
     chords: [
-      "E# major",
+      "E# Major",
       "F## minor",
       "G## minor",
-      "A# major",
-      "B# major",
+      "A# Major",
+      "B# Major",
       "C## minor",
     ],
   },
@@ -408,21 +408,21 @@ export const Keys: Record<KeyName, Key> = {
     name: "E# minor",
     chords: [
       "E# minor",
-      "G# major",
+      "G# Major",
       "A# minor",
       "B# minor",
-      "C# major",
-      "D# major",
+      "C# Major",
+      "D# Major",
     ],
   },
-  "Fb major": {
-    name: "Fb major",
+  "Fb Major": {
+    name: "Fb Major",
     chords: [
-      "Fb major",
+      "Fb Major",
       "Gb minor",
       "Ab minor",
-      "Bbb major",
-      "Cb major",
+      "Bbb Major",
+      "Cb Major",
       "Db minor",
     ],
   },
@@ -430,36 +430,36 @@ export const Keys: Record<KeyName, Key> = {
     name: "Fb minor",
     chords: [
       "Fb minor",
-      "Abb major",
+      "Abb Major",
       "Bbb minor",
       "Cb minor",
-      "Dbb major",
-      "Ebb major",
+      "Dbb Major",
+      "Ebb Major",
     ],
   },
-  "F major": {
-    name: "F major",
-    chords: ["F major", "G minor", "A minor", "Bb major", "C major", "D minor"],
+  "F Major": {
+    name: "F Major",
+    chords: ["F Major", "G minor", "A minor", "Bb Major", "C Major", "D minor"],
   },
   "F minor": {
     name: "F minor",
     chords: [
       "F minor",
-      "Ab major",
+      "Ab Major",
       "Bb minor",
       "C minor",
-      "Db major",
-      "Eb major",
+      "Db Major",
+      "Eb Major",
     ],
   },
-  "F# major": {
-    name: "F# major",
+  "F# Major": {
+    name: "F# Major",
     chords: [
-      "F# major",
+      "F# Major",
       "G# minor",
       "A# minor",
-      "Bb major",
-      "C# major",
+      "Bb Major",
+      "C# Major",
       "D# minor",
     ],
   },
@@ -467,21 +467,21 @@ export const Keys: Record<KeyName, Key> = {
     name: "F# minor",
     chords: [
       "F# minor",
-      "A major",
+      "A Major",
       "B minor",
       "C# minor",
-      "D major",
-      "E major",
+      "D Major",
+      "E Major",
     ],
   },
-  "Gb major": {
-    name: "Gb major",
+  "Gb Major": {
+    name: "Gb Major",
     chords: [
-      "Gb major",
+      "Gb Major",
       "Ab minor",
       "Bb minor",
-      "B major",
-      "Db major",
+      "B Major",
+      "Db Major",
       "Eb minor",
     ],
   },
@@ -489,36 +489,36 @@ export const Keys: Record<KeyName, Key> = {
     name: "Gb minor",
     chords: [
       "Gb minor",
-      "Bbb major",
+      "Bbb Major",
       "Cb minor",
       "Db minor",
-      "Ebb major",
-      "Fb major",
+      "Ebb Major",
+      "Fb Major",
     ],
   },
-  "G major": {
-    name: "G major",
-    chords: ["G major", "A minor", "B minor", "C major", "D major", "E minor"],
+  "G Major": {
+    name: "G Major",
+    chords: ["G Major", "A minor", "B minor", "C Major", "D Major", "E minor"],
   },
   "G minor": {
     name: "G minor",
     chords: [
       "G minor",
-      "Bb major",
+      "Bb Major",
       "C minor",
       "D minor",
-      "Eb major",
-      "F major",
+      "Eb Major",
+      "F Major",
     ],
   },
-  "G# major": {
-    name: "G# major",
+  "G# Major": {
+    name: "G# Major",
     chords: [
-      "G# major",
+      "G# Major",
       "A# minor",
       "B# minor",
-      "C# major",
-      "D# major",
+      "C# Major",
+      "D# Major",
       "E# minor",
     ],
   },
@@ -526,66 +526,66 @@ export const Keys: Record<KeyName, Key> = {
     name: "G# minor",
     chords: [
       "G# minor",
-      "B major",
+      "B Major",
       "C# minor",
       "Eb minor",
-      "E major",
-      "Gb major",
+      "E Major",
+      "Gb Major",
     ],
   },
 };
 
 export const Chords: Record<ChordName, Chord> = {
-  "Abb major": { name: "Abb major", notes: ["G", "B", "D"] },
-  "Ab major": { name: "Ab major", notes: ["G#", "C", "D#"] },
+  "Abb Major": { name: "Abb Major", notes: ["G", "B", "D"] },
+  "Ab Major": { name: "Ab Major", notes: ["G#", "C", "D#"] },
   "Ab minor": { name: "Ab minor", notes: ["G#", "B", "D#"] },
-  "A major": { name: "A major", notes: ["A", "C#", "E"] },
+  "A Major": { name: "A Major", notes: ["A", "C#", "E"] },
   "A minor": { name: "A minor", notes: ["A", "C", "E"] },
-  "A# major": { name: "A# major", notes: ["A#", "D", "F"] },
+  "A# Major": { name: "A# Major", notes: ["A#", "D", "F"] },
   "A# minor": { name: "A# minor", notes: ["A#", "C#", "F"] },
-  "Bbb major": { name: "Bbb major", notes: ["A", "C#", "E"] },
+  "Bbb Major": { name: "Bbb Major", notes: ["A", "C#", "E"] },
   "Bbb minor": { name: "Bbb minor", notes: ["A", "C", "E"] },
-  "Bb major": { name: "Bb major", notes: ["A#", "D", "F"] },
+  "Bb Major": { name: "Bb Major", notes: ["A#", "D", "F"] },
   "Bb minor": { name: "Bb minor", notes: ["A#", "C#", "F"] },
-  "B major": { name: "B major", notes: ["B", "D#", "F#"] },
+  "B Major": { name: "B Major", notes: ["B", "D#", "F#"] },
   "B minor": { name: "B minor", notes: ["B", "D", "F#"] },
-  "B# major": { name: "B# major", notes: ["C", "E", "G"] },
+  "B# Major": { name: "B# Major", notes: ["C", "E", "G"] },
   "B# minor": { name: "B# minor", notes: ["C", "D#", "G"] },
-  "Cb major": { name: "Cb major", notes: ["B", "D#", "F#"] },
+  "Cb Major": { name: "Cb Major", notes: ["B", "D#", "F#"] },
   "Cb minor": { name: "Cb minor", notes: ["B", "D", "F#"] },
-  "C major": { name: "C major", notes: ["C", "E", "G"] },
+  "C Major": { name: "C Major", notes: ["C", "E", "G"] },
   "C minor": { name: "C minor", notes: ["C", "D#", "G"] },
-  "C# major": { name: "C# major", notes: ["C#", "F", "G#"] },
+  "C# Major": { name: "C# Major", notes: ["C#", "F", "G#"] },
   "C# minor": { name: "C# minor", notes: ["C#", "E", "G#"] },
   "C## minor": { name: "C## minor", notes: ["D", "F", "A"] },
-  "Dbb major": { name: "Dbb major", notes: ["C", "E", "G"] },
-  "Db major": { name: "Db major", notes: ["C#", "F", "G#"] },
+  "Dbb Major": { name: "Dbb Major", notes: ["C", "E", "G"] },
+  "Db Major": { name: "Db Major", notes: ["C#", "F", "G#"] },
   "Db minor": { name: "Db minor", notes: ["C#", "E", "G#"] },
-  "D major": { name: "D major", notes: ["D", "F#", "A"] },
+  "D Major": { name: "D Major", notes: ["D", "F#", "A"] },
   "D minor": { name: "D minor", notes: ["D", "F", "A"] },
-  "D# major": { name: "D# major", notes: ["D#", "G", "A#"] },
+  "D# Major": { name: "D# Major", notes: ["D#", "G", "A#"] },
   "D# minor": { name: "D# minor", notes: ["D#", "F#", "A#"] },
   "D## minor": { name: "D## minor", notes: ["E", "G", "B"] },
-  "Ebb major": { name: "Ebb major", notes: ["D", "F#", "A"] },
-  "Eb major": { name: "Eb major", notes: ["D#", "G", "A#"] },
+  "Ebb Major": { name: "Ebb Major", notes: ["D", "F#", "A"] },
+  "Eb Major": { name: "Eb Major", notes: ["D#", "G", "A#"] },
   "Eb minor": { name: "Eb minor", notes: ["D#", "F#", "A#"] },
-  "E major": { name: "E major", notes: ["E", "G#", "B"] },
+  "E Major": { name: "E Major", notes: ["E", "G#", "B"] },
   "E minor": { name: "E minor", notes: ["E", "G", "B"] },
-  "E# major": { name: "E# major", notes: ["F", "A", "C"] },
+  "E# Major": { name: "E# Major", notes: ["F", "A", "C"] },
   "E# minor": { name: "E# minor", notes: ["F", "G#", "C"] },
-  "Fb major": { name: "Fb major", notes: ["E", "G#", "B"] },
+  "Fb Major": { name: "Fb Major", notes: ["E", "G#", "B"] },
   "Fb minor": { name: "Fb minor", notes: ["E", "G", "B"] },
-  "F major": { name: "F major", notes: ["F", "A", "C"] },
+  "F Major": { name: "F Major", notes: ["F", "A", "C"] },
   "F minor": { name: "F minor", notes: ["F", "G#", "C"] },
-  "F# major": { name: "F# major", notes: ["F#", "A#", "C#"] },
+  "F# Major": { name: "F# Major", notes: ["F#", "A#", "C#"] },
   "F# minor": { name: "F# minor", notes: ["F#", "A", "C#"] },
-  "F## major": { name: "F## major", notes: ["G", "B", "D"] },
+  "F## Major": { name: "F## Major", notes: ["G", "B", "D"] },
   "F## minor": { name: "F## minor", notes: ["G", "A#", "D"] },
-  "Gb major": { name: "Gb major", notes: ["F#", "A#", "C#"] },
+  "Gb Major": { name: "Gb Major", notes: ["F#", "A#", "C#"] },
   "Gb minor": { name: "Gb minor", notes: ["F#", "A", "C#"] },
-  "G major": { name: "G major", notes: ["G", "B", "D"] },
+  "G Major": { name: "G Major", notes: ["G", "B", "D"] },
   "G minor": { name: "G minor", notes: ["G", "A#", "D"] },
-  "G# major": { name: "G# major", notes: ["G#", "C", "D#"] },
+  "G# Major": { name: "G# Major", notes: ["G#", "C", "D#"] },
   "G# minor": { name: "G# minor", notes: ["G#", "B", "D#"] },
   "G## minor": { name: "G## minor", notes: ["A", "C", "E"] },
 };
