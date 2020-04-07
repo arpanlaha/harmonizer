@@ -26,7 +26,6 @@ import Dropzone from "react-dropzone";
 import { FMSynth, Transport, Offline } from "tone";
 
 import { SliderValue } from "antd/lib/slider";
-import { TagProps } from "antd/lib/tag";
 
 import "antd/dist/antd.css";
 import "antd/dist/antd.dark.css";
@@ -494,7 +493,7 @@ export default function Harmonizer(): ReactElement {
                   </Tooltip>
                   <div className="flex-row">
                     {result.chords.map(
-                      (chord, chordIndex): ReactElement<TagProps> => (
+                      (chord, chordIndex): ReactElement => (
                         <Tooltip
                           title={`Notes: ${replaceAccidentals(
                             Chords[chord].notes.join(", ")
