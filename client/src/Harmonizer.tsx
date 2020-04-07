@@ -181,6 +181,14 @@ export default function Harmonizer(): ReactElement {
   useEffect(resetAudioSource, [overlayBuffer, resetAudioSource]);
 
   /**
+   * Resets user parameter overloads
+   */
+  const resetParams = (): void => {
+    form.resetFields();
+    setParams({});
+  };
+
+  /**
    * Reset harmony results on new file submission or harmonization
    */
   const resetResult = (): void => {
@@ -195,9 +203,9 @@ export default function Harmonizer(): ReactElement {
    */
   const handleFile = (files: File[]): void => {
     if (files.length > 0) {
+      resetParams();
       resetResult();
       setMelodyFile(files[0]);
-      resetParams();
     }
   };
 
@@ -257,14 +265,6 @@ export default function Harmonizer(): ReactElement {
         ? Promise.resolve()
         : Promise.reject("");
     },
-  };
-
-  /**
-   * Resets user parameter overloads
-   */
-  const resetParams = (): void => {
-    form.resetFields();
-    setParams({});
   };
 
   /**
