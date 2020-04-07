@@ -52,8 +52,13 @@ export const getHarmony = (
       type: "GET_HARMONY_SUCCESS",
       result: response.data.result,
     }))
-    .catch((error: AxiosError) => ({
-      type: "GET_HARMONY_FAIL",
-      error: error.response?.data,
-    }));
+    .catch((error: AxiosError) => {
+      console.log("here");
+      return {
+        type: "GET_HARMONY_FAIL",
+        error:
+          error.response?.data ??
+          "Server error - please post an issue at https://github.com/arpanlaha/harmonizer/issues",
+      };
+    });
 };

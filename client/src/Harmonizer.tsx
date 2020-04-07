@@ -486,17 +486,22 @@ export default function Harmonizer(): ReactElement {
                   <div className="flex-row">
                     {result.chords.map(
                       (chord, chordIndex): ReactElement<TagProps> => (
-                        <Tag
-                          className={
-                            chordIndex === getCurrentChordIndex()
-                              ? "current-chord-tag"
-                              : ""
-                          }
-                          color={getBadgeColor(chord)}
+                        <Tooltip
+                          title={`Notes: ${Chords[chord].notes.join(", ")}`}
+                          placement="top"
                           key={chordIndex}
                         >
-                          {chord}
-                        </Tag>
+                          <Tag
+                            className={
+                              chordIndex === getCurrentChordIndex()
+                                ? "current-chord-tag"
+                                : ""
+                            }
+                            color={getBadgeColor(chord)}
+                          >
+                            {chord}
+                          </Tag>
+                        </Tooltip>
                       )
                     )}
                   </div>
