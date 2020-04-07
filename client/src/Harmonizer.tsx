@@ -212,7 +212,7 @@ export default function Harmonizer(): ReactElement {
    * Replaces 'b' with '♭' and '#' with '♯' for keys, chords, or notes with accidentals
    * @param str the key, chord, or note to be converted
    */
-  const replaceAccidentals = (str: String) =>
+  const replaceAccidentals = (str: string): string =>
     str.replace(/b/g, "♭").replace(/#/g, "♯");
 
   /**
