@@ -148,7 +148,7 @@ export default function Harmonizer(): ReactElement {
   /**
    * Reset audioSource on change to overlayBuffer
    */
-  useEffect((): void => resetAudioSource(), [overlayBuffer, resetAudioSource]);
+  useEffect(resetAudioSource, [overlayBuffer, resetAudioSource]);
 
   /**
    * Reset harmony results on new file submission or harmonization
@@ -193,10 +193,8 @@ export default function Harmonizer(): ReactElement {
             : setError(response.error ?? "");
           setLoading(false);
         })
-        .catch((error) => {
-          setError(error);
-          setLoading(false);
-        });
+        .catch(setError)
+        .then(() => setLoading(false));
     }
   };
 
@@ -278,7 +276,7 @@ export default function Harmonizer(): ReactElement {
     <>
       <Head />
       <div className="center-vertical">
-        <h1 className="title">Harmonizer </h1>
+        <h1 className="title">Harmonizer</h1>
 
         <div className="content">
           <div className="upload-container">
@@ -292,15 +290,13 @@ export default function Harmonizer(): ReactElement {
                 noKeyboard
               >
                 {({ getRootProps, getInputProps }) => (
-                  <section>
-                    <Button
-                      type={melodyFile === null ? "primary" : "default"}
-                      {...getRootProps()}
-                    >
-                      <input {...getInputProps()} />
-                      Select file
-                    </Button>
-                  </section>
+                  <Button
+                    type={melodyFile === null ? "primary" : "default"}
+                    {...getRootProps()}
+                  >
+                    <input {...getInputProps()} />
+                    Select file
+                  </Button>
                 )}
               </Dropzone>
             </div>

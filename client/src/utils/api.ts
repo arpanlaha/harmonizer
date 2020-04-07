@@ -52,7 +52,7 @@ export const getHarmony = (
       type: "GET_HARMONY_SUCCESS",
       result: response.data.result,
     }))
-    .catch((error: AxiosError<string>) => ({
+    .catch((error: AxiosError) => ({
       type: "GET_HARMONY_FAIL",
       error: error.response?.data,
     }));
