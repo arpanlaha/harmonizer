@@ -49,24 +49,27 @@ body {
 .title {
   @extend .center-text;
 
-  font-size: 5vw;
+  font-size: 10vmin;
   margin: 0;
-  margin-top: 2vw;
+  margin: 2vh;
 }
 
 .content {
   display: flex;
-  flex-direction: row;
   justify-content: center;
-  flex: 1;
+
+  @media (orientation: landscape) {
+    flex-direction: row;
+    flex: 1;
+  }
+
+  @media (orientation: portrait) {
+    flex-direction: column;
+  }
 }
 
 @mixin container {
-  width: 40vw;
-  min-height: 50vh;
   height: auto;
-  margin: 5vh 2vw;
-  padding: 2vh 2vw;
 
   background-color: $card-background;
   border: none;
@@ -80,13 +83,33 @@ body {
   }
 
   .ant-card-head-title {
-    font-size: 3vw;
     padding: 0;
-    // padding-top: 1vh;
   }
 
   .ant-card-body {
-    padding: 2vh 2vw;
+    padding: 2vmin;
+    @include center-vertical;
+  }
+
+  @media (orientation: landscape) {
+    min-height: 50vh;
+    width: 40vw;
+    margin: 2vh;
+    padding: 2vh;
+
+    .ant-card-head-title {
+      font-size: 3vw;
+    }
+  }
+
+  @media (orientation: portrait) {
+    width: 80vw;
+    margin: 1vh;
+    padding: 1vh;
+
+    .ant-card-head-title {
+      font-size: 5vh;
+    }
   }
 }
 
@@ -145,7 +168,7 @@ body {
 .loader {
   width: 100%;
   height: 100%;
-  padding: 4vh;
+  padding: 8vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -162,12 +185,17 @@ body {
   width: 20vw;
 }
 
+.result-row {
+  @include center-horizontal;
+  justify-content: space-evenly;
+}
+
 .result-field {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 1vh;
+  margin: 1vh;
 
   h3 {
     margin: 0;
@@ -207,7 +235,8 @@ body {
   background-color: $player-background;
   border-radius: 10vh;
   padding: 2vh 2vw;
-  margin: 2vh 0;
+  margin: 0;
+  margin-top: 2vh;
   width: 32vw;
 
   button {

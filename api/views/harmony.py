@@ -3,7 +3,7 @@ from essentia.standard import (
     MonoLoader,
     KeyExtractor,
     PitchMelodia,
-    RhythmExtractor,
+    RhythmExtractor2013,
     Meter,
     Beatogram,
     BeatsLoudness,
@@ -38,10 +38,7 @@ def harmonize():
                 {
                     "success": False,
                     "message": "No file provided",
-                    "data": {
-                        "files": request.files,
-                        "file": ("missing" if file is None else file.filename),
-                    },
+                    "data": {"file": ("missing" if file is None else file.filename),},
                 }
             ),
             400,
@@ -54,14 +51,27 @@ def harmonize():
     file.save(file_path)
     file.close()
 
-    analysis = analyze(file_path)
+    audio = MonoLoader(filename=file_path)()
 
-    frequencies = analysis["frequencies"]
-    start = analysis["start"].item()
+    frequencies, freq_confidence = PitchMelodia()(audio)  # binned list of frequencies
 
-    key = request.form.get("key", analysis["key"])
-    bpm = float(request.form.get("bpm", analysis["bpm"]))
-    meter = float(request.form.get("meter", analysis["meter"]))
+    key, scale, strength = KeyExtractor()(
+        audio
+    )  # key (note) and scale (major vs. minor) matter
+
+    if scale == "major":
+        scale = "Major"
+
+    bpm, beats = RhythmExtractor2013()(audio)[:2]
+    bpm = float(request.form.get("bpm", bpm))
+
+    loudness, loudness_band_ratio = BeatsLoudness(beats=beats)(audio)
+    beatogram = Beatogram()(loudness, loudness_band_ratio)
+    meter = Meter()(beatogram)
+    start = float(beats[0]) - 60 / bpm
+
+    key = request.form.get("key", key + " " + scale)
+    meter = float(request.form.get("meter", meter))
 
     measure_length_bins = (
         meter * (60 / bpm) * (44100 / 128)
@@ -71,6 +81,15 @@ def harmonize():
 
     measures = [
         frequencies[
+            int(i * measure_length_bins) : int(
+                min(len(frequencies), (i + 1) * measure_length_bins)
+            )
+        ]
+        for i in range(num_measures)
+    ]  # split frequencies into measures
+
+    confidences = [
+        freq_confidence[
             int(i * measure_length_bins) : int(
                 min(len(frequencies), (i + 1) * measure_length_bins)
             )
@@ -91,7 +110,9 @@ def harmonize():
     for i in range(num_measures - 2):
         # start from second last and go backwards (important for contextual scoring)
         measure_number = len(chords) - 2 - i
-        chords[measure_number] = generate(measures[measure_number], key)
+        chords[measure_number] = generate(
+            measures[measure_number], confidences[measure_number], key
+        )
 
     os.remove(file_path)
 
@@ -116,7 +137,7 @@ def harmonize():
 def analyze(file):
     audio = MonoLoader(filename=file)()
 
-    frequencies = PitchMelodia()(audio)[0]  # binned list of frequencies
+    frequencies, freq_confidence = PitchMelodia()(audio)  # binned list of frequencies
 
     key, scale, strength = KeyExtractor()(
         audio
@@ -125,7 +146,7 @@ def analyze(file):
     if scale == "major":
         scale = "Major"
 
-    bpm, beats = RhythmExtractor()(audio)[:2]  # tempo in beats per minute
+    bpm, beats = RhythmExtractor2013()(audio)[:2]  # tempo in beats per minute
 
     loudness, loudness_band_ratio = BeatsLoudness(beats=beats)(audio)
     beatogram = Beatogram()(loudness, loudness_band_ratio)
@@ -141,11 +162,13 @@ def analyze(file):
     }
 
 
-def generate(frequencies, key, next=None):
+def generate(frequencies, confidences, key, next=None):
     pitch_histogram = {}  # stores number of occurences of each pitch
     index_histogram = {}  # stores number of occurences of each pitch
 
-    for frequency in frequencies:
+    for i in range(len(frequencies)):
+        frequency = frequencies[i]
+        confidence = confidences[i]
         if frequency == 0.0:  # disregard invalid values
             continue
 
@@ -157,9 +180,9 @@ def generate(frequencies, key, next=None):
         pitch_name = pitches[pitch_index]
 
         if pitch_name in pitch_histogram:
-            pitch_histogram[pitch_name] += 1
+            pitch_histogram[pitch_name] += confidence
         else:
-            pitch_histogram[pitch_name] = 1
+            pitch_histogram[pitch_name] = confidence
 
     chord_scores = {}  # arbitrarily defined scores for each possible chord
     chords = model["keys"][key]["chords"]

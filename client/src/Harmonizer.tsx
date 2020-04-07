@@ -399,11 +399,7 @@ export default function Harmonizer(): ReactElement {
                 <div className="params">
                   <Tooltip title={keyDescription} placement="top">
                     <Item className="key-input" label="Key" name="key">
-                      <Select
-                        placeholder="C Major"
-                        showSearch
-                        value={params.key}
-                      >
+                      <Select showSearch value={params.key}>
                         {Object.keys(Keys).map((keyName) => (
                           <Option key={keyName} value={keyName}>
                             {replaceAccidentals(keyName)}
@@ -419,11 +415,7 @@ export default function Harmonizer(): ReactElement {
                       name="bpm"
                       rules={[validateMeasureLength]}
                     >
-                      <InputNumber
-                        placeholder="120"
-                        value={params.bpm}
-                        min={40}
-                      />
+                      <InputNumber value={params.bpm} min={40} max={250} />
                     </Item>
                   </Tooltip>
                   <Tooltip title={meterDescription} placement="top">
@@ -433,11 +425,7 @@ export default function Harmonizer(): ReactElement {
                       name="meter"
                       rules={[validateMeasureLength]}
                     >
-                      <InputNumber
-                        placeholder="4"
-                        value={params.meter}
-                        min={1}
-                      />
+                      <InputNumber value={params.meter} min={1} />
                     </Item>
                   </Tooltip>
                 </div>
@@ -495,19 +483,34 @@ export default function Harmonizer(): ReactElement {
 
             {result !== null && (
               <>
-                <div className="result-field">
-                  <Tooltip title={keyDescription} placement="left">
-                    <h3>Key:</h3>
-                  </Tooltip>
-                  <Tooltip
-                    title={`Chords: ${replaceAccidentals(
-                      Keys[result.key].chords.join(", ")
-                    )}`}
-                    placement="top"
-                  >
-                    <Tag color="blue">{replaceAccidentals(result.key)}</Tag>
-                  </Tooltip>
+                <div className="result-row">
+                  <div className="result-field">
+                    <Tooltip title={keyDescription} placement="left">
+                      <h3>Key:</h3>
+                    </Tooltip>
+                    <Tooltip
+                      title={`Chords: ${replaceAccidentals(
+                        Keys[result.key].chords.join(", ")
+                      )}`}
+                      placement="top"
+                    >
+                      <Tag color="blue">{replaceAccidentals(result.key)}</Tag>
+                    </Tooltip>
+                  </div>
+                  <div className="result-field">
+                    <Tooltip title={bpmDescription} placement="left">
+                      <h3>BPM:</h3>
+                    </Tooltip>
+                    <Tag color="blue">{Math.round(result.bpm)}</Tag>
+                  </div>
+                  <div className="result-field">
+                    <Tooltip title={meterDescription} placement="left">
+                      <h3>Meter:</h3>
+                    </Tooltip>
+                    <Tag color="blue">{Math.round(result.meter)}</Tag>
+                  </div>
                 </div>
+
                 <div className="result-field">
                   <Tooltip title={chordsDescription} placement="left">
                     <h3>Chords:</h3>
@@ -534,19 +537,6 @@ export default function Harmonizer(): ReactElement {
                       </Tooltip>
                     ))}
                   </div>
-                </div>
-
-                <div className="result-field">
-                  <Tooltip title={bpmDescription} placement="left">
-                    <h3>BPM:</h3>
-                  </Tooltip>
-                  <Tag color="blue">{Math.round(result.bpm)}</Tag>
-                </div>
-                <div className="result-field">
-                  <Tooltip title={meterDescription} placement="left">
-                    <h3>Meter:</h3>
-                  </Tooltip>
-                  <Tag color="blue">{Math.round(result.meter)}</Tag>
                 </div>
 
                 <div className="player">
