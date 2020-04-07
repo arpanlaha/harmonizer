@@ -32,7 +32,8 @@ export interface HarmonyResponseWrapper {
 
 export const getHarmony = (
   file: File | Blob,
-  params: HarmonyParams
+  params: HarmonyParams,
+  setProgress: (progress: number) => void
 ): Promise<HarmonyResponseWrapper> => {
   const data = new FormData();
   data.append("melody", file);
@@ -47,7 +48,10 @@ export const getHarmony = (
   });
 
   return axios
-    .post(`${BACKEND_URL}/harmony`, data)
+    .post(`${BACKEND_URL}/harmony`, data, {
+      onUploadProgress: (progress: ProgressEvent): void =>
+        setProgress((progress.loaded / progress.total) * 100),
+    })
     .then((response) => ({
       type: "GET_HARMONY_SUCCESS",
       result: response.data.result,

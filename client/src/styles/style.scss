@@ -22,8 +22,8 @@ $player-background: hsl(215, 16, 8);
 }
 
 @mixin audio-button {
-  width: 4vh;
-  height: 4vh;
+  width: 5vh;
+  height: 5vh;
 }
 
 body {
@@ -42,9 +42,14 @@ body {
   @include center-vertical;
 }
 
-.title {
-  font-size: 6vw;
+.center-text {
   text-align: center;
+}
+
+.title {
+  @extend .center-text;
+
+  font-size: 5vw;
   margin: 0;
   margin-top: 2vw;
 }
@@ -81,7 +86,7 @@ body {
   }
 
   .ant-card-body {
-    padding: 2vh;
+    padding: 2vh 2vw;
   }
 }
 
@@ -100,22 +105,26 @@ body {
   margin-bottom: 2vh;
 }
 
-.params-title {
-  text-align: center;
-}
-
 .params {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
 }
 
-.params-instructions {
-  text-align: center;
-}
-
 .key-input {
   width: 10vw;
+}
+
+.bpm-input {
+  .ant-input-number {
+    width: 6vw;
+  }
+}
+
+.meter-input {
+  .ant-input-number {
+    width: 4vw;
+  }
 }
 
 .upload-buttons {
@@ -133,14 +142,10 @@ body {
   @include center-vertical;
 }
 
-.file-name {
-  text-align: center;
-}
-
 .loader {
   width: 100%;
   height: 100%;
-  padding: 12vh;
+  padding: 4vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -151,6 +156,10 @@ body {
     height: 8vh;
     margin: 1vh;
   }
+}
+
+.ant-progress {
+  width: 20vw;
 }
 
 .result-field {
@@ -194,11 +203,12 @@ body {
 
 .player {
   @include center-horizontal;
-
+  justify-content: space-evenly;
   background-color: $player-background;
   border-radius: 10vh;
-  padding: 2vh 2.5vh;
-  margin: 2vh;
+  padding: 2vh 2vw;
+  margin: 2vh 0;
+  width: 32vw;
 
   button {
     @include center-vertical;
@@ -236,6 +246,6 @@ body {
   }
 
   .ant-slider {
-    width: 14vw;
+    width: 16vw;
   }
 }

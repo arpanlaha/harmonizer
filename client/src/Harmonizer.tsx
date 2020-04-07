@@ -15,6 +15,7 @@ import {
   Form,
   InputNumber,
   notification,
+  Progress,
   Slider,
   Spin,
   Select,
@@ -49,6 +50,7 @@ export default function Harmonizer(): ReactElement {
   const [loading, setLoading] = useState(false);
   const [params, setParams] = useState<HarmonyParams>({});
   const [error, setError] = useState("");
+  const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<HarmonyResult | null>(null);
   const [audioSource, setAudioSource] = useState(ctx.createBufferSource());
   const [melodyBuffer, setMelodyBuffer] = useState(
@@ -97,7 +99,7 @@ export default function Harmonizer(): ReactElement {
       Transport.bpm.value = bpm;
       const measureLength = Math.max((60 * meter) / bpm, melodyBuffer.duration);
 
-      // synthesize audio and render into output buffer
+      // synthesize audio and render into overlay buffer
       Offline((): void => {
         // nne synth per chord note
         const synths = [
@@ -230,7 +232,8 @@ export default function Harmonizer(): ReactElement {
     if (melodyFile !== null) {
       resetResult();
       setLoading(true);
-      getHarmony(melodyFile, params)
+      setProgress(0);
+      getHarmony(melodyFile, params, setProgress)
         .then((response) => {
           response.result
             ? setResult(response.result)
@@ -391,12 +394,16 @@ export default function Harmonizer(): ReactElement {
                 onValuesChange={setParams}
                 form={form}
               >
-                <h2 className="params-title">Parameters (optional)</h2>
+                <h2 className="center-text">Parameters (optional)</h2>
 
                 <div className="params">
                   <Tooltip title={keyDescription} placement="top">
                     <Item className="key-input" label="Key" name="key">
-                      <Select placeholder="Key" showSearch value={params.key}>
+                      <Select
+                        placeholder="C Major"
+                        showSearch
+                        value={params.key}
+                      >
                         {Object.keys(Keys).map((keyName) => (
                           <Option key={keyName} value={keyName}>
                             {replaceAccidentals(keyName)}
@@ -407,13 +414,13 @@ export default function Harmonizer(): ReactElement {
                   </Tooltip>
                   <Tooltip title={bpmDescription} placement="top">
                     <Item
-                      className="number-input"
+                      className="bpm-input"
                       label="BPM"
                       name="bpm"
                       rules={[validateMeasureLength]}
                     >
                       <InputNumber
-                        placeholder="BPM"
+                        placeholder="120"
                         value={params.bpm}
                         min={40}
                       />
@@ -421,20 +428,20 @@ export default function Harmonizer(): ReactElement {
                   </Tooltip>
                   <Tooltip title={meterDescription} placement="top">
                     <Item
-                      className="number-input"
+                      className="meter-input"
                       label="Meter"
                       name="meter"
                       rules={[validateMeasureLength]}
                     >
                       <InputNumber
-                        placeholder="Meter"
+                        placeholder="4"
                         value={params.meter}
                         min={1}
                       />
                     </Item>
                   </Tooltip>
                 </div>
-                <p className="params-instructions">
+                <p className="center-text">
                   Harmonizer's backend will automatically detect the above
                   fields upon submission. However, if you wish to manually set
                   or override the backend's results, you can do so with the
@@ -467,10 +474,24 @@ export default function Harmonizer(): ReactElement {
 
           <Card className="result-container" title="Results">
             {melodyFile !== null && (
-              <h2 className="file-name">Melody: {melodyFile.name}</h2>
+              <h2 className="center-text">Melody: {melodyFile.name}</h2>
             )}
 
-            {loading && <Spin className="loader" />}
+            {loading && (
+              <>
+                <Spin className="loader" />
+                <Progress
+                  percent={progress}
+                  status={progress < 100 ? "active" : "success"}
+                  showInfo={false}
+                />
+                <h3 className="center-text">
+                  {progress < 100
+                    ? `Uploading (${Math.round(progress)}%)...`
+                    : "Waiting for result..."}
+                </h3>
+              </>
+            )}
 
             {result !== null && (
               <>
