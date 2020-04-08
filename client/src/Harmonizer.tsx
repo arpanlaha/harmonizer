@@ -60,6 +60,7 @@ export default function Harmonizer(): ReactElement {
   const [harmonyBuffer, setHarmonyBuffer] = useState(
     ctx.createBuffer(1, 1, ctx.sampleRate)
   );
+  const [firstBeat, setFirstBeat] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [playTime, setPlayTime] = useState(0);
 
@@ -94,6 +95,7 @@ export default function Harmonizer(): ReactElement {
   useEffect((): void => {
     if (result !== null) {
       const { bpm, chords, meter, start } = result;
+      setFirstBeat(start);
       Transport.bpm.value = bpm;
       const measureLength = Math.min((60 * meter) / bpm, melodyBuffer.duration);
 
@@ -264,9 +266,15 @@ export default function Harmonizer(): ReactElement {
    */
   const getCurrentChordIndex = (): number =>
     result !== null && melodyBuffer !== null
-      ? Math.min(
-          Math.floor((playTime * result.chords.length) / melodyBuffer.duration),
-          result.chords.length
+      ? Math.max(
+          Math.min(
+            Math.floor(
+              (playTime * result.chords.length - firstBeat) /
+                (melodyBuffer.duration - firstBeat)
+            ),
+            result.chords.length
+          ),
+          0
         )
       : -1;
 
