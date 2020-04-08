@@ -52,14 +52,12 @@ export default function Harmonizer(): ReactElement {
   const [error, setError] = useState("");
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<HarmonyResult | null>(null);
-  const [audioSource, setAudioSource] = useState(ctx.createBufferSource());
+  const [melodySource, setMelodySource] = useState(ctx.createBufferSource());
+  const [harmonySource, setHarmonySource] = useState(ctx.createBufferSource());
   const [melodyBuffer, setMelodyBuffer] = useState(
     ctx.createBuffer(1, 1, ctx.sampleRate)
   );
   const [harmonyBuffer, setHarmonyBuffer] = useState(
-    ctx.createBuffer(1, 1, ctx.sampleRate)
-  );
-  const [overlayBuffer, setOverlayBuffer] = useState(
     ctx.createBuffer(1, 1, ctx.sampleRate)
   );
   const [playing, setPlaying] = useState(false);
@@ -135,51 +133,32 @@ export default function Harmonizer(): ReactElement {
   }, [result, melodyBuffer]);
 
   /**
-   * Overlay melody and harmony buffers when either is changed
+   * Reinitialize melodySource with melodyBuffer
    */
-  useEffect((): void => {
-    // initialize new overlay buffer
-    if (harmonyBuffer.length > 1) {
-      const newOverlayBuffer = ctx.createBuffer(
-        melodyBuffer.numberOfChannels,
-        melodyBuffer.length,
-        ctx.sampleRate
-      );
-      // harmony is mono
-      const harmonyBufferChannel = harmonyBuffer.getChannelData(0);
-
-      // melody has arbitrary channels
-      for (
-        let channel = 0;
-        channel < melodyBuffer.numberOfChannels;
-        channel++
-      ) {
-        const newOverlayBufferChannel = newOverlayBuffer.getChannelData(
-          channel
-        );
-        const melodyBufferChannel = melodyBuffer.getChannelData(channel);
-        for (let i = 0; i < melodyBuffer.length; i++) {
-          newOverlayBufferChannel[i] =
-            melodyBufferChannel[i] + harmonyBufferChannel[i];
-        }
-      }
-      setOverlayBuffer(newOverlayBuffer);
-    }
-  }, [melodyBuffer, harmonyBuffer]);
+  const resetMelodySource = useCallback((): void => {
+    const newMelodySource = ctx.createBufferSource();
+    newMelodySource.buffer = melodyBuffer;
+    setMelodySource(newMelodySource);
+  }, [melodyBuffer, setMelodySource]);
 
   /**
-   * Reinitialize audioSource with overlayBuffer
+   * Reinitialize harmonySource with harmonyBuffer
    */
-  const resetAudioSource = useCallback((): void => {
-    const newAudioSource = ctx.createBufferSource();
-    newAudioSource.buffer = overlayBuffer;
-    setAudioSource(newAudioSource);
-  }, [overlayBuffer, setAudioSource]);
+  const resetHarmonySource = useCallback((): void => {
+    const newHarmonySource = ctx.createBufferSource();
+    newHarmonySource.buffer = harmonyBuffer;
+    setHarmonySource(newHarmonySource);
+  }, [harmonyBuffer, setHarmonySource]);
 
   /**
-   * Reset audioSource on change to overlayBuffer
+   * Reset melodySource on change to melodyBuffer
    */
-  useEffect(resetAudioSource, [overlayBuffer, resetAudioSource]);
+  useEffect(resetMelodySource, [melodyBuffer, resetMelodySource]);
+
+  /**
+   * Reset harmonySource on change to harmonyBuffer
+   */
+  useEffect(resetHarmonySource, [harmonyBuffer, resetHarmonySource]);
 
   /**
    * Resets user parameter overloads
@@ -295,7 +274,8 @@ export default function Harmonizer(): ReactElement {
    * Start harmonized audio playback
    */
   const handlePlay = (): void => {
-    audioSource.connect(ctx.destination);
+    melodySource.connect(ctx.destination);
+    harmonySource.connect(ctx.destination);
 
     // Fetch current time and reset to start if previous playback finished
     let newPlayTime = playTime;
@@ -304,7 +284,8 @@ export default function Harmonizer(): ReactElement {
       setPlayTime(newPlayTime);
     }
 
-    audioSource.start(0, newPlayTime);
+    melodySource.start(0, newPlayTime);
+    harmonySource.start(0, newPlayTime);
     setPlaying(true);
 
     // Start timer to update playTime every PLAYBACK_INTERVAL
@@ -315,18 +296,21 @@ export default function Harmonizer(): ReactElement {
     );
 
     // Clear timer and reset audioSource on stop
-    audioSource.onended = (): void => {
+    melodySource.onended = (): void => {
       clearInterval(playTimer);
-      resetAudioSource();
+      resetMelodySource();
       setPlaying(false);
     };
+
+    harmonySource.onended = resetHarmonySource;
   };
 
   /**
    * Stop harmonized audio playback
    */
   const handleStop = (): void => {
-    audioSource.stop();
+    melodySource.stop();
+    harmonySource.stop();
     setPlaying(false);
   };
 
