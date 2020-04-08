@@ -235,8 +235,7 @@ body {
   background-color: $player-background;
   border-radius: 10vh;
   padding: 2vh 2vw;
-  margin: 0;
-  margin-top: 2vh;
+  margin: 2vh 0;
   width: 32vw;
 
   button {
@@ -276,5 +275,18 @@ body {
 
   .ant-slider {
     width: 16vw;
+  }
+}
+
+.harmony-volume {
+  @include center-horizontal;
+
+  h4 {
+    margin: 0;
+    margin-right: 1vw;
+  }
+
+  .ant-slider {
+    width: 12vw;
   }
 }

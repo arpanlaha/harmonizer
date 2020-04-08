@@ -54,6 +54,7 @@ export default function Harmonizer(): ReactElement {
   const [result, setResult] = useState<HarmonyResult | null>(null);
   const [melodySource, setMelodySource] = useState(ctx.createBufferSource());
   const [harmonySource, setHarmonySource] = useState(ctx.createBufferSource());
+  const [gainNode] = useState(ctx.createGain());
   const [melodyBuffer, setMelodyBuffer] = useState(
     ctx.createBuffer(1, 1, ctx.sampleRate)
   );
@@ -63,6 +64,7 @@ export default function Harmonizer(): ReactElement {
   const [firstBeat, setFirstBeat] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [playTime, setPlayTime] = useState(0);
+  const [harmonyVolume, setHarmonyVolume] = useState(50);
 
   const [form] = Form.useForm();
 
@@ -163,6 +165,20 @@ export default function Harmonizer(): ReactElement {
   useEffect(resetHarmonySource, [harmonyBuffer]);
 
   /**
+   * Connect gain node to output on initialization
+   */
+  useEffect((): void => {
+    gainNode.connect(ctx.destination);
+  }, [gainNode]);
+
+  /**
+   * Update gain on harmony volume change
+   */
+  useEffect((): void => {
+    gainNode.gain.value = harmonyVolume / 50;
+  }, [harmonyVolume, gainNode]);
+
+  /**
    * Resets user parameter overloads
    */
   const resetParams = (): void => {
@@ -177,6 +193,7 @@ export default function Harmonizer(): ReactElement {
     setError("");
     setResult(null);
     setPlayTime(0);
+    setHarmonyVolume(50);
   };
 
   /**
@@ -283,7 +300,7 @@ export default function Harmonizer(): ReactElement {
    */
   const handlePlay = (): void => {
     melodySource.connect(ctx.destination);
-    harmonySource.connect(ctx.destination);
+    harmonySource.connect(gainNode);
 
     // Fetch current time and reset to start if previous playback finished
     let newPlayTime = playTime;
@@ -326,7 +343,7 @@ export default function Harmonizer(): ReactElement {
    * Update playTime from slider input
    * @param newPlayTime slider input value
    */
-  const handleSlider = (newPlayTime: SliderValue): void => {
+  const handlePlayTime = (newPlayTime: SliderValue): void => {
     if (typeof newPlayTime !== "number") {
       return;
     }
@@ -347,6 +364,13 @@ export default function Harmonizer(): ReactElement {
     const secondsInt = Math.floor(secondsLeft);
 
     return `${minutes}:${seconds > 10 ? "" : "0"}${secondsInt}`;
+  };
+
+  const handleHarmonyVolume = (newHarmonyVolume: SliderValue): void => {
+    if (typeof newHarmonyVolume !== "number") {
+      return;
+    }
+    setHarmonyVolume(newHarmonyVolume);
   };
 
   return (
@@ -547,8 +571,17 @@ export default function Harmonizer(): ReactElement {
                     min={0}
                     max={melodyBuffer.duration}
                     step={PLAYBACK_INTERVAL}
-                    onChange={handleSlider}
+                    onChange={handlePlayTime}
                     tooltipVisible={false}
+                  />
+                </div>
+                <div className="harmony-volume">
+                  <h4>Harmony volume:</h4>
+                  <Slider
+                    value={harmonyVolume}
+                    min={0}
+                    max={100}
+                    onChange={handleHarmonyVolume}
                   />
                 </div>
               </>
