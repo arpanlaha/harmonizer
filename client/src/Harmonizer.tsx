@@ -77,7 +77,7 @@ export default function Harmonizer(): ReactElement {
         .then(setMelodyBuffer)
         .catch(() => setError(`Error loading ${melodyFile.name} in browser`));
     }
-  }, [melodyFile, setMelodyBuffer]);
+  }, [melodyFile]);
 
   useEffect((): void => {
     if (error !== "") {
@@ -141,7 +141,7 @@ export default function Harmonizer(): ReactElement {
     const newMelodySource = ctx.createBufferSource();
     newMelodySource.buffer = melodyBuffer;
     setMelodySource(newMelodySource);
-  }, [melodyBuffer, setMelodySource]);
+  }, [melodyBuffer]);
 
   /**
    * Reinitialize harmonySource with harmonyBuffer
@@ -150,17 +150,17 @@ export default function Harmonizer(): ReactElement {
     const newHarmonySource = ctx.createBufferSource();
     newHarmonySource.buffer = harmonyBuffer;
     setHarmonySource(newHarmonySource);
-  }, [harmonyBuffer, setHarmonySource]);
+  }, [harmonyBuffer]);
 
   /**
    * Reset melodySource on change to melodyBuffer
    */
-  useEffect(resetMelodySource, [melodyBuffer, resetMelodySource]);
+  useEffect(resetMelodySource, [melodyBuffer]);
 
   /**
    * Reset harmonySource on change to harmonyBuffer
    */
-  useEffect(resetHarmonySource, [harmonyBuffer, resetHarmonySource]);
+  useEffect(resetHarmonySource, [harmonyBuffer]);
 
   /**
    * Resets user parameter overloads
