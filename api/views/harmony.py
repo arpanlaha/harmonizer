@@ -68,7 +68,7 @@ def harmonize():
     loudness, loudness_band_ratio = BeatsLoudness(beats=beats)(audio)
     beatogram = Beatogram()(loudness, loudness_band_ratio)
     meter = Meter()(beatogram)
-    start = float(beats[0]) - 60 / bpm
+    start = max(float(beats[0]) - 60 / bpm, 0)
 
     key = request.form.get("key", key + " " + scale)
     meter = float(request.form.get("meter", meter))
