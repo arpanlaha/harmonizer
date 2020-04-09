@@ -65,6 +65,7 @@ export const getHarmony = (
 };
 
 export const getOverlay = (
+  name: string,
   melodyBuffer: AudioBuffer,
   harmonyBuffer: AudioBuffer,
   setProgress: (progress: number) => void
@@ -79,7 +80,7 @@ export const getOverlay = (
   return axios
     .post(
       `${BACKEND_URL}/overlay`,
-      { melody: melodyData, harmony: harmonyData },
+      { name, melody: melodyData, harmony: harmonyData },
       {
         onUploadProgress: (progress: ProgressEvent): void =>
           setProgress((progress.loaded / progress.total) * 100),

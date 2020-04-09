@@ -11,7 +11,7 @@ from essentia.standard import (
 from operator import itemgetter
 from .utils import model
 import os
-import tempfile
+from tempfile import TemporaryDirectory
 import math
 
 harmony = Blueprint("harmony", __name__, url_prefix="/harmony")
@@ -34,20 +34,14 @@ def harmonize():
 
     if file is None or file.filename == "":
         return (
-            jsonify(
-                {
-                    "success": False,
-                    "message": "No file provided",
-                    "data": {"file": ("missing" if file is None else file.filename),},
-                }
-            ),
+            jsonify({"success": False, "message": "No file provided"}),
             400,
         )
 
     if not allowed_file(file.filename):
         return jsonify({"success": False, "message": "Invalid file type"}), 400
 
-    file_path = os.path.join(tempfile.mkdtemp(), file.filename)
+    file_path = os.path.join(TemporaryDirectory(), file.filename)
     file.save(file_path)
     file.close()
 
@@ -113,8 +107,6 @@ def harmonize():
         chords[measure_number] = generate(
             measures[measure_number], confidences[measure_number], key
         )
-
-    os.remove(file_path)
 
     return (
         jsonify(
