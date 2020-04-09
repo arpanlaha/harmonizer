@@ -63,37 +63,3 @@ export const getHarmony = (
         "Server error - please post an issue at https://github.com/arpanlaha/harmonizer/issues",
     }));
 };
-
-export const getOverlay = (
-  name: string,
-  melodyBuffer: AudioBuffer,
-  harmonyBuffer: AudioBuffer,
-  setProgress: (progress: number) => void
-): Promise<any> => {
-  const melodyData: ArrayBuffer[] = [];
-  for (let channel = 0; channel < melodyBuffer.numberOfChannels; channel++) {
-    melodyData.push(melodyBuffer.getChannelData(channel));
-  }
-
-  const harmonyData = harmonyBuffer.getChannelData(0);
-
-  return axios
-    .post(
-      `${BACKEND_URL}/overlay`,
-      { name, melody: melodyData, harmony: harmonyData },
-      {
-        onUploadProgress: (progress: ProgressEvent): void =>
-          setProgress((progress.loaded / progress.total) * 100),
-      }
-    )
-    .then((response) => ({
-      type: "GET_OVERLAY_SUCCESS",
-      result: response.data,
-    }))
-    .catch((error) => ({
-      type: "GET_OVERLAY_FAIL",
-      error:
-        error.response?.data ??
-        "Server error - please post an issue at https://github.com/arpanlaha/harmonizer/issues",
-    }));
-};

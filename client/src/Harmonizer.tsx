@@ -86,7 +86,7 @@ export default function Harmonizer(): ReactElement {
       notification.error({
         message: "Error",
         description: error,
-        duration: 0,
+        duration: 10,
       });
     }
   }, [error]);
@@ -366,6 +366,9 @@ export default function Harmonizer(): ReactElement {
     return `${minutes}:${seconds > 10 ? "" : "0"}${secondsInt}`;
   };
 
+  /**
+   * Sets harmony volume on slider input
+   */
   const handleHarmonyVolume = (newHarmonyVolume: SliderValue): void => {
     if (typeof newHarmonyVolume !== "number") {
       return;
@@ -492,7 +495,7 @@ export default function Harmonizer(): ReactElement {
                 <h3 className="center-text">
                   {progress < 100
                     ? `Uploading (${Math.round(progress)}%)...`
-                    : "Waiting for result..."}
+                    : "Waiting for results..."}
                 </h3>
               </>
             )}
@@ -584,8 +587,6 @@ export default function Harmonizer(): ReactElement {
                     onChange={handleHarmonyVolume}
                   />
                 </div>
-
-                <Button type="primary">Download</Button>
               </>
             )}
           </Card>

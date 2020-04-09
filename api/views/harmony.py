@@ -41,7 +41,8 @@ def harmonize():
     if not allowed_file(file.filename):
         return jsonify({"success": False, "message": "Invalid file type"}), 400
 
-    file_path = os.path.join(TemporaryDirectory(), file.filename)
+    tempdir = TemporaryDirectory()
+    file_path = os.path.join(tempdir.name, file.filename)
     file.save(file_path)
     file.close()
 
