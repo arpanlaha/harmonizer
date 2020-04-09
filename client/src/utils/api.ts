@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { ChordName, KeyName } from "./theory";
 
 const BACKEND_URL = `${
@@ -31,12 +31,12 @@ export interface HarmonyResponseWrapper {
 }
 
 export const getHarmony = (
-  file: File | Blob,
+  melody: File | Blob,
   params: HarmonyParams,
   setProgress: (progress: number) => void
 ): Promise<HarmonyResponseWrapper> => {
   const data = new FormData();
-  data.append("melody", file);
+  data.append("melody", melody);
   harmonyParamNames.forEach((paramName) => {
     const param = params[paramName];
     if (param !== undefined) {
@@ -56,8 +56,41 @@ export const getHarmony = (
       type: "GET_HARMONY_SUCCESS",
       result: response.data.result,
     }))
-    .catch((error: AxiosError) => ({
+    .catch((error) => ({
       type: "GET_HARMONY_FAIL",
+      error:
+        error.response?.data ??
+        "Server error - please post an issue at https://github.com/arpanlaha/harmonizer/issues",
+    }));
+};
+
+export const getOverlay = (
+  melodyBuffer: AudioBuffer,
+  harmonyBuffer: AudioBuffer,
+  setProgress: (progress: number) => void
+): Promise<any> => {
+  const melodyData: ArrayBuffer[] = [];
+  for (let channel = 0; channel < melodyBuffer.numberOfChannels; channel++) {
+    melodyData.push(melodyBuffer.getChannelData(channel));
+  }
+
+  const harmonyData = harmonyBuffer.getChannelData(0);
+
+  return axios
+    .post(
+      `${BACKEND_URL}/overlay`,
+      { melody: melodyData, harmony: harmonyData },
+      {
+        onUploadProgress: (progress: ProgressEvent): void =>
+          setProgress((progress.loaded / progress.total) * 100),
+      }
+    )
+    .then((response) => ({
+      type: "GET_OVERLAY_SUCCESS",
+      result: response.data,
+    }))
+    .catch((error) => ({
+      type: "GET_OVERLAY_FAIL",
       error:
         error.response?.data ??
         "Server error - please post an issue at https://github.com/arpanlaha/harmonizer/issues",

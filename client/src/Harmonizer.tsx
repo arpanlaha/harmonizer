@@ -584,6 +584,8 @@ export default function Harmonizer(): ReactElement {
                     onChange={handleHarmonyVolume}
                   />
                 </div>
+
+                <Button type="primary">Download</Button>
               </>
             )}
           </Card>
