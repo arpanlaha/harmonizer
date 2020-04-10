@@ -25,6 +25,7 @@ import {
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
 import Dropzone from "react-dropzone";
 import { FMSynth, Transport, Offline } from "tone";
+import toWav from "audiobuffer-to-wav";
 
 import { SliderValue } from "antd/lib/slider";
 
@@ -376,6 +377,58 @@ export default function Harmonizer(): ReactElement {
     setHarmonyVolume(newHarmonyVolume);
   };
 
+  /**
+   * Downloads harmonized buffer as wav file
+   */
+  const handleDownload = (): void => {
+    if (melodyFile !== null) {
+      const harmonizedBuffer = ctx.createBuffer(
+        melodyBuffer.numberOfChannels,
+        melodyBuffer.length,
+        ctx.sampleRate
+      );
+      // harmony is mono
+      const harmonyBufferChannel = harmonyBuffer.getChannelData(0);
+
+      // melody has arbitrary channels
+      for (
+        let channel = 0;
+        channel < melodyBuffer.numberOfChannels;
+        channel++
+      ) {
+        const newOverlayBufferChannel = harmonizedBuffer.getChannelData(
+          channel
+        );
+        const melodyBufferChannel = melodyBuffer.getChannelData(channel);
+        for (let i = 0; i < melodyBuffer.length; i++) {
+          newOverlayBufferChannel[i] =
+            melodyBufferChannel[i] +
+            harmonyBufferChannel[i] * gainNode.gain.value;
+        }
+      }
+
+      const downloadLink = document.createElement("a");
+      document.body.appendChild(downloadLink);
+      downloadLink.style.display = "none";
+
+      downloadLink.href = window.URL.createObjectURL(
+        new window.Blob([new DataView(toWav(harmonizedBuffer))], {
+          type: "audio/wav",
+        })
+      );
+
+      const melodyName = melodyFile.name;
+      downloadLink.download = `${melodyName.substring(
+        0,
+        melodyName.lastIndexOf(".")
+      )}_harmonized.wav`;
+
+      downloadLink.click();
+      window.URL.revokeObjectURL(downloadLink.href);
+      document.body.removeChild(downloadLink);
+    }
+  };
+
   return (
     <>
       <Head />
@@ -587,6 +640,13 @@ export default function Harmonizer(): ReactElement {
                     onChange={handleHarmonyVolume}
                   />
                 </div>
+                <Button
+                  className="download"
+                  type="primary"
+                  onClick={handleDownload}
+                >
+                  Download (WAV)
+                </Button>
               </>
             )}
           </Card>

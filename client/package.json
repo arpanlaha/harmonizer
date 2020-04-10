@@ -15,7 +15,8 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "antd": "^4.1.1",
+    "antd": "^4.1.2",
+    "audiobuffer-to-wav": "^1.0.0",
     "axios": "^0.19.2",
     "node-sass": "^4.13.1",
     "react": "^16.13.1",
@@ -28,7 +29,8 @@
   },
   "devDependencies": {
     "@h4iuiuc/eslint-plugin": "^1.1.7",
-    "@types/react": "^16.9.33",
+    "@types/audiobuffer-to-wav": "^1.0.0",
+    "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.6",
     "@types/react-helmet": "^5.0.15",
     "eslint": "^6.8.0",
