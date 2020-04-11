@@ -557,7 +557,7 @@ export default function Harmonizer(): ReactElement {
               <>
                 <div className="result-row">
                   <div className="result-field">
-                    <Tooltip title={keyDescription} placement="left">
+                    <Tooltip title={keyDescription} placement="top">
                       <h3>Key:</h3>
                     </Tooltip>
                     <Tooltip
@@ -570,13 +570,13 @@ export default function Harmonizer(): ReactElement {
                     </Tooltip>
                   </div>
                   <div className="result-field">
-                    <Tooltip title={bpmDescription} placement="left">
+                    <Tooltip title={bpmDescription} placement="top">
                       <h3>BPM:</h3>
                     </Tooltip>
                     <Tag color="blue">{Math.round(result.bpm)}</Tag>
                   </div>
                   <div className="result-field">
-                    <Tooltip title={meterDescription} placement="left">
+                    <Tooltip title={meterDescription} placement="top">
                       <h3>Meter:</h3>
                     </Tooltip>
                     <Tag color="blue">{Math.round(result.meter)}</Tag>
@@ -584,7 +584,7 @@ export default function Harmonizer(): ReactElement {
                 </div>
 
                 <div className="result-field">
-                  <Tooltip title={chordsDescription} placement="left">
+                  <Tooltip title={chordsDescription} placement="top">
                     <h3>Chords:</h3>
                   </Tooltip>
                   <div className="flex-row">
