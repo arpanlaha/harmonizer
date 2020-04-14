@@ -7,6 +7,7 @@ import {
   HarmonyParams,
   HarmonyResult,
   Keys,
+  synthesizeHarmony,
 } from "./utils";
 import { Head } from "./components";
 import {
@@ -24,7 +25,6 @@ import {
 } from "antd";
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
 import Dropzone from "react-dropzone";
-import { FMSynth, Transport, Offline } from "tone";
 import toWav from "audiobuffer-to-wav";
 
 import { SliderValue } from "antd/lib/slider";
@@ -34,7 +34,6 @@ import "antd/dist/antd.dark.css";
 import "./styles/style.scss";
 
 const PLAYBACK_INTERVAL = 0.02;
-const Synth = FMSynth;
 const { ctx } = AudioContext;
 const { Item } = Form;
 const { Option } = Select;
@@ -97,43 +96,21 @@ export default function Harmonizer(): ReactElement {
    */
   useEffect((): void => {
     if (result !== null) {
-      const { bpm, chords, meter, start } = result;
+      const { start } = result;
       setFirstBeat(start);
-      Transport.bpm.value = bpm;
-      const measureLength = Math.min((60 * meter) / bpm, melodyBuffer.duration);
-
-      // synthesize audio and render into overlay buffer
-      Offline((): void => {
-        // nne synth per chord note
-        const synths = [
-          new Synth().toDestination(),
-          new Synth().toDestination(),
-          new Synth().toDestination(),
-        ];
-
-        // decreasing order of volume: tonic, dominant, mediant
-        const decibelDiff = 2;
-        synths[1].volume.value -= decibelDiff * 2;
-        synths[2].volume.value -= decibelDiff;
-
-        // trigger 3 * chord progression length attack/releases
-        chords.forEach((chord, chordIndex): void =>
-          synths.forEach(
-            (synth, synthIndex): FMSynth =>
-              synth.triggerAttackRelease(
-                `${Chords[chord].notes[synthIndex]}3`,
-                measureLength,
-                measureLength * chordIndex + start
-              )
+      synthesizeHarmony(result, melodyBuffer.duration)
+        .then((buffer) => {
+          // convert Tone.js type into Web Audio API type and set buffer
+          const newBuffer = buffer.get();
+          if (newBuffer !== undefined) {
+            setHarmonyBuffer(newBuffer);
+          }
+        })
+        .catch(() =>
+          setError(
+            "Error synthesizing audio - please post an issue at https://github.com/arpanlaha/harmonizer/issues"
           )
         );
-      }, melodyBuffer.duration).then((buffer): void => {
-        // convert Tone.js type into Web Audio API type and set buffer
-        const newBuffer = buffer.get();
-        if (newBuffer !== undefined) {
-          setHarmonyBuffer(newBuffer);
-        }
-      });
     }
   }, [result, melodyBuffer]);
 

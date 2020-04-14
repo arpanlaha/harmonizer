@@ -24,6 +24,7 @@ export interface HarmonyResult {
   meter: number;
   start: number;
 }
+
 export interface HarmonyResponseWrapper {
   type: string;
   result?: HarmonyResult;
