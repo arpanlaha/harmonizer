@@ -81,15 +81,18 @@ export default function Harmonizer(): ReactElement {
     }
   }, [melodyFile]);
 
-  useEffect((): void => {
-    if (error !== "") {
-      notification.error({
-        message: "Error",
-        description: error,
-        duration: 10,
-      });
-    }
-  }, [error]);
+  useEffect(
+    (): void =>
+      error !== ""
+        ? notification.error({
+            message: "Error",
+            description: error,
+            key: "error",
+            duration: 0,
+          })
+        : notification.close("error"),
+    [error]
+  );
 
   /**
    * Synthesize harmony and sets buffer on harmony parameter change

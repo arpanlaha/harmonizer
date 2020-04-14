@@ -9,7 +9,7 @@ export const synthesizeHarmony = (
 ): Promise<ToneAudioBuffer> => {
   const { bpm, chords, meter, start } = result;
 
-  const createSynth = () =>
+  const createSynth = (): FMSynth =>
     new Synth({
       envelope: {
         decay: 240 / bpm,
