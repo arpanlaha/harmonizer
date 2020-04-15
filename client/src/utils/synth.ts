@@ -12,8 +12,8 @@ export const synthesizeHarmony = (
   const createSynth = (): FMSynth =>
     new Synth({
       envelope: {
-        decay: 240 / bpm,
-        sustain: 0.5,
+        decay: (60 * meter) / bpm,
+        sustain: 0.2,
       },
       modulation: {
         type: "sine",
