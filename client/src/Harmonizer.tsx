@@ -601,7 +601,6 @@ export default function Harmonizer(): ReactElement {
                   >
                     {playing ? <PauseCircleFilled /> : <PlayCircleFilled />}
                   </Button>
-
                   <Slider
                     value={playTime}
                     min={0}

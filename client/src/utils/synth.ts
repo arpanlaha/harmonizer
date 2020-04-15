@@ -15,6 +15,9 @@ export const synthesizeHarmony = (
         decay: 240 / bpm,
         sustain: 0.5,
       },
+      modulation: {
+        type: "sine",
+      },
     }).toDestination();
 
   Transport.bpm.value = bpm;
