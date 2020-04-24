@@ -60,7 +60,7 @@ export const getHarmony = (
     .catch((error) => ({
       type: "GET_HARMONY_FAIL",
       error:
-        error.response?.data ??
+        error.response?.data?.message ??
         "Server error - please post an issue at https://github.com/arpanlaha/harmonizer/issues",
     }));
 };
