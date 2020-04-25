@@ -74,15 +74,11 @@ def harmonize():
 
     num_measures = max(round(len(frequencies) / measure_bin_length), 1)
 
-    # measure_lengths_seconds = [len(measure) / (44100 / 128) for measure in measures]
-
     chords = [""] * num_measures  # stores string representation of chord progression
 
     # assume first and last chords are tonic
     chords[0] = model["keys"][key]["chords"][0]
     chords[num_measures - 1] = chords[0]
-
-    chords = request.form.get("chords", chords)
 
     for i in range(num_measures - 2):
         # start from second last and go backwards (important for contextual scoring)
@@ -127,15 +123,12 @@ def harmonize():
             notes = model["chords"][chord]["notes"]
 
             for note in notes:
-                if (
-                    note not in pitch_histogram
-                ):  # disregard note if not detected in measure
-                    continue
+                note_val = pitch_histogram.get(note, 0)
 
                 if note == notes[0]:
-                    chord_score += 1.2 * pitch_histogram[note]
+                    chord_score += 1.2 * note_val
                 else:
-                    chord_score += pitch_histogram[note]
+                    chord_score += note_val
 
             chord_scores[chord] = chord_score
 

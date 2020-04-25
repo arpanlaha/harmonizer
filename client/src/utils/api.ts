@@ -8,14 +8,13 @@ const BACKEND_URL = `${
 
 export interface HarmonyParams {
   bpm?: number;
-  chords?: ChordName[];
   key?: KeyName;
   meter?: number;
 }
 
-type HarmonyParamName = "bpm" | "chords" | "key" | "meter";
+type HarmonyParamName = "bpm" | "key" | "meter";
 
-const harmonyParamNames: HarmonyParamName[] = ["bpm", "chords", "key", "meter"];
+const harmonyParamNames: HarmonyParamName[] = ["bpm", "key", "meter"];
 
 export interface HarmonyResult {
   bpm: number;

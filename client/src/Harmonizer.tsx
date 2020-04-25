@@ -491,7 +491,6 @@ export default function Harmonizer(): ReactElement {
                       onClick={resetParams}
                       disabled={
                         params.key === undefined &&
-                        params.chords === undefined &&
                         params.bpm === undefined &&
                         params.meter === undefined
                       }
