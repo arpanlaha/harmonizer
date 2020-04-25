@@ -61,7 +61,6 @@ export default function Harmonizer(): ReactElement {
   const [harmonyBuffer, setHarmonyBuffer] = useState(
     ctx.createBuffer(1, 1, ctx.sampleRate)
   );
-  const [firstBeat, setFirstBeat] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [playTime, setPlayTime] = useState(0);
   const [harmonyVolume, setHarmonyVolume] = useState(50);
@@ -100,7 +99,6 @@ export default function Harmonizer(): ReactElement {
   useEffect((): void => {
     if (result !== null) {
       const { start } = result;
-      setFirstBeat(start);
       synthesizeHarmony(result, melodyBuffer.duration)
         .then((buffer) => {
           // convert Tone.js type into Web Audio API type and set buffer
@@ -267,8 +265,8 @@ export default function Harmonizer(): ReactElement {
       ? Math.max(
           Math.min(
             Math.floor(
-              (playTime * result.chords.length - firstBeat) /
-                (melodyBuffer.duration - firstBeat)
+              (playTime * result.chords.length - result.start) /
+                (melodyBuffer.duration - result.start)
             ),
             result.chords.length
           ),
