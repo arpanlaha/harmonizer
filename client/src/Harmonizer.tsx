@@ -98,7 +98,6 @@ export default function Harmonizer(): ReactElement {
    */
   useEffect((): void => {
     if (result !== null) {
-      const { start } = result;
       synthesizeHarmony(result, melodyBuffer.duration)
         .then((buffer) => {
           // convert Tone.js type into Web Audio API type and set buffer
