@@ -7,27 +7,24 @@ import React, {
   useState,
 } from "react";
 import {
-  Chords,
+  bpmDescription,
   ChordName,
+  Chords,
+  chordsDescription,
   HarmonyResult,
+  keyDescription,
   Keys,
-  synthesizeHarmony,
+  meterDescription,
   replaceAccidentals,
+  synthesizeHarmony,
 } from "../utils";
-import { Button, Card, Progress, Slider, Spin, Tag, Tooltip } from "antd";
-
-import toWav from "audiobuffer-to-wav";
+import { Button, Progress, Slider, Spin, Tag, Tooltip } from "antd";
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
+import toWav from "audiobuffer-to-wav";
+
 import { SliderValue } from "antd/lib/slider";
 
 const PLAYBACK_INTERVAL = 0.02;
-
-const keyDescription =
-  "The key determines which chords are available for a given melody.";
-const chordsDescription = "The chords make up the harmony.";
-const bpmDescription = "The BPM (Beats Per Minute) sets the tempo.";
-const meterDescription =
-  "The meter corresponds to how many beats make up a measure.";
 
 interface ResultWrapperProps {
   ctx: AudioContext;
@@ -74,7 +71,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
         .then(setMelodyBuffer)
         .catch(() => setError(`Error loading ${melodyFile.name} in browser`));
     }
-  }, [melodyFile]);
+  }, [ctx, melodyFile, setError]);
 
   /**
    * Synthesize harmony and sets buffer on harmony parameter change
@@ -95,7 +92,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
           )
         );
     }
-  }, [result, melodyBuffer]);
+  }, [result, melodyBuffer, setError]);
 
   /**
    * Reinitialize melodySource with melodyBuffer
@@ -105,7 +102,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
     newMelodySource.buffer = melodyBuffer;
     setMelodySource(newMelodySource);
     setMelodyDuration(melodyBuffer.duration);
-  }, [melodyBuffer]);
+  }, [ctx, melodyBuffer, setMelodyDuration]);
 
   /**
    * Reinitialize harmonySource with harmonyBuffer
@@ -114,7 +111,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
     const newHarmonySource = ctx.createBufferSource();
     newHarmonySource.buffer = harmonyBuffer;
     setHarmonySource(newHarmonySource);
-  }, [harmonyBuffer]);
+  }, [ctx, harmonyBuffer]);
 
   /**
    * Reset melodySource on change to melodyBuffer
@@ -131,7 +128,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
    */
   useEffect((): void => {
     gainNode.connect(ctx.destination);
-  }, [gainNode]);
+  }, [gainNode, ctx]);
 
   /**
    * Update gain on harmony volume change

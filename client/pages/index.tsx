@@ -1,13 +1,12 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import {
-  meterDescription,
   bpmDescription,
   getHarmony,
-  keyDescription,
   HarmonyParams,
   HarmonyResult,
+  keyDescription,
   Keys,
+  meterDescription,
   replaceAccidentals,
 } from "../utils";
 import { ResultWrapper } from "../components";
@@ -39,7 +38,6 @@ export default function Harmonizer(): ReactElement {
 
   useEffect(() => {
     if (process.browser) {
-      console.log("here");
       setCtx(new window.AudioContext());
     }
   }, []);
