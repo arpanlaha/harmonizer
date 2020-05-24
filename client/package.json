@@ -18,12 +18,10 @@
     "audiobuffer-to-wav": "^1.0.0",
     "axios": "^0.19.2",
     "next": "^9.4.2",
-    "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-dropzone": "^10.2.2",
-    "tone": "^14.7.2",
-    "typescript": "^3.9.3"
+    "react-dropzone": "^11.0.1",
+    "tone": "^14.7.2"
   },
   "devDependencies": {
     "@h4iuiuc/eslint-plugin": "^1.1.9",
@@ -31,23 +29,13 @@
     "@types/node": "^14.0.5",
     "@types/react": "^16.9.35",
     "eslint": "^6.8.0",
-    "markdownlint-cli": "^0.22.0",
-    "prettier": "^2.0.5"
+    "markdownlint-cli": "^0.23.1",
+    "node-sass": "^4.14.1",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.3"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/arpanlaha/harmonizer"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }
