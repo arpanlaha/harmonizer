@@ -2,7 +2,6 @@ import React, { ReactElement } from "react";
 import { AppProps } from "next/app";
 import { Head } from "../components";
 
-import "antd/dist/antd.css";
 import "antd/dist/antd.dark.css";
 import "../public/styles/style.scss";
 
