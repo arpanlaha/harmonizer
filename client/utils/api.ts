@@ -2,8 +2,8 @@ import axios from "axios";
 import { ChordName, KeyName } from "./theory";
 
 const BACKEND_URL = `${
-  process.env.REACT_APP_BACKEND_URL ??
-  `http://${process.env.REACT_APP_VM_IP ?? "localhost"}:5000`
+  process.env.NEXT_PUBLIC_BACKEND_URL ??
+  `http://${process.env.NEXT_PUBLIC_VM_IP ?? "localhost"}:5000`
 }`;
 
 export interface HarmonyParams {

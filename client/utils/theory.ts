@@ -1,3 +1,17 @@
+/**
+ * Replaces 'b' with '♭' and '#' with '♯' for keys, chords, or notes with accidentals
+ * @param str the key, chord, or note to be converted
+ */
+export const replaceAccidentals = (str: string): string =>
+  str.replace(/b/g, "♭").replace(/#/g, "♯");
+
+export const keyDescription =
+  "The key determines which chords are available for a given melody.";
+export const chordsDescription = "The chords make up the harmony.";
+export const bpmDescription = "The BPM (Beats Per Minute) sets the tempo.";
+export const meterDescription =
+  "The meter corresponds to how many beats make up a measure.";
+
 export type KeyName =
   | "Ab Major"
   | "Ab minor"
