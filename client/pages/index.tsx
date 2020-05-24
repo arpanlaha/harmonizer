@@ -8,8 +8,8 @@ import {
   HarmonyResult,
   Keys,
   synthesizeHarmony,
-} from "./utils";
-import { Head } from "./components";
+} from "../utils";
+import { Head } from "../components";
 import {
   Button,
   Card,
@@ -28,10 +28,6 @@ import Dropzone from "react-dropzone";
 import toWav from "audiobuffer-to-wav";
 
 import { SliderValue } from "antd/lib/slider";
-
-import "antd/dist/antd.css";
-import "antd/dist/antd.dark.css";
-import "./styles/style.scss";
 
 const PLAYBACK_INTERVAL = 0.02;
 const { ctx } = AudioContext;
