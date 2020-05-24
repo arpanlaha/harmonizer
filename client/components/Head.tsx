@@ -25,6 +25,7 @@ export default function Head(props: HeadProps): ReactElement {
       />
       <meta name="author" content="Arpan Laha" />
       <link rel="shortcut icon" href="/logo.svg" />
+      <link rel="manifest" href="/manifest.json" />
       <title>{title ?? "Harmonizer"}</title>
     </NextHead>
   );
