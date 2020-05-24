@@ -24,6 +24,7 @@ import toWav from "audiobuffer-to-wav";
 
 import { SliderValue } from "antd/lib/slider";
 
+const DEFAULT_VOLUME = 50;
 const PLAYBACK_INTERVAL = 0.02;
 
 interface ResultWrapperProps {
@@ -36,6 +37,10 @@ interface ResultWrapperProps {
   setMelodyDuration: Dispatch<SetStateAction<number>>;
 }
 
+/**
+ * Wraps WebAudio API functionality in a component that is fetched after AudioContext initialization.
+ * Necessary as the WebAudio API is browser-only and is those not available at build time.
+ */
 export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
   const {
     ctx,
@@ -47,21 +52,36 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
     setMelodyDuration,
   } = props;
 
+  // Melody AudioBufferSourceNode
   const [melodySource, setMelodySource] = useState(ctx.createBufferSource());
+
+  // Harmony AudioBufferSourceNode
   const [harmonySource, setHarmonySource] = useState(ctx.createBufferSource());
+
+  // GainNode used to control harmonySource volume
   const [gainNode] = useState(ctx.createGain());
+
+  // AudioBuffer from the melody file
   const [melodyBuffer, setMelodyBuffer] = useState(
     ctx.createBuffer(1, 1, ctx.sampleRate)
   );
+
+  // AudioBuffer from the harmony file
   const [harmonyBuffer, setHarmonyBuffer] = useState(
     ctx.createBuffer(1, 1, ctx.sampleRate)
   );
+
+  // If the audio is currently playing
   const [playing, setPlaying] = useState(false);
+
+  // Current playtime (seconds) of the audio
   const [playTime, setPlayTime] = useState(0);
-  const [harmonyVolume, setHarmonyVolume] = useState(50);
+
+  // Harmony volume (0-100, 50: gain of 1) set by user
+  const [harmonyVolume, setHarmonyVolume] = useState(DEFAULT_VOLUME);
 
   /**
-   * Set melody buffer on file upload
+   * Set melody buffer on file upload.
    */
   useEffect((): void => {
     if (melodyFile !== null) {
@@ -74,7 +94,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
   }, [ctx, melodyFile, setError]);
 
   /**
-   * Synthesize harmony and sets buffer on harmony parameter change
+   * Synthesize harmony and sets buffer on harmony parameter change.
    */
   useEffect((): void => {
     if (result !== null) {
@@ -95,7 +115,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
   }, [result, melodyBuffer, setError]);
 
   /**
-   * Reinitialize melodySource with melodyBuffer
+   * Reinitialize melodySource with melodyBuffer.
    */
   const resetMelodySource = useCallback((): void => {
     const newMelodySource = ctx.createBufferSource();
@@ -105,7 +125,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
   }, [ctx, melodyBuffer, setMelodyDuration]);
 
   /**
-   * Reinitialize harmonySource with harmonyBuffer
+   * Reinitialize harmonySource with harmonyBuffer.
    */
   const resetHarmonySource = useCallback((): void => {
     const newHarmonySource = ctx.createBufferSource();
@@ -114,36 +134,39 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
   }, [ctx, harmonyBuffer]);
 
   /**
-   * Reset melodySource on change to melodyBuffer
+   * Reset melodySource on change to melodyBuffer.
    */
   useEffect(resetMelodySource, [melodyBuffer]);
 
   /**
-   * Reset harmonySource on change to harmonyBuffer
+   * Reset harmonySource on change to harmonyBuffer.
    */
   useEffect(resetHarmonySource, [harmonyBuffer]);
 
   /**
-   * Connect gain node to output on initialization
+   * Connect gain node to output on initialization.
    */
   useEffect((): void => {
     gainNode.connect(ctx.destination);
   }, [gainNode, ctx]);
 
   /**
-   * Update gain on harmony volume change
+   * Update gain on harmony volume change.
    */
   useEffect((): void => {
-    gainNode.gain.value = harmonyVolume / 50;
+    gainNode.gain.value = harmonyVolume / DEFAULT_VOLUME;
   }, [harmonyVolume, gainNode]);
 
+  /**
+   * Reset audio player on result changes.
+   */
   useEffect((): void => {
     setPlayTime(0);
-    setHarmonyVolume(50);
+    setHarmonyVolume(DEFAULT_VOLUME);
   }, [result]);
 
   /**
-   * Assigns a chord a badge color depending on its scale degree in the current key
+   * Assigns a chord a badge color depending on its scale degree in the current key.
    * @param chord the chord to assign a color to
    */
   const getBadgeColor = (chord: ChordName): string =>
@@ -154,7 +177,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
       : "blue";
 
   /**
-   * Determines the current chord index being played based off of the current playTime
+   * Determines the current chord index being played based off of the current playTime.
    */
   const getCurrentChordIndex = (): number =>
     result !== null && melodyBuffer !== null
@@ -171,7 +194,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
       : -1;
 
   /**
-   * Start harmonized audio playback
+   * Start harmonized audio playback.
    */
   const handlePlay = (): void => {
     melodySource.connect(ctx.destination);
@@ -206,7 +229,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
   };
 
   /**
-   * Stop harmonized audio playback
+   * Stop harmonized audio playback.
    */
   const handleStop = (): void => {
     melodySource.stop();
@@ -215,7 +238,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
   };
 
   /**
-   * Update playTime from slider input
+   * Update playTime from slider input.
    * @param newPlayTime slider input value
    */
   const handlePlayTime = (newPlayTime: SliderValue): void => {
@@ -229,7 +252,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
   };
 
   /**
-   * Convert time to standard mm:ss format
+   * Convert time to standard mm:ss format.
    * @param seconds time in seconds
    */
   const formatTime = (seconds: number): string => {
@@ -242,7 +265,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
   };
 
   /**
-   * Sets harmony volume on slider input
+   * Sets harmony volume on slider input.
    */
   const handleHarmonyVolume = (newHarmonyVolume: SliderValue): void => {
     if (typeof newHarmonyVolume !== "number") {
@@ -252,7 +275,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
   };
 
   /**
-   * Downloads harmonized buffer as wav file
+   * Downloads harmonized buffer as wav file.
    */
   const handleDownload = (): void => {
     if (melodyFile !== null) {

@@ -25,23 +25,44 @@ const { Item } = Form;
 const { Option } = Select;
 
 export default function Harmonizer(): ReactElement {
+  // AudioContext to use with WebAudio API - initialized client side
   const [ctx, setCtx] = useState<AudioContext | null>(null);
+
+  // In-memory audio file selected by user to harmonize
   const [melodyFile, setMelodyFile] = useState<File | null>(null);
+
+  // Duration (seconds) of the melody file
+  const [melodyDuration, setMelodyDuration] = useState(0);
+
+  // If request is currently pending
   const [loading, setLoading] = useState(false);
+
+  // Harmony params specified by user
   const [params, setParams] = useState<HarmonyParams>({});
+
+  // Error messages - empty string corresponds to non-error state
   const [error, setError] = useState("");
+
+  // Progress (percent) of the /harmony request upload
   const [progress, setProgress] = useState(0);
+
+  // Results returned from the /harmony endpoint
   const [result, setResult] = useState<HarmonyResult | null>(null);
-  const [melodyDuration, setMelodyDuration] = useState(-1);
 
   const [form] = Form.useForm();
 
+  /**
+   * Initializes AudioContext client-side.
+   */
   useEffect(() => {
     if (process.browser) {
       setCtx(new window.AudioContext());
     }
   }, []);
 
+  /**
+   * Creates notification on new error or closes notification on error resolution.
+   */
   useEffect(
     (): void =>
       error !== ""
@@ -56,7 +77,7 @@ export default function Harmonizer(): ReactElement {
   );
 
   /**
-   * Resets user parameter overloads
+   * Resets user parameter overloads.
    */
   const resetParams = (): void => {
     form.resetFields();
@@ -64,7 +85,7 @@ export default function Harmonizer(): ReactElement {
   };
 
   /**
-   * Reset harmony results on new file submission or harmonization
+   * Reset harmony results on new file submission or harmonization.
    */
   const resetResult = (): void => {
     setError("");
@@ -72,7 +93,7 @@ export default function Harmonizer(): ReactElement {
   };
 
   /**
-   * Sets melody file on drop
+   * Sets melody file on drop.
    * @param files list of added files (singleton)
    */
   const handleFile = (files: File[]): void => {
@@ -84,7 +105,7 @@ export default function Harmonizer(): ReactElement {
   };
 
   /**
-   * Sets error state on invalid file type drop
+   * Sets error state on invalid file type drop.
    */
   const handleInvalidFile = (): void =>
     setError(
@@ -92,7 +113,7 @@ export default function Harmonizer(): ReactElement {
     );
 
   /**
-   * Sends melody file to harmony enndpoint
+   * Sends melody file to harmony enndpoint.
    */
   const handleSubmit = (): void => {
     if (melodyFile !== null) {
@@ -111,7 +132,7 @@ export default function Harmonizer(): ReactElement {
   };
 
   /**
-   * Sets error state if user input measure length exceeds melody duration
+   * Sets error state if user input measure length exceeds melody duration.
    */
   const handleSubmitFail = (): void => {
     setError(
@@ -120,7 +141,7 @@ export default function Harmonizer(): ReactElement {
   };
 
   /**
-   * Validates that meter and bpm don't lead to a measure length above the melody duration if both are set
+   * Validates that meter and bpm don't lead to a measure length above the melody duration if both are set.
    */
   const validateMeasureLength = {
     validator: (): Promise<void> => {
@@ -136,7 +157,6 @@ export default function Harmonizer(): ReactElement {
 
   return (
     <>
-      {/* <Head /> */}
       <div className="center-vertical">
         <h1 className="title">Harmonizer</h1>
 
