@@ -160,6 +160,14 @@ export default function Harmonizer(): ReactElement {
       <div className="center-vertical">
         <h1 className="title">Harmonizer</h1>
 
+        <a
+          href="https://github.com/arpanlaha/harmonizer"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img className="github" src="/github.svg" alt="GitHub" />
+        </a>
+
         <div className="content">
           <Card className="upload-container" title="Upload">
             <div className="dropzone-container">

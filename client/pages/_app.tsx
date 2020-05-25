@@ -3,7 +3,7 @@ import { AppProps } from "next/app";
 import { Head } from "../components";
 
 import "antd/dist/antd.dark.css";
-import "../public/styles/style.scss";
+import "../public/style.scss";
 
 export default function Harmonizer({
   Component,

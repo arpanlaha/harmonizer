@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Nunito Sans Light";
-  src: url("../fonts/NunitoSans-Light.ttf");
+  src: url("./NunitoSans-Light.ttf");
   font-display: block;
 }
 
@@ -52,6 +52,22 @@ body {
   font-size: 10vmin;
   margin: 0;
   margin: 2vh;
+}
+
+.github {
+  position: fixed;
+  margin: 0;
+  width: 5vh;
+  height: 5vh;
+  top: 5vh;
+  right: 5vh;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.github:hover {
+  opacity: 1;
+  transition: opacity 0.2s;
 }
 
 .content {
