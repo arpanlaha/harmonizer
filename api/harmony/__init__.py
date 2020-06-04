@@ -9,4 +9,4 @@ def main(req: HttpRequest, context: Context) -> HttpResponse:
     try:
         return AzureFunctionsWsgi(app).main(req, context)
     except Exception as err:
-        return err
+        return str(err)
