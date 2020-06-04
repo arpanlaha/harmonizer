@@ -1,10 +1,7 @@
 import axios from "axios";
 import { ChordName, KeyName } from "./theory";
 
-const BACKEND_URL = `${
-  process.env.NEXT_PUBLIC_BACKEND_URL ??
-  `http://${process.env.NEXT_PUBLIC_VM_IP ?? "localhost"}:5000`
-}`;
+const BACKEND_URL = `https://t-arlah-harmonizer.azurewebsites.net/api`;
 
 export interface HarmonyParams {
   bpm?: number;
