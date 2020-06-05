@@ -1,12 +1,11 @@
 import logging
 
-from azure.functions import HttpRequest, Context, HttpResponse
-from azf_wsgi import AzureFunctionsWsgi
-from __app__.application import app
+from azure.functions import HttpRequest, Context, HttpResponse, WsgiMiddleware
+from ..FlaskApp.wsgi import application
 
 
 def main(req: HttpRequest, context: Context) -> HttpResponse:
     try:
-        return AzureFunctionsWsgi(app).main(req, context)
+        return WsgiMiddleware(application).main(req, context)
     except Exception as err:
         return str(err)

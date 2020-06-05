@@ -14,7 +14,7 @@ import os
 from tempfile import TemporaryDirectory
 import math
 
-harmony = Blueprint("harmony", __name__, url_prefix="/api/harmony")
+harmony = Blueprint("harmony", __name__, url_prefix="/harmony")
 
 
 def allowed_file(filename):

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ChordName, KeyName } from "./theory";
 
-const BACKEND_URL = `https://t-arlah-harmonizer.azurewebsites.net/api`;
+const BACKEND_URL = `https://t-arlah-harmonizer.azurewebsites.net`;
 
 export interface HarmonyParams {
   bpm?: number;
