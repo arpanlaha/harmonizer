@@ -136,12 +136,12 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
   /**
    * Reset melodySource on change to melodyBuffer.
    */
-  useEffect(resetMelodySource, [melodyBuffer]);
+  useEffect(resetMelodySource, [melodyBuffer, resetMelodySource]);
 
   /**
    * Reset harmonySource on change to harmonyBuffer.
    */
-  useEffect(resetHarmonySource, [harmonyBuffer]);
+  useEffect(resetHarmonySource, [harmonyBuffer, resetHarmonySource]);
 
   /**
    * Connect gain node to output on initialization.

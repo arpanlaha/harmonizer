@@ -1,6 +1,10 @@
 {
-  "plugins": ["@h4iuiuc"],
-  "extends": ["plugin:@h4iuiuc/recommended", "plugin:@h4iuiuc/typescript"],
+  "plugins": ["@hack4impact-uiuc"],
+  "extends": [
+    "plugin:@hack4impact-uiuc/base",
+    "plugin:@hack4impact-uiuc/react",
+    "plugin:@hack4impact-uiuc/typescript"
+  ],
   "rules": {
     "@typescript-eslint/no-magic-numbers": "off",
     "no-console": "error"
