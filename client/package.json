@@ -14,21 +14,21 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "antd": "^4.3.1",
+    "antd": "^4.3.5",
     "audiobuffer-to-wav": "^1.0.0",
     "axios": "^0.19.2",
     "next": "^9.4.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.0.1",
-    "tone": "^14.7.3"
+    "tone": "^14.7.11"
   },
   "devDependencies": {
     "@hack4impact-uiuc/eslint-plugin": "^2.0.1",
     "@types/audiobuffer-to-wav": "^1.0.0",
-    "@types/node": "^14.0.11",
-    "@types/react": "^16.9.35",
-    "eslint": "^7.1.0",
+    "@types/node": "^14.0.13",
+    "@types/react": "^16.9.38",
+    "eslint": "^7.3.0",
     "markdownlint-cli": "^0.23.1",
     "node-sass": "^4.14.1",
     "prettier": "^2.0.5",
