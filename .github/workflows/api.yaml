@@ -43,10 +43,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r api/requirements.txt
 
-      # - name: "Login via Azure CLI"
-      #   uses: azure/login@v1
-      #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: "Login via Azure CLI"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_FUNCTIONS_CREDENTIALS }}
+
       - name: Deploy to Azure Functions
         uses: azure/functions-action@v1
         with:
