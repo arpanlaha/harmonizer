@@ -27,6 +27,10 @@ export default function Head(props: HeadProps): ReactElement {
       <meta name="theme-color" content="#0d0f12" />
       <link rel="shortcut icon" href="/logo.svg" />
       <link rel="manifest" href="/manifest.json" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300&display=swap"
+        rel="stylesheet"
+      ></link>
       <title>{title ?? "Harmonizer"}</title>
     </NextHead>
   );
