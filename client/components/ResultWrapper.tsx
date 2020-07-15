@@ -22,8 +22,6 @@ import { Button, Progress, Slider, Spin, Tag, Tooltip } from "antd";
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
 import toWav from "audiobuffer-to-wav";
 
-import { SliderValue } from "antd/lib/slider";
-
 const DEFAULT_VOLUME = 50;
 const PLAYBACK_INTERVAL = 0.02;
 
@@ -241,10 +239,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
    * Update playTime from slider input.
    * @param newPlayTime slider input value
    */
-  const handlePlayTime = (newPlayTime: SliderValue): void => {
-    if (typeof newPlayTime !== "number") {
-      return;
-    }
+  const handlePlayTime = (newPlayTime: number): void => {
     if (playing) {
       handleStop();
     }
@@ -262,16 +257,6 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
     const secondsInt = Math.floor(secondsLeft);
 
     return `${minutes}:${seconds > 10 ? "" : "0"}${secondsInt}`;
-  };
-
-  /**
-   * Sets harmony volume on slider input.
-   */
-  const handleHarmonyVolume = (newHarmonyVolume: SliderValue): void => {
-    if (typeof newHarmonyVolume !== "number") {
-      return;
-    }
-    setHarmonyVolume(newHarmonyVolume);
   };
 
   /**
@@ -428,7 +413,7 @@ export default function ResultWrapper(props: ResultWrapperProps): ReactElement {
               value={harmonyVolume}
               min={0}
               max={100}
-              onChange={handleHarmonyVolume}
+              onChange={setHarmonyVolume}
             />
           </div>
           <Button className="download" type="primary" onClick={handleDownload}>
