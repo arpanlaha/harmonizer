@@ -1,7 +1,6 @@
 {
   "build": {
     "env": {
-      "GATSBY_TELEMETRY_DISABLED": "1",
       "BACKEND_URL": "@harmonizer_backend_url"
     }
   },
