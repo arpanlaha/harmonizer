@@ -2,7 +2,7 @@
   "builds": [
     {
       "src": "client/package.json",
-      "use": "@verce/next"
+      "use": "@vercel/next"
     }
   ],
   "build": {
