@@ -1,4 +1,10 @@
 {
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@verce/next"
+    }
+  ],
   "build": {
     "env": {
       "BACKEND_URL": "@harmonizer_backend_url"
